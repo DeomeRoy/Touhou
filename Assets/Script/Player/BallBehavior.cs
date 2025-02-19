@@ -24,7 +24,7 @@ public class BallBehavior : MonoBehaviour
             transform.position = new Vector2(player.transform.position.x, player.transform.position.y - launchYPosition);
         }
 
-        if (!hasLaunched && Input.GetKeyDown(KeyCode.Space))
+        if (!hasLaunched && Input.GetKeyDown(KeyCode.X))
         {
             transform.position = new Vector2(player.transform.position.x, player.transform.position.y - launchYPosition);
             GetComponent<SpriteRenderer>().enabled = true;

@@ -110,7 +110,7 @@ public class PlayerController : MonoBehaviour
         //子彈 > 滑行 > 拍球 > 移動
         if (!bullet_flag)
         {
-            if (hasLaunched && Input.GetKey(KeyCode.E) && !bullet_exists)
+            if (hasLaunched && Input.GetKey(KeyCode.Z) && !bullet_exists)
             {
                 rb.velocity = Vector2.zero;
                 attack_flag = false;
@@ -125,7 +125,7 @@ public class PlayerController : MonoBehaviour
             }
             else if (!slide_attack_flag)
             {
-                if (Input.GetKey(KeyCode.A))
+                if (Input.GetKey(KeyCode.LeftArrow))
                 {
                     if (hasLaunched && Input.GetKeyDown(KeyCode.LeftShift))
                     {
@@ -138,7 +138,7 @@ public class PlayerController : MonoBehaviour
                     }
                     else if (!attack_flag)
                     {
-                        if (Input.GetKeyDown(KeyCode.A))
+                        if (Input.GetKeyDown(KeyCode.LeftArrow))
                         {
                             walkTimer = 0;
                         }
@@ -148,7 +148,7 @@ public class PlayerController : MonoBehaviour
                     }
                 }
 
-                if (Input.GetKey(KeyCode.D))
+                if (Input.GetKey(KeyCode.RightArrow))
                 {
                     if (hasLaunched && Input.GetKeyDown(KeyCode.LeftShift))
                     {
@@ -161,7 +161,7 @@ public class PlayerController : MonoBehaviour
                     }
                     else if (!attack_flag)
                     {
-                        if (Input.GetKeyDown(KeyCode.D))
+                        if (Input.GetKeyDown(KeyCode.RightArrow))
                         {
                             walkTimer = 0;
                         }
@@ -171,7 +171,7 @@ public class PlayerController : MonoBehaviour
                     }
                 }
 
-                if (Input.GetKey(KeyCode.Space) && !attack_flag)
+                if (Input.GetKey(KeyCode.X) && !attack_flag)
                 {
                     rb.velocity = Vector2.zero;
                     attack_flag = true;
@@ -199,7 +199,7 @@ public class PlayerController : MonoBehaviour
             }
         }
 
-        if (hasLaunched && Input.GetKeyDown(KeyCode.Q) && !boom_flag)
+        if (hasLaunched && Input.GetKeyDown(KeyCode.Space) && !boom_flag)
         {
             boom_flag = true;
             boom_attack_cnt = 0.0f;
@@ -216,7 +216,7 @@ public class PlayerController : MonoBehaviour
 
         if (!slide_attack_flag && !attack_flag && !bullet_flag)
         {
-            if (!Input.GetKey(KeyCode.A) && !Input.GetKey(KeyCode.D))
+            if (!Input.GetKey(KeyCode.LeftArrow) && !Input.GetKey(KeyCode.RightArrow))
             {
                 walkTimer = 0;
                 rb.velocity = Vector2.zero;
@@ -241,7 +241,7 @@ public class PlayerController : MonoBehaviour
             if (frame >= attackSprites.Length) frame = attackSprites.Length - 1;
             SetSprite(attackSprites[frame], attackSize, attackOffset);
         }
-        else if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.D))
+        else if (Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.RightArrow))
         {
             int cycle = ((int)(walkTimer / walkswitch)) % 4;
             int index = (cycle == 3) ? 1 : cycle;
