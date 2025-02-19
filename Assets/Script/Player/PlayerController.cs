@@ -28,7 +28,6 @@ public class PlayerController : MonoBehaviour
     public float playerslide = 27.0f;
     public int score;
     public int life;
-    public int Level;
     private Rigidbody2D rb;
 
     public Sprite idleSprite;
@@ -56,14 +55,17 @@ public class PlayerController : MonoBehaviour
     private CircleCollider2D CircleCollider;
     private PolygonCollider2D PolygonCollider;
     private bool isFlipped = false;
-    void Start()
+    Vector3 targetPosition;
+    int level;
+    bool CheakPosition;
+    public void Start()
     {
         attack_cnt = 0.0f;
         slide_attack_cnt = 0.0f;
         bullet_attack_cnt = 0.0f;
         boom_attack_cnt = 0.0f;
         life = 20;
-        Level = 1;
+        level = 1;
         rb = GetComponent<Rigidbody2D>();
         rb.constraints = RigidbodyConstraints2D.FreezePositionY | RigidbodyConstraints2D.FreezeRotation;
         spriteRenderer = transform.Find("SpriteContainer").GetComponent<SpriteRenderer>();
@@ -258,32 +260,46 @@ public class PlayerController : MonoBehaviour
             CircleCollider.enabled  = true;
             PolygonCollider.enabled = false;
         }
-    }
-    public void LevelPush(){
-        Level += 1;
-        GameObject.Find("SpriteContainer").GetComponent<SpriteRenderer>().enabled = false;
-        switch(Level){
+        switch(level){
             case 2:
-            transform.position = new Vector3(0, 5.9f, 0);
-            GameObject.Find("Ball").GetComponent<BallBehavior>().LevelChanging();
-            StartCoroutine(LevelPushDone());
-            break;
+                if(transform.position.y != 5.9f){
+                    targetPosition = new Vector3(transform.position.x,5.9f, transform.position.z);
+                    transform.position = Vector3.MoveTowards(transform.position,targetPosition, 2.0f * Time.deltaTime);
+                    GameObject.Find("Ball").GetComponent<BallBehavior>().LevelChanging();
+                }
+                else if(transform.position.y == 5.9f && CheakPosition){
+                    CheakPosition = false;
+                }
+                break;
             case 3:
-            transform.position = new Vector3(0, 15.9f, 0);
-            GameObject.Find("Ball").GetComponent<BallBehavior>().LevelChanging();
-            StartCoroutine(LevelPushDone());
-            break;
+                if(transform.position.y != 15.9f){
+                    targetPosition = new Vector3(transform.position.x,15.9f, transform.position.z);
+                    transform.position = Vector3.MoveTowards(transform.position,targetPosition, 2.0f * Time.deltaTime);
+                    GameObject.Find("Ball").GetComponent<BallBehavior>().LevelChanging();
+                }
+                else if(transform.position.y == 15.9f && CheakPosition){
+                    CheakPosition = false;
+                }
+                break;
             case 4:
-            transform.position = new Vector3(0, 25.95f, 0);
-            GameObject.Find("Ball").GetComponent<BallBehavior>().LevelChanging();
-            StartCoroutine(LevelPushDone());
-            break;
+                if(transform.position.y != 25.95f){
+                    targetPosition = new Vector3(transform.position.x,25.95f, transform.position.z);
+                    transform.position = Vector3.MoveTowards(transform.position,targetPosition, 2.0f * Time.deltaTime);
+                    GameObject.Find("Ball").GetComponent<BallBehavior>().LevelChanging();
+                }
+                else if(transform.position.y == 25.95f && CheakPosition){
+                    CheakPosition = false;
+                }
+                break;
         }
     }
-    public IEnumerator LevelPushDone(){
-        yield return new WaitForSeconds(350f*Time.deltaTime);
-        GameObject.Find("SpriteContainer").GetComponent<SpriteRenderer>().enabled = true;
+    public void LevelPush(){
+        level += 1;
+        CheakPosition = true;
     }
+    // public void LevelPushDone(){
+        
+    // }
     private void OnCollisionEnter2D(Collision2D collision)
     {
         bool hasLaunched = ballScript != null && ballScript.hasLaunched;

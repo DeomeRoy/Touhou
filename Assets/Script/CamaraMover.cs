@@ -7,6 +7,7 @@ public class CamaraMover : MonoBehaviour{
     public float speed = 2.0f;
     Vector3 targetPosition;
     int Level;
+    bool CheakCamara;
     void Start(){
         Level = 1;
     }
@@ -14,7 +15,9 @@ public class CamaraMover : MonoBehaviour{
         switch(Level){
             case 2:
                 targetPosition = new Vector3(Level1_2.position.x,Level1_2.position.y, transform.position.z);
+                if(transform.position.y != 10.02f){
                 transform.position = Vector3.MoveTowards(transform.position,targetPosition, speed * Time.deltaTime);
+                }
                 break;
             case 3:
                 targetPosition = new Vector3(Level1_3.position.x,Level1_3.position.y, transform.position.z);
