@@ -127,7 +127,7 @@ public class PlayerController : MonoBehaviour
             {
                 if (Input.GetKey(KeyCode.LeftArrow))
                 {
-                    if (hasLaunched && Input.GetKeyDown(KeyCode.LeftShift))
+                    if (hasLaunched && Input.GetKeyDown(KeyCode.X))
                     {
                         attack_flag = false;
                         slide_l_or_r = true;
@@ -138,7 +138,7 @@ public class PlayerController : MonoBehaviour
                     }
                     else if (!attack_flag)
                     {
-                        if (Input.GetKeyDown(KeyCode.LeftArrow))
+                        if (Input.GetKeyDown(KeyCode.X))
                         {
                             walkTimer = 0;
                         }
