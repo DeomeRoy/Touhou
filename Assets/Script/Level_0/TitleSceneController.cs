@@ -20,39 +20,36 @@ public class TitleSceneController : MonoBehaviour{
         Settingpanel = false;
     }
     void Update(){
-        if (Input.GetMouseButtonDown(0)){
+        if (Input.GetMouseButtonUp(0)){
             PointerEventData eventData = new PointerEventData(EventSystem.current);
             eventData.position = Input.mousePosition;
             List<RaycastResult> results = new List<RaycastResult>();
             EventSystem.current.RaycastAll(eventData, results);
-            var Options = FindObjectOfType<ChangePanel>();
             foreach (RaycastResult result in results){
                 switch(result.gameObject.name){
                     case "Start":
+                        print("Start");
                         FadeOut();
                         StartCoroutine(Cutscene());
                         break;
+                    case "Information":
+                        print("Information");
+                        SceneManager.LoadScene("Information");
+                        break;
                     case "Continue":
                         print("Continue");
-                        GameObject.Find("Stage 1").GetComponent<ChangePanel>().MoveInPanel();
-                        GameObject.Find("Start").GetComponent<ChangePanel>().MoveOutPanel();
                         break;
                     case "Setting":
                         print("Setting");
-                        // GameObject.Find("Stage 1").GetComponent<ChangePanel>().MoveInPanel();
-                        // GameObject.Find("Start").GetComponent<ChangePanel>().MoveOutPanel();
                         break;
                     case "Exit":
                         print("GameExit");
                         Application.Quit();
                         break;
-                    case "Stage 1":
                     case "Stage 2":
                     case "Stage 3":
                         break;
                     case "Back":
-                        GameObject.Find("Stage 1").GetComponent<ChangePanel>().MoveOutPanel();
-                        GameObject.Find("Start").GetComponent<ChangePanel>().MoveInPanel();
                         break;
                 }
             }
