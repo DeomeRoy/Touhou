@@ -6,6 +6,7 @@ public class PlayerController : MonoBehaviour
 {
     public GameObject bulletPrefab;
     public GameObject BOOM;
+    public GameObject HP,MP;
     private BallBehavior ballScript;
     public bool attack_flag = false;
     public bool slide_attack_flag = false;
@@ -64,7 +65,7 @@ public class PlayerController : MonoBehaviour
         slide_attack_cnt = 0.0f;
         bullet_attack_cnt = 0.0f;
         boom_attack_cnt = 0.0f;
-        life = 20;
+        life = 100;
         level = 1;
         rb = GetComponent<Rigidbody2D>();
         rb.constraints = RigidbodyConstraints2D.FreezePositionY | RigidbodyConstraints2D.FreezeRotation;
@@ -84,213 +85,216 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
-        attack_cnt += Time.deltaTime;
-        slide_attack_cnt += Time.deltaTime;
-        bullet_attack_cnt += Time.deltaTime;
-        boom_attack_cnt += Time.deltaTime;
-        bool hasLaunched = ballScript != null && ballScript.hasLaunched;
+        if(Time.timeScale == 1){
+            attack_cnt += Time.deltaTime;
+            slide_attack_cnt += Time.deltaTime;
+            bullet_attack_cnt += Time.deltaTime;
+            boom_attack_cnt += Time.deltaTime;
+            bool hasLaunched = ballScript != null && ballScript.hasLaunched;
 
-        if (attack_cnt >= attack_time)
-        {
-            attack_flag = false;
-        }
-        if (slide_attack_cnt >= slide_attack_time)
-        {
-            slide_attack_flag = false;
-        }
-        if (bullet_attack_cnt >= bullet_attack_time)
-        {
-            bullet_flag = false;
-        }
-        if (boom_attack_cnt >= boom_attack_cool)
-        {
-            boom_flag = false;
-        }
-
-        //子彈 > 滑行 > 拍球 > 移動
-        if (!bullet_flag)
-        {
-            if (hasLaunched && Input.GetKey(KeyCode.Z) && !bullet_exists)
+            if (attack_cnt >= attack_time)
             {
-                rb.velocity = Vector2.zero;
                 attack_flag = false;
-                slide_attack_flag = false;
-                bullet_flag = true;
-                bullet_exists = true;
-                bullet_attack_cnt = 0.0f;
-                if (bulletPrefab != null)
-                {
-                    Instantiate(bulletPrefab, transform.position, Quaternion.identity);
-                }
             }
-            else if (!slide_attack_flag)
+            if (slide_attack_cnt >= slide_attack_time)
             {
-                if (Input.GetKey(KeyCode.LeftArrow))
-                {
-                    if (hasLaunched && Input.GetKeyDown(KeyCode.X))
-                    {
-                        attack_flag = false;
-                        slide_l_or_r = true;
-                        slide_attack_flag = true;
-                        slide_attack_cnt = 0.0f;
-                        spriteRenderer.flipX = true;
-                        FlipCollider(1);
-                    }
-                    else if (!attack_flag)
-                    {
-                        if (Input.GetKeyDown(KeyCode.LeftArrow))
-                        {
-                            walkTimer = 0;
-                        }
-                        walkTimer += Time.deltaTime;
-                        spriteRenderer.flipX = true;
-                        rb.velocity = new Vector2(-playermove, rb.velocity.y);
-                    }
-                }
+                slide_attack_flag = false;
+            }
+            if (bullet_attack_cnt >= bullet_attack_time)
+            {
+                bullet_flag = false;
+            }
+            if (boom_attack_cnt >= boom_attack_cool)
+            {
+                boom_flag = false;
+            }
 
-                if (Input.GetKey(KeyCode.RightArrow))
-                {
-                    if (hasLaunched && Input.GetKeyDown(KeyCode.X))
-                    {
-                        attack_flag = false;
-                        slide_l_or_r = false;
-                        slide_attack_flag = true;
-                        slide_attack_cnt = 0.0f;
-                        spriteRenderer.flipX = false;
-                        FlipCollider(0);
-                    }
-                    else if (!attack_flag)
-                    {
-                        if (Input.GetKeyDown(KeyCode.RightArrow))
-                        {
-                            walkTimer = 0;
-                        }
-                        walkTimer += Time.deltaTime;
-                        spriteRenderer.flipX = false;
-                        rb.velocity = new Vector2(playermove, rb.velocity.y);
-                    }
-                }
-
-                if (Input.GetKey(KeyCode.X) && !attack_flag)
+            //子彈 > 滑行 > 拍球 > 移動
+            if (!bullet_flag)
+            {
+                if (hasLaunched && Input.GetKey(KeyCode.Z) && !bullet_exists)
                 {
                     rb.velocity = Vector2.zero;
-                    attack_flag = true;
-                    attack_cnt = 0.0f;
-                    GameObject ball = GameObject.FindWithTag("Ball");
-                    if (ball != null)
+                    attack_flag = false;
+                    slide_attack_flag = false;
+                    bullet_flag = true;
+                    bullet_exists = true;
+                    bullet_attack_cnt = 0.0f;
+                    if (bulletPrefab != null)
                     {
-                        float playerX = transform.position.x;
-                        float ballX = ball.transform.position.x;
-                        spriteRenderer.flipX = playerX > ballX;
+                        Instantiate(bulletPrefab, transform.position, Quaternion.identity);
+                    }
+                }
+                else if (!slide_attack_flag)
+                {
+                    if (Input.GetKey(KeyCode.LeftArrow))
+                    {
+                        if (hasLaunched && Input.GetKeyDown(KeyCode.X))
+                        {
+                            attack_flag = false;
+                            slide_l_or_r = true;
+                            slide_attack_flag = true;
+                            slide_attack_cnt = 0.0f;
+                            spriteRenderer.flipX = true;
+                            FlipCollider(1);
+                        }
+                        else if (!attack_flag)
+                        {
+                            if (Input.GetKeyDown(KeyCode.LeftArrow))
+                            {
+                                walkTimer = 0;
+                            }
+                            walkTimer += Time.deltaTime;
+                            spriteRenderer.flipX = true;
+                            rb.velocity = new Vector2(-playermove, rb.velocity.y);
+                        }
+                    }
+
+                    if (Input.GetKey(KeyCode.RightArrow))
+                    {
+                        if (hasLaunched && Input.GetKeyDown(KeyCode.X))
+                        {
+                            attack_flag = false;
+                            slide_l_or_r = false;
+                            slide_attack_flag = true;
+                            slide_attack_cnt = 0.0f;
+                            spriteRenderer.flipX = false;
+                            FlipCollider(0);
+                        }
+                        else if (!attack_flag)
+                        {
+                            if (Input.GetKeyDown(KeyCode.RightArrow))
+                            {
+                                walkTimer = 0;
+                            }
+                            walkTimer += Time.deltaTime;
+                            spriteRenderer.flipX = false;
+                            rb.velocity = new Vector2(playermove, rb.velocity.y);
+                        }
+                    }
+
+                    if (Input.GetKey(KeyCode.X) && !attack_flag)
+                    {
+                        rb.velocity = Vector2.zero;
+                        attack_flag = true;
+                        attack_cnt = 0.0f;
+                        GameObject ball = GameObject.FindWithTag("Ball");
+                        if (ball != null)
+                        {
+                            float playerX = transform.position.x;
+                            float ballX = ball.transform.position.x;
+                            spriteRenderer.flipX = playerX > ballX;
+                        }
                     }
                 }
             }
-        }
 
-        if (slide_attack_flag)
-        {
-            if (slide_l_or_r)
+            if (slide_attack_flag)
             {
-                rb.velocity = new Vector2(-playerslide, rb.velocity.y);
+                if (slide_l_or_r)
+                {
+                    rb.velocity = new Vector2(-playerslide, rb.velocity.y);
+                }
+                else
+                {
+                    rb.velocity = new Vector2(playerslide, rb.velocity.y);
+                }
+            }
+
+            if (hasLaunched && Input.GetKeyDown(KeyCode.Space) && !boom_flag && (MP.GetComponent<RectTransform>().localScale == new Vector3(1f,1f,1f)))
+            {
+                boom_flag = true;
+                boom_attack_cnt = 0.0f;
+                GameObject[] balls = GameObject.FindGameObjectsWithTag("Ball");
+                foreach (GameObject ball in balls)
+                {
+                    if (BOOM != null)
+                    {
+                        GameObject tempBall = Instantiate(BOOM, ball.transform.position, Quaternion.identity);
+                        Destroy(tempBall, boom_attack_time);
+                        MP.GetComponent<MP>().MP_return0();
+                    }
+                }
+            }
+
+            if (!slide_attack_flag && !attack_flag && !bullet_flag)
+            {
+                if (!Input.GetKey(KeyCode.LeftArrow) && !Input.GetKey(KeyCode.RightArrow))
+                {
+                    walkTimer = 0;
+                    rb.velocity = Vector2.zero;
+                }
+            }
+
+            if (bullet_flag)
+            {
+                int frame = Mathf.FloorToInt((bullet_attack_cnt / bullet_attack_time) * bulletSprites.Length);
+                if (frame >= bulletSprites.Length) frame = bulletSprites.Length - 1;
+                SetSprite(bulletSprites[frame], bulletSize, bulletOffset);
+            }
+            else if (slide_attack_flag)
+            {
+                int frame = Mathf.FloorToInt((slide_attack_cnt / slide_attack_time) * slideSprites.Length);
+                if (frame >= slideSprites.Length) frame = slideSprites.Length - 1;
+                SetSprite(slideSprites[frame], slideSize, slideOffset);
+            }
+            else if (attack_flag)
+            {
+                int frame = Mathf.FloorToInt((attack_cnt / attack_time) * attackSprites.Length);
+                if (frame >= attackSprites.Length) frame = attackSprites.Length - 1;
+                SetSprite(attackSprites[frame], attackSize, attackOffset);
+            }
+            else if (Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.RightArrow))
+            {
+                int cycle = ((int)(walkTimer / walkswitch)) % 4;
+                int index = (cycle == 3) ? 1 : cycle;
+                SetSprite(walkSprites[index], walkSize, walkOffset);
             }
             else
             {
-                rb.velocity = new Vector2(playerslide, rb.velocity.y);
+                SetSprite(idleSprite, idleSize, idleOffset);
             }
-        }
 
-        if (hasLaunched && Input.GetKeyDown(KeyCode.Space) && !boom_flag)
-        {
-            boom_flag = true;
-            boom_attack_cnt = 0.0f;
-            GameObject[] balls = GameObject.FindGameObjectsWithTag("Ball");
-            foreach (GameObject ball in balls)
-            {
-                if (BOOM != null)
-                {
-                    GameObject tempBall = Instantiate(BOOM, ball.transform.position, Quaternion.identity);
-                    Destroy(tempBall, boom_attack_time);
-                }
+            if(slide_attack_flag == true){
+                CircleCollider.enabled  = false;
+                PolygonCollider.enabled = true;
             }
-        }
-
-        if (!slide_attack_flag && !attack_flag && !bullet_flag)
-        {
-            if (!Input.GetKey(KeyCode.LeftArrow) && !Input.GetKey(KeyCode.RightArrow))
-            {
-                walkTimer = 0;
-                rb.velocity = Vector2.zero;
+            else if(slide_attack_flag == false){
+                CircleCollider.enabled  = true;
+                PolygonCollider.enabled = false;
             }
-        }
-
-        if (bullet_flag)
-        {
-            int frame = Mathf.FloorToInt((bullet_attack_cnt / bullet_attack_time) * bulletSprites.Length);
-            if (frame >= bulletSprites.Length) frame = bulletSprites.Length - 1;
-            SetSprite(bulletSprites[frame], bulletSize, bulletOffset);
-        }
-        else if (slide_attack_flag)
-        {
-            int frame = Mathf.FloorToInt((slide_attack_cnt / slide_attack_time) * slideSprites.Length);
-            if (frame >= slideSprites.Length) frame = slideSprites.Length - 1;
-            SetSprite(slideSprites[frame], slideSize, slideOffset);
-        }
-        else if (attack_flag)
-        {
-            int frame = Mathf.FloorToInt((attack_cnt / attack_time) * attackSprites.Length);
-            if (frame >= attackSprites.Length) frame = attackSprites.Length - 1;
-            SetSprite(attackSprites[frame], attackSize, attackOffset);
-        }
-        else if (Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.RightArrow))
-        {
-            int cycle = ((int)(walkTimer / walkswitch)) % 4;
-            int index = (cycle == 3) ? 1 : cycle;
-            SetSprite(walkSprites[index], walkSize, walkOffset);
-        }
-        else
-        {
-            SetSprite(idleSprite, idleSize, idleOffset);
-        }
-
-        if(slide_attack_flag == true){
-            CircleCollider.enabled  = false;
-            PolygonCollider.enabled = true;
-        }
-        else if(slide_attack_flag == false){
-            CircleCollider.enabled  = true;
-            PolygonCollider.enabled = false;
-        }
-        switch(level){
-            case 2:
-                if(transform.position.y != 5.9f){
-                    targetPosition = new Vector3(transform.position.x,5.9f, transform.position.z);
-                    transform.position = Vector3.MoveTowards(transform.position,targetPosition, 2.0f * Time.deltaTime);
-                    GameObject.Find("Ball").GetComponent<BallBehavior>().LevelChanging();
-                }
-                else if(transform.position.y == 5.9f && CheakPosition){
-                    CheakPosition = false;
-                }
-                break;
-            case 3:
-                if(transform.position.y != 15.9f){
-                    targetPosition = new Vector3(transform.position.x,15.9f, transform.position.z);
-                    transform.position = Vector3.MoveTowards(transform.position,targetPosition, 2.0f * Time.deltaTime);
-                    GameObject.Find("Ball").GetComponent<BallBehavior>().LevelChanging();
-                }
-                else if(transform.position.y == 15.9f && CheakPosition){
-                    CheakPosition = false;
-                }
-                break;
-            case 4:
-                if(transform.position.y != 25.95f){
-                    targetPosition = new Vector3(transform.position.x,25.95f, transform.position.z);
-                    transform.position = Vector3.MoveTowards(transform.position,targetPosition, 2.0f * Time.deltaTime);
-                    GameObject.Find("Ball").GetComponent<BallBehavior>().LevelChanging();
-                }
-                else if(transform.position.y == 25.95f && CheakPosition){
-                    CheakPosition = false;
-                }
-                break;
+            switch(level){
+                case 2:
+                    if(transform.position.y != 5.9f){
+                        targetPosition = new Vector3(transform.position.x,5.9f, transform.position.z);
+                        transform.position = Vector3.MoveTowards(transform.position,targetPosition, 2.0f * Time.deltaTime);
+                        GameObject.Find("Ball").GetComponent<BallBehavior>().LevelChanging();
+                    }
+                    else if(transform.position.y == 5.9f && CheakPosition){
+                        CheakPosition = false;
+                    }
+                    break;
+                case 3:
+                    if(transform.position.y != 15.9f){
+                        targetPosition = new Vector3(transform.position.x,15.9f, transform.position.z);
+                        transform.position = Vector3.MoveTowards(transform.position,targetPosition, 2.0f * Time.deltaTime);
+                        GameObject.Find("Ball").GetComponent<BallBehavior>().LevelChanging();
+                    }
+                    else if(transform.position.y == 15.9f && CheakPosition){
+                        CheakPosition = false;
+                    }
+                    break;
+                case 4:
+                    if(transform.position.y != 25.95f){
+                        targetPosition = new Vector3(transform.position.x,25.95f, transform.position.z);
+                        transform.position = Vector3.MoveTowards(transform.position,targetPosition, 2.0f * Time.deltaTime);
+                        GameObject.Find("Ball").GetComponent<BallBehavior>().LevelChanging();
+                    }
+                    else if(transform.position.y == 25.95f && CheakPosition){
+                        CheakPosition = false;
+                    }
+                    break;
+            }
         }
     }
     public void LevelPush(){
@@ -359,12 +363,18 @@ public class PlayerController : MonoBehaviour
 
     public void LoseLife()
     {
-        life -= 1;
-        Debug.Log(life);
-        if (life <= 0)
-        {
-            Debug.Log("die");
+        life -= 5;
+        if(life!=0){
+            HP.GetComponent<HP>().HP_Change(life);
         }
+        else if (life == 0){
+            HP.GetComponent<HP>().HP_Change(life);
+            Debug.Log("die");
+            // Destroy(gameObject);
+        }
+    }
+    public void GetScore(){
+        MP.GetComponent<MP>().MP_Change();
     }
 
     void FlipCollider(int x){

@@ -5,6 +5,7 @@ using UnityEngine;
 public class B_Block : MonoBehaviour
 {
     public float fallSpeed = 2.0f;
+    public GameObject MP;
     private Rigidbody2D rb;
 
     void Start()
@@ -31,6 +32,7 @@ public class B_Block : MonoBehaviour
             if (player != null) 
             {
                 player.score += 1;
+                player.GetScore();
                 Debug.Log("score" + player.score);
             }
             Destroy(gameObject);

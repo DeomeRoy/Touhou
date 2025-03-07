@@ -8,7 +8,7 @@ using DG.Tweening;
 
 public class TitleSceneController : MonoBehaviour{
     [HideInInspector]public bool Mainpanel,Savepanel,Settingpanel;
-    [HideInInspector]public GameObject Background_001,Background_002,Options;
+    public GameObject Background_001,Background_002,Options,ContinuePane,SettingPane;
     [HideInInspector]public CanvasGroup CutscenePanel;
     
     void Start(){
@@ -21,6 +21,8 @@ public class TitleSceneController : MonoBehaviour{
         Settingpanel = false;
         Background_001.SetActive(true);
         Background_002.SetActive(false);
+        ContinuePane.SetActive(false);
+        SettingPane.SetActive(false);
         Options.SetActive(true);
     }
     void Update(){
@@ -32,54 +34,50 @@ public class TitleSceneController : MonoBehaviour{
             foreach (RaycastResult result in results){
                 switch(result.gameObject.name){
                     case "Start":
-                        print("Start");
                         FadeOut();
                         StartCoroutine(Cutscene());
                         break;
                     case "Information":
-                        print("Information");
                         SceneManager.LoadScene("Information");
                         break;
                     case "Continue":
-                        print("Continue");
-                        SwitchBackground(1);
+                        Continue();
                         break;
                     case "Setting":
-                        print("Setting");
-                        SwitchBackground(1);
+                        Setting();
                         break;
                     case "Exit":
                         print("GameExit");
                         Application.Quit();
                         break;
-                    case "Stage 2":
-                    case "Stage 3":
-                        break;
-                    case "Back":
-                        SwitchBackground(2);
-                        break;
                 }
             }
-        }
-    }
-    void SwitchBackground(int x){
-        switch(x){
-            case 1:
-            Background_001.SetActive(false);
-            Background_002.SetActive(true);
-            Options.SetActive(false);
-            break;
-            case 2:
-            Background_001.SetActive(true);
-            Background_002.SetActive(false);
-            Options.SetActive(true);
-            break;
         }
     }
     void FadeOut(){
         GameObject obj = GameObject.Find("CutscenePanel");
         CutscenePanel = obj.GetComponent<CanvasGroup>();
         CutscenePanel.DOFade(1f,150f*Time.deltaTime);
+    }
+    void Continue(){
+        Background_001.SetActive(false);
+        Background_002.SetActive(true);
+        Options.SetActive(false);
+        ContinuePane.SetActive(true);
+    }
+    void Setting(){
+        Background_001.SetActive(false);
+        Background_002.SetActive(true);
+        Options.SetActive(false);
+        SettingPane.SetActive(true);
+    }
+    public void BackToTitle(){
+        Debug.Log("111");
+        Background_001.SetActive(true);
+        Background_002.SetActive(false);
+        Options.SetActive(true);
+        SettingPane.SetActive(false);
+        ContinuePane.SetActive(false);
     }
     IEnumerator Cutscene(){
         yield return new WaitForSeconds(160f*Time.deltaTime);
