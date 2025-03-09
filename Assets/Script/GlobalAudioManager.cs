@@ -101,6 +101,15 @@ public class GlobalAudioManager : MonoBehaviour
         activeMusicSource.Play();
     }
 
+    public void PlayMusicDirectly(AudioClip clip, float targetVolume)
+    {
+        activeMusicSource.Stop();
+        activeMusicSource.clip = clip;
+        activeMusicSource.volume = targetVolume;
+        activeMusicSource.loop = true;
+        activeMusicSource.Play();
+    }
+
     public void CrossfadeToMusicWithTarget(AudioClip newClip, float targetVolume, float fadeOutDuration, float fadeInDuration)
     {
         AudioSource newSource = (activeMusicSource == musicSource1) ? musicSource2 : musicSource1;
@@ -130,11 +139,13 @@ public class GlobalAudioManager : MonoBehaviour
 
     public void PlayBossMusicWithFadeIn(float fadeInDuration)
     {
-        activeMusicSource.clip = bossMusic;
-        activeMusicSource.volume = 0f;
-        activeMusicSource.loop = true;
-        activeMusicSource.Play();
-        StartCoroutine(FadeIn(activeMusicSource, fadeInDuration, bossVolume));
+        AudioSource newSource = (activeMusicSource == musicSource1) ? musicSource2 : musicSource1;
+        newSource.clip = bossMusic;
+        newSource.volume = 0f;
+        newSource.loop = true;
+        newSource.Play();
+        StartCoroutine(FadeIn(newSource, fadeInDuration, bossVolume));
+        activeMusicSource = newSource;
     }
 
     IEnumerator FadeIn(AudioSource source, float duration, float targetVolume)
@@ -189,6 +200,12 @@ public class GlobalAudioManager : MonoBehaviour
             yield return null;
         }
         fromSource.Stop();
+    }
+
+    public void StopAllMusic()
+    {
+        musicSource1.Stop();
+        musicSource2.Stop();
     }
 }
 

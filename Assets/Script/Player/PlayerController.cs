@@ -35,7 +35,7 @@ public class PlayerController : MonoBehaviour
     private SpriteRenderer spriteRenderer;
     private Color originalColor;
     private Rigidbody2D rb;
-    public float strikeForceMultiplier = 15.0f;
+    public float strikeForceMultiplier = 25.0f;
     public float angleRangeModifier = 1.0f;
     public float angularForceMultiplier = 8.0f;
 

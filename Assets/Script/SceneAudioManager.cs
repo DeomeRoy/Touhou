@@ -30,28 +30,45 @@ public class SceneAudioManager : MonoBehaviour
     {
         if (scene.name == "TitleScene")
         {
-            if (string.IsNullOrEmpty(previousScene) ||
-                previousScene == "Stage1" || previousScene == "Stage2" || previousScene == "Stage3")
+            if (!string.IsNullOrEmpty(previousScene) &&
+                (previousScene == "Stage1" || previousScene == "Stage2" || previousScene == "Stage3" || previousScene == "BossScene"))
+            {
+                StartCoroutine(SwitchToMainMenuMusic());
+            }
+            else
             {
                 GlobalAudioManager.Instance.PlayMainMenuMusic();
             }
         }
         else if (scene.name == "Stage1")
         {
-            GlobalAudioManager.Instance.CrossfadeToStage1Music(stageFadeOutDuration, stageFadeInDuration);
+            GlobalAudioManager.Instance.PlayMusicDirectly(
+            GlobalAudioManager.Instance.stage1Music,
+            GlobalAudioManager.Instance.stage1Volume);
         }
         else if (scene.name == "Stage2")
         {
-            GlobalAudioManager.Instance.CrossfadeToStage2Music(stageFadeOutDuration, stageFadeInDuration);
+            GlobalAudioManager.Instance.PlayMusicDirectly(
+            GlobalAudioManager.Instance.stage2Music,
+            GlobalAudioManager.Instance.stage2Volume);
         }
         else if (scene.name == "Stage3")
         {
-            GlobalAudioManager.Instance.CrossfadeToStage3Music(stageFadeOutDuration, stageFadeInDuration);
+            GlobalAudioManager.Instance.PlayMusicDirectly(
+            GlobalAudioManager.Instance.stage3Music,
+            GlobalAudioManager.Instance.stage3Volume);
         }
 
         previousScene = scene.name;
-
         RegisterButtonListeners();
+    }
+
+    IEnumerator SwitchToMainMenuMusic()
+    {
+        float fadeOutDuration = titleFadeOutDuration;
+        GlobalAudioManager.Instance.StopAllMusic();
+        yield return new WaitForSeconds(fadeOutDuration);
+        GlobalAudioManager.Instance.PlayMainMenuMusic();
     }
 
     void RegisterButtonListeners()

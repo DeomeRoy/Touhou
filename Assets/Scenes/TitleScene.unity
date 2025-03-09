@@ -617,8 +617,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3c19b14aa4e87304395c1de43dc5617e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  titleFadeOutDuration: 3
-  stageFadeOutDuration: 2
+  titleFadeOutDuration: 0
+  stageFadeOutDuration: 0
   stageFadeInDuration: 2
 --- !u!1 &202022101
 GameObject:
