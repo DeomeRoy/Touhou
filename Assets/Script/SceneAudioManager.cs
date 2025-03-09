@@ -30,12 +30,8 @@ public class SceneAudioManager : MonoBehaviour
     {
         if (scene.name == "TitleScene")
         {
-            if (!string.IsNullOrEmpty(previousScene) &&
-                (previousScene == "Stage1" || previousScene == "Stage2" || previousScene == "Stage3" || previousScene == "BossScene"))
-            {
-                StartCoroutine(SwitchToMainMenuMusic());
-            }
-            else
+            if (string.IsNullOrEmpty(previousScene) ||
+                previousScene == "Stage1" || previousScene == "Stage2" || previousScene == "Stage3")
             {
                 GlobalAudioManager.Instance.PlayMainMenuMusic();
             }

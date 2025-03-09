@@ -94,6 +94,7 @@ public class GlobalAudioManager : MonoBehaviour
 
     public void PlayMainMenuMusic()
     {
+        StopAllMusic();
         activeMusicSource = musicSource1;
         activeMusicSource.clip = mainMenuMusic;
         activeMusicSource.volume = mainMenuVolume;
@@ -101,10 +102,13 @@ public class GlobalAudioManager : MonoBehaviour
         activeMusicSource.Play();
     }
 
-    public void PlayMusicDirectly(AudioClip clip, float targetVolume)
+    public void PlayMusicDirectly(AudioClip newClip, float targetVolume, bool forceChange = false)
     {
+        if (!forceChange && activeMusicSource.clip == newClip && activeMusicSource.isPlaying)
+           return;
+                
         activeMusicSource.Stop();
-        activeMusicSource.clip = clip;
+        activeMusicSource.clip = newClip;
         activeMusicSource.volume = targetVolume;
         activeMusicSource.loop = true;
         activeMusicSource.Play();
