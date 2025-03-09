@@ -6,18 +6,20 @@ using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 using DG.Tweening;
 
-public class TitleSceneController : MonoBehaviour{
-    [HideInInspector]public bool Mainpanel,Savepanel,Settingpanel;
-    public GameObject Background_001,Background_002,Options,ContinuePane,SettingPane;
-    [HideInInspector]public CanvasGroup CutscenePanel;
-    
-    void Start(){
+public class TitleSceneController : MonoBehaviour
+{
+    [HideInInspector] public bool Mainpanel, Savepanel, Settingpanel;
+    public GameObject Background_001, Background_002, Options, ContinuePane, SettingPane;
+    [HideInInspector] public CanvasGroup CutscenePanel;
+
+    void Start()
+    {
         GameObject obj = GameObject.Find("CutscenePanel");
         CutscenePanel = obj.GetComponent<CanvasGroup>();
-        CutscenePanel.DOFade(1f,0f);
-        CutscenePanel.DOFade(0f,100f*Time.deltaTime);
-        Mainpanel    = true;
-        Savepanel    = false;
+        CutscenePanel.DOFade(1f, 0f);
+        CutscenePanel.DOFade(0f, 100f * Time.deltaTime);
+        Mainpanel = true;
+        Savepanel = false;
         Settingpanel = false;
         Background_001.SetActive(true);
         Background_002.SetActive(false);
@@ -25,14 +27,19 @@ public class TitleSceneController : MonoBehaviour{
         SettingPane.SetActive(false);
         Options.SetActive(true);
     }
-    void Update(){
-        if (Input.GetMouseButtonUp(0)){
+
+    void Update()
+    {
+        if (Input.GetMouseButtonUp(0))
+        {
             PointerEventData eventData = new PointerEventData(EventSystem.current);
             eventData.position = Input.mousePosition;
             List<RaycastResult> results = new List<RaycastResult>();
             EventSystem.current.RaycastAll(eventData, results);
-            foreach (RaycastResult result in results){
-                switch(result.gameObject.name){
+            foreach (RaycastResult result in results)
+            {
+                switch (result.gameObject.name)
+                {
                     case "Start":
                         FadeOut();
                         StartCoroutine(Cutscene());
@@ -47,43 +54,53 @@ public class TitleSceneController : MonoBehaviour{
                         Setting();
                         break;
                     case "Exit":
-                        print("GameExit");
+                        Debug.Log("GameExit");
                         Application.Quit();
                         break;
                 }
             }
         }
     }
-    void FadeOut(){
+
+    void FadeOut()
+    {
         GameObject obj = GameObject.Find("CutscenePanel");
         CutscenePanel = obj.GetComponent<CanvasGroup>();
-        CutscenePanel.DOFade(1f,150f*Time.deltaTime);
+        float fadeTime = 150f * Time.deltaTime;
+        CutscenePanel.DOFade(1f, fadeTime);
+        GlobalAudioManager.Instance.FadeOutMusic(fadeTime);
     }
-    void Continue(){
+
+    void Continue()
+    {
         Background_001.SetActive(false);
         Background_002.SetActive(true);
         Options.SetActive(false);
         ContinuePane.SetActive(true);
     }
-    void Setting(){
+
+    void Setting()
+    {
         Background_001.SetActive(false);
         Background_002.SetActive(true);
         Options.SetActive(false);
         SettingPane.SetActive(true);
     }
-    public void BackToTitle(){
-        Debug.Log("111");
+
+    public void BackToTitle()
+    {
+        Debug.Log("BackToTitle");
         Background_001.SetActive(true);
         Background_002.SetActive(false);
         Options.SetActive(true);
         SettingPane.SetActive(false);
         ContinuePane.SetActive(false);
     }
-    IEnumerator Cutscene(){
-        yield return new WaitForSeconds(160f*Time.deltaTime);
-        print("GameStart");
+
+    IEnumerator Cutscene()
+    {
+        yield return new WaitForSeconds(160f * Time.deltaTime);
+        Debug.Log("GameStart");
         SceneManager.LoadScene("Stage1");
     }
 }
-
-    

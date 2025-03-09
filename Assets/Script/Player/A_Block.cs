@@ -5,20 +5,45 @@ using UnityEngine;
 public class A_Block : MonoBehaviour
 {
     public GameObject B_BlockPrefab;
+    public GameObject E_BlockPrefab;
     public int OnCollisionTimes = 0;
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.gameObject.layer == LayerMask.NameToLayer("Ball"))
         {
-            if(OnCollisionTimes == 1){
-                Instantiate(B_BlockPrefab, transform.position, Quaternion.identity);
+            if (OnCollisionTimes == 1)
+            {
+                bool dropEBlock = false;
+                GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
+                if (playerObj != null)
+                {
+                    PlayerController pc = playerObj.GetComponent<PlayerController>();
+                   //玩家血量低於50
+                   if (pc.life < 50)
+                   {
+                      //1/3掉Ecube
+                      if (Random.value < (1f / 3f))
+                      {
+                        dropEBlock = true;
+                      }
+                   }
+                }
+                if (dropEBlock)
+                {
+                    Instantiate(E_BlockPrefab, transform.position, Quaternion.identity);
+                }
+                else
+                {
+                    Instantiate(B_BlockPrefab, transform.position, Quaternion.identity);
+                }
+
                 Rigidbody2D ballRb = collision.rigidbody;
 
                 ContactPoint2D contact = collision.contacts[0];
                 Vector2 collisionPoint = contact.point;
-                Vector2 bulletPosition = transform.position;
-                Vector2 collisionDirection = (collisionPoint - bulletPosition).normalized;
+                Vector2 blockPosition = transform.position;
+                Vector2 collisionDirection = (collisionPoint - blockPosition).normalized;
 
                 float angle = Mathf.Atan2(collisionDirection.y, collisionDirection.x) * Mathf.Rad2Deg;
                 float horizontalFactor = Mathf.Abs(Mathf.Sin(angle * Mathf.Deg2Rad));
@@ -30,7 +55,6 @@ public class A_Block : MonoBehaviour
 
                 float ballSpeed = ballRb.velocity.magnitude;
                 float minSpeed = 3.0f;
-
                 if (ballSpeed < minSpeed)
                 {
                     ballSpeed = minSpeed;
@@ -41,10 +65,10 @@ public class A_Block : MonoBehaviour
                 ballRb.angularVelocity = angularForce;
                 Destroy(gameObject);
             }
-            else{
+            else
+            {
                 OnCollisionTimes = 1;
-                GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("A_Block_Broke");;
-                
+                GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("A_Block_Broke");
             }
         }
     }

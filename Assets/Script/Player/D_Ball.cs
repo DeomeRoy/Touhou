@@ -31,10 +31,7 @@ public class D_Ball : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             PlayerController player = other.GetComponent<PlayerController>();
-            if (player != null)
-            {
-                player.LoseLife(); 
-            }
+            player.LoseLife(); 
             Destroy(gameObject);
         }
         else if (other.CompareTag("Wall"))

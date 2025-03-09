@@ -29,12 +29,8 @@ public class B_Block : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             PlayerController player = other.GetComponent<PlayerController>();
-            if (player != null) 
-            {
-                player.score += 1;
-                player.GetScore();
-                Debug.Log("score" + player.score);
-            }
+            player.score += 10;
+            player.GetScore();
             Destroy(gameObject);
         }
         else if (other.CompareTag("Wall"))

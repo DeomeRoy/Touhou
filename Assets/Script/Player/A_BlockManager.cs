@@ -4,14 +4,15 @@ using UnityEngine;
 
 public class A_BlockManager : MonoBehaviour
 {
-    public GameObject B_BlockPrefab; 
+    public GameObject B_BlockPrefab;
+    public GameObject E_BlockPrefab;
 
     public string blockTag = "A_Block";
     public string blockLayer = "A_Block";
 
     void Start()
     {
-        GetComponent<SpriteRenderer>().enabled = false; 
+        GetComponent<SpriteRenderer>().enabled = false;
 
         foreach (Transform child in transform)
         {
@@ -24,6 +25,10 @@ public class A_BlockManager : MonoBehaviour
             if (aBlock.B_BlockPrefab == null)
             {
                 aBlock.B_BlockPrefab = B_BlockPrefab;
+            }
+            if (aBlock.E_BlockPrefab == null)
+            {
+                aBlock.E_BlockPrefab = E_BlockPrefab;
             }
             child.gameObject.tag = blockTag;
             child.gameObject.layer = LayerMask.NameToLayer(blockLayer);

@@ -8,7 +8,7 @@ public class BallBehavior : MonoBehaviour
     public bool hasLaunched = false;
     public float launchForce = 10f;    
     public float launchYPosition = 2f; 
-    private GameObject player;        
+    private GameObject player;  
 
     public void Start()
     {
@@ -24,7 +24,7 @@ public class BallBehavior : MonoBehaviour
             transform.position = new Vector2(player.transform.position.x, player.transform.position.y - launchYPosition);
         }
 
-        if (!hasLaunched && Input.GetKeyDown(KeyCode.X))
+        if (!hasLaunched && Input.GetKeyDown(KeyCode.X) && player.GetComponent<PlayerController>().controlEnabled)
         {
             transform.position = new Vector2(player.transform.position.x, player.transform.position.y - launchYPosition);
             GetComponent<SpriteRenderer>().enabled = true;

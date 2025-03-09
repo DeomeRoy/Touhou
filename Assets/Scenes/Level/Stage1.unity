@@ -815,6 +815,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   B_BlockPrefab: {fileID: 484334599547172165, guid: 166f0f668a07c1b46ac6f96cc0053905, type: 3}
+  E_BlockPrefab: {fileID: 484334599547172165, guid: b734b816b385cf8498d4c8d3358300a1, type: 3}
   blockTag: A_Block
   blockLayer: A_Block
 --- !u!50 &281199013
@@ -4207,6 +4208,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   B_BlockPrefab: {fileID: 484334599547172165, guid: 166f0f668a07c1b46ac6f96cc0053905, type: 3}
+  E_BlockPrefab: {fileID: 484334599547172165, guid: b734b816b385cf8498d4c8d3358300a1, type: 3}
   blockTag: A_Block
   blockLayer: A_Block
 --- !u!50 &956830654
@@ -5276,6 +5278,7 @@ GameObject:
   - component: {fileID: 1175098145}
   - component: {fileID: 1175098144}
   - component: {fileID: 1175098143}
+  - component: {fileID: 1175098147}
   - component: {fileID: 1175098142}
   - component: {fileID: 1175098146}
   m_Layer: 9
@@ -5369,11 +5372,17 @@ MonoBehaviour:
   boom_flag: 0
   slide_l_or_r: 0
   bullet_exists: 0
+  controlEnabled: 1
   playermove: 9
   playerslide: 27
   score: 0
   life: 0
+  invincibilitytime: 0.5
+  strikeForceMultiplier: 11
+  angleRangeModifier: 1
+  angularForceMultiplier: 8
   idleSprite: {fileID: 21300000, guid: a462e7111a9a978408813c9c76ba0d6c, type: 3}
+  deadSprite: {fileID: 21300000, guid: 0b9a36face0f42e47a50a683090beb0b, type: 3}
   walkSprites:
   - {fileID: 21300000, guid: 4905b1e9f19fef646a0eea78a236faea, type: 3}
   - {fileID: 21300000, guid: d8b81a4a291f45c49bb220841a5acebe, type: 3}
@@ -5391,11 +5400,13 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 0b9a36face0f42e47a50a683090beb0b, type: 3}
   - {fileID: 21300000, guid: b0cc44af42186744fb566fe66fd0743b, type: 3}
   idleSize: {x: 1.32, y: 1.23}
+  deadSize: {x: 1, y: 1}
   walkSize: {x: 1.32, y: 1.23}
   attackSize: {x: 1.32, y: 1.23}
   slideSize: {x: 1.32, y: 1.23}
   bulletSize: {x: 1.32, y: 1.23}
   idleOffset: {x: 0, y: 1.66}
+  deadOffset: {x: 0, y: 0}
   walkOffset: {x: 0, y: 1.66}
   attackOffset: {x: 0, y: 1.66}
   slideOffset: {x: 0, y: 1.66}
@@ -5466,6 +5477,51 @@ PolygonCollider2D:
       - {x: 11.132451, y: -7.701405}
       - {x: -0.7320057, y: 3.6875584}
   m_UseDelaunayMesh: 0
+--- !u!61 &1175098147
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1175098141}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0.7}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0, y: 0}
+    oldSize: {x: 0, y: 0}
+    newSize: {x: 0, y: 0}
+    adaptiveTilingThreshold: 0
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  serializedVersion: 2
+  m_Size: {x: 6.7, y: 16.07}
+  m_EdgeRadius: 0
 --- !u!1 &1181591956
 GameObject:
   m_ObjectHideFlags: 0
@@ -6963,6 +7019,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   B_BlockPrefab: {fileID: 484334599547172165, guid: 166f0f668a07c1b46ac6f96cc0053905, type: 3}
+  E_BlockPrefab: {fileID: 484334599547172165, guid: b734b816b385cf8498d4c8d3358300a1, type: 3}
   blockTag: A_Block
   blockLayer: A_Block
 --- !u!50 &1450754903
@@ -10534,7 +10591,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!61 &1969140248
 BoxCollider2D:
   m_ObjectHideFlags: 0
