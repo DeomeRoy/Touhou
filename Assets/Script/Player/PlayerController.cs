@@ -30,8 +30,9 @@ public class PlayerController : MonoBehaviour
     public float playerslide = 27.0f;
     public int score;
     public int life;
-    private bool invincible = false;
+    public bool invincible = false;
     public float invincibilitytime = 0.5f;
+    public bool die = false;
     private SpriteRenderer spriteRenderer;
     private Color originalColor;
     private Rigidbody2D rb;
@@ -115,6 +116,15 @@ public class PlayerController : MonoBehaviour
             bullet_attack_cnt += Time.deltaTime;
             boom_attack_cnt += Time.deltaTime;
             bool hasLaunched = ballScript != null && ballScript.hasLaunched;
+
+            if (die)
+            {
+                SetSprite(deadSprite, deadSize, deadOffset);
+                controlEnabled = false; //禁用行動
+                invincible = true;
+                walkTimer = 0;
+                rb.velocity = Vector2.zero;
+            }
 
             if (attack_cnt >= attack_time)
             {
@@ -246,16 +256,6 @@ public class PlayerController : MonoBehaviour
                     GetScore();
                 }
 
-
-                if (!slide_attack_flag && !attack_flag && !bullet_flag)
-                {
-                    if (!Input.GetKey(KeyCode.LeftArrow) && !Input.GetKey(KeyCode.RightArrow))
-                    {
-                        walkTimer = 0;
-                        rb.velocity = Vector2.zero;
-                    }
-                }
-
                 if (bullet_flag)
                 {
                     int frame = Mathf.FloorToInt((bullet_attack_cnt / bullet_attack_time) * bulletSprites.Length);
@@ -282,27 +282,29 @@ public class PlayerController : MonoBehaviour
                 }
                 else
                 {
+                    walkTimer = 0;
+                    rb.velocity = Vector2.zero;
                     SetSprite(idleSprite, idleSize, idleOffset);
                 }
+            }
 
-                if (slide_attack_flag == true)
-                {
-                    CircleCollider.enabled = false;
-                    BoxCollider.enabled = false;
-                    PolygonCollider.enabled = true;
-                }
-                else if (attack_flag == true)
-                {
-                    CircleCollider.enabled = true;
-                    BoxCollider.enabled = false;
-                    PolygonCollider.enabled = false;
-                }
-                else
-                {
-                    CircleCollider.enabled = false;
-                    BoxCollider.enabled = true;
-                    PolygonCollider.enabled = false;
-                }
+            if (slide_attack_flag == true)
+            {
+                CircleCollider.enabled = false;
+                BoxCollider.enabled = false;
+                PolygonCollider.enabled = true;
+            }
+            else if (attack_flag == true)
+            {
+                CircleCollider.enabled = true;
+                BoxCollider.enabled = false;
+                PolygonCollider.enabled = false;
+            }
+            else
+            {
+                CircleCollider.enabled = false;
+                BoxCollider.enabled = true;
+                PolygonCollider.enabled = false;
             }
 
             switch (level)
@@ -436,18 +438,22 @@ public class PlayerController : MonoBehaviour
         if (invincible)
             return;
 
-        life -= 5;
-        HP.GetComponent<HP>().HP_Change(life);
-        Debug.Log(life);
-        GlobalAudioManager.Instance.PlayDamageSound();//音效
+        if (life > 0)
+        {
+            life -= 5;
+            HP.GetComponent<HP>().HP_Change(life);
+            Debug.Log(life);
+            GlobalAudioManager.Instance.PlayDamageSound();//音效
+            StartCoroutine(InvincibilityCoroutine());
+        }
+        
         if (life <= 0)
         {
+            HP.GetComponent<HP>().HP_Change(life);
+            die = true;
             Debug.Log("die");
-            controlEnabled = false; //禁用行動
-            SetSprite(deadSprite, deadSize, deadOffset);//死亡圖片
             //Time.timeScale = 0;
         }
-        StartCoroutine(InvincibilityCoroutine());
     }
 
     IEnumerator InvincibilityCoroutine()//無敵時間
