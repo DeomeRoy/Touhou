@@ -5,10 +5,23 @@ public class GlobalAudioManager : MonoBehaviour
 {
     public static GlobalAudioManager Instance;
 
-    public AudioClip damageSound;
-    public AudioClip explosionSound;
     public AudioClip buttonSound;
-    public AudioClip attackSound;
+    public AudioClip runSound;
+    public AudioClip attackSound;    
+    public AudioClip slideSound;
+    public AudioClip bulletSound;
+    public AudioClip explosionSound;
+    public AudioClip addhp;
+    public AudioClip addmp;
+    public AudioClip damageSound;
+    public AudioClip extraHitSound1;
+    public AudioClip extraHitSound2;
+    public AudioClip deadSound;
+
+    public AudioClip blockfireSound;
+    public AudioClip balltoblockSound;
+    public AudioClip balltowallSound;
+
     public AudioClip mainMenuMusic;
     public AudioClip stage1Music;
     public AudioClip stage2Music;
@@ -19,7 +32,8 @@ public class GlobalAudioManager : MonoBehaviour
 
     // 多音效使用
     private AudioSource sfxSource;
-
+    private AudioSource runAudioSource;
+    private AudioSource slideAudioSource;
     public AudioSource musicSource1;
     public AudioSource musicSource2;
     private AudioSource activeMusicSource;
@@ -27,16 +41,29 @@ public class GlobalAudioManager : MonoBehaviour
     public float defaultFadeDuration = 2.0f;
 
     // 個別音量控制
+
+    public float buttonVolume = 1f;
+    public float runVolume = 1f;
+    public float attackVolume = 1f;
+    public float slideVolume = 1f;
+    public float bulletVolume = 1f;
+    public float explosionVolume = 1f;
+    public float addhpVolume = 1f;
+    public float addmpVolume = 1f;
+    public float damageVolume = 1f;
+    public float extraHitVolume1 = 1f;
+    public float extraHitVolume2 = 1f;
+    public float deadVolume = 1f;
+
+    public float blockfireVolume = 1f;
+    public float balltoblockVolume = 1f;
+    public float balltowallVolume = 1f;
+
     public float mainMenuVolume = 1f;
     public float stage1Volume = 0.8f;
     public float stage2Volume = 0.8f;
     public float stage3Volume = 0.8f;
     public float bossVolume = 1f;
-    public float damageVolume = 1f;
-    public float explosionVolume = 1f;
-    public float buttonVolume = 1f;
-    public float attackVolume = 1f;
-
 
     void Awake()
     {
@@ -50,6 +77,14 @@ public class GlobalAudioManager : MonoBehaviour
             Destroy(gameObject);
             return;
         }
+
+        sfxSource = gameObject.AddComponent<AudioSource>();
+
+        runAudioSource = gameObject.AddComponent<AudioSource>();
+        runAudioSource.loop = true;
+
+        slideAudioSource = gameObject.AddComponent<AudioSource>();
+        slideAudioSource.loop = false;
 
         if (PlayerPrefs.HasKey("GlobalVolume"))
             globalVolume = PlayerPrefs.GetFloat("GlobalVolume");
@@ -72,24 +107,99 @@ public class GlobalAudioManager : MonoBehaviour
         PlayerPrefs.SetFloat("GlobalVolume", value);
     }
 
-    public void PlayDamageSound(float volumeScale = 1f)
-    {
-            sfxSource.PlayOneShot(damageSound, damageVolume * volumeScale);
-    }
-
-    public void PlayExplosionSound(float volumeScale = 1f)
-    {
-            sfxSource.PlayOneShot(explosionSound, explosionVolume * volumeScale);
-    }
-
     public void PlayButtonSound(float volumeScale = 1f)
     {
         sfxSource.PlayOneShot(buttonSound, buttonVolume * volumeScale);
     }
 
+    public void StartRunSound(float volumeScale = 1f)
+    {
+        if (!runAudioSource.isPlaying)
+        {
+            runAudioSource.clip = runSound;
+            runAudioSource.volume = runVolume * volumeScale;
+            runAudioSource.Play();
+        }
+    }
+
+    public void StopRunSound()
+    {
+        if (runAudioSource.isPlaying)
+        {
+            runAudioSource.Stop();
+        }
+    }
+
+    public void PlaySlideSoundOnce(float volumeScale = 1f)
+    {
+        if (slideAudioSource.isPlaying)
+        {
+            slideAudioSource.Stop();
+        }
+        slideAudioSource.clip = slideSound;
+        slideAudioSource.volume = slideVolume * volumeScale;
+        slideAudioSource.Play();
+    }
+
     public void PlayAttackSound(float volumeScale = 1f)
     {
         sfxSource.PlayOneShot(attackSound, attackVolume * volumeScale);
+    }
+
+    public void PlayBulletSound(float volumeScale = 1f)
+    {
+        sfxSource.PlayOneShot(bulletSound, bulletVolume * volumeScale);
+    }
+
+    public void PlayExplosionSound(float volumeScale = 1f)
+    {
+        sfxSource.PlayOneShot(explosionSound, explosionVolume * volumeScale);
+    }
+
+    public void PlayAddHpSound(float volumeScale = 1f)
+    {
+        sfxSource.PlayOneShot(addhp, addhpVolume * volumeScale);
+    }
+
+    public void PlayAddMpSound(float volumeScale = 1f)
+    {
+        sfxSource.PlayOneShot(addmp, addmpVolume * volumeScale);
+    }
+
+    public void PlayDamageSound(float volumeScale = 1f)
+    {
+        sfxSource.PlayOneShot(damageSound, damageVolume * volumeScale);
+    }
+
+    public void PlayExtraHitSound1(float volumeScale = 1f)
+    {
+        sfxSource.PlayOneShot(extraHitSound1, extraHitVolume1 * volumeScale);
+    }
+
+    public void PlayExtraHitSound2(float volumeScale = 1f)
+    {
+        sfxSource.PlayOneShot(extraHitSound2, extraHitVolume2 * volumeScale);
+    }
+
+    public void PlayDeadSound(float volumeScale = 1f)
+    {
+        sfxSource.PlayOneShot(deadSound, deadVolume * volumeScale);
+    }
+
+    //方塊音效
+    public void PlayBlockFireSound(float volumeScale = 1f)
+    {
+        sfxSource.PlayOneShot(blockfireSound, blockfireVolume * volumeScale);
+    }
+
+    public void PlayBallToBlockSound(float volumeScale = 1f)
+    {
+        sfxSource.PlayOneShot(balltoblockSound, balltoblockVolume * volumeScale);
+    }
+
+    public void PlayBallToWallSound(float volumeScale = 1f)
+    {
+        sfxSource.PlayOneShot(balltowallSound, balltowallVolume * volumeScale);
     }
 
     public void PlayMainMenuMusic()

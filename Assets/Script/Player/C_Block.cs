@@ -12,6 +12,7 @@ public class C_Block : MonoBehaviour
     {
         if (collision.gameObject.layer == LayerMask.NameToLayer("Ball"))
         {
+            GlobalAudioManager.Instance.PlayBallToBlockSound();
             GameObject spawner = new GameObject("D_BallSpawner");
             D_BallSpawner ballSpawnerScript = spawner.AddComponent<D_BallSpawner>();
             ballSpawnerScript.Initialize(D_BallPrefab, transform.position, numBalls, delayBetweenBalls);

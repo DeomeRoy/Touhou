@@ -17,7 +17,7 @@ public class PlayerController : MonoBehaviour
     public bool controlEnabled = true;
 
     float attack_time = 0.3f;
-    float slide_attack_time = 0.15f;
+    float slide_attack_time = 0.3f;
     float bullet_attack_time = 0.3f;
     float boom_attack_time = 0.3f;
     float boom_attack_cool = 5.0f;
@@ -39,6 +39,7 @@ public class PlayerController : MonoBehaviour
     public float strikeForceMultiplier = 25.0f;
     public float angleRangeModifier = 1.0f;
     public float angularForceMultiplier = 8.0f;
+    private float lastExtraHit2Time = 10f;
 
     public Sprite idleSprite;
     public Sprite deadSprite;
@@ -46,6 +47,7 @@ public class PlayerController : MonoBehaviour
     public Sprite[] attackSprites;
     public Sprite[] bulletSprites;
     public Sprite[] slideSprites;
+    public Sprite[] transitionRunSprites;
 
     public Vector2 idleSize = Vector2.one;
     public Vector2 deadSize = Vector2.one;
@@ -53,6 +55,7 @@ public class PlayerController : MonoBehaviour
     public Vector2 attackSize = Vector2.one;
     public Vector2 slideSize = Vector2.one;
     public Vector2 bulletSize = Vector2.one;
+    public Vector2 transitionRunSize = Vector2.one;
 
     public Vector2 idleOffset = Vector2.zero;
     public Vector2 deadOffset = Vector2.zero;
@@ -60,9 +63,11 @@ public class PlayerController : MonoBehaviour
     public Vector2 attackOffset = Vector2.zero;
     public Vector2 slideOffset = Vector2.zero;
     public Vector2 bulletOffset = Vector2.zero;
+    public Vector2 transitionRunOffset = Vector2.zero;
 
     private float walkTimer = 0.0f;
     public float walkswitch = 0.25f;
+    public float transitionSwitch = 0.15f;
 
     private CircleCollider2D CircleCollider;
     private PolygonCollider2D PolygonCollider;
@@ -156,7 +161,7 @@ public class PlayerController : MonoBehaviour
                         bullet_flag = true;
                         bullet_exists = true;
                         bullet_attack_cnt = 0.0f;
-                        GlobalAudioManager.Instance.PlayAttackSound();
+                        GlobalAudioManager.Instance.PlayBulletSound();
                         if (bulletPrefab != null)
                         {
                             Instantiate(bulletPrefab, transform.position, Quaternion.identity);
@@ -173,6 +178,7 @@ public class PlayerController : MonoBehaviour
                                 slide_attack_flag = true;
                                 slide_attack_cnt = 0.0f;
                                 spriteRenderer.flipX = true;
+                                GlobalAudioManager.Instance.PlaySlideSoundOnce();
                                 FlipCollider(1);
                             }
                             else if (!attack_flag)
@@ -196,6 +202,7 @@ public class PlayerController : MonoBehaviour
                                 slide_attack_flag = true;
                                 slide_attack_cnt = 0.0f;
                                 spriteRenderer.flipX = false;
+                                GlobalAudioManager.Instance.PlaySlideSoundOnce();
                                 FlipCollider(0);
                             }
                             else if (!attack_flag)
@@ -244,6 +251,7 @@ public class PlayerController : MonoBehaviour
                     boom_flag = true;
                     boom_attack_cnt = 0.0f;
                     GameObject[] balls = GameObject.FindGameObjectsWithTag("Ball");
+                    GlobalAudioManager.Instance.PlayExplosionSound();
                     foreach (GameObject ball in balls)
                     {
                         if (BOOM != null)
@@ -260,30 +268,35 @@ public class PlayerController : MonoBehaviour
                 {
                     int frame = Mathf.FloorToInt((bullet_attack_cnt / bullet_attack_time) * bulletSprites.Length);
                     if (frame >= bulletSprites.Length) frame = bulletSprites.Length - 1;
+                    GlobalAudioManager.Instance.StopRunSound();                  
                     SetSprite(bulletSprites[frame], bulletSize, bulletOffset);
                 }
                 else if (slide_attack_flag)
                 {
                     int frame = Mathf.FloorToInt((slide_attack_cnt / slide_attack_time) * slideSprites.Length);
                     if (frame >= slideSprites.Length) frame = slideSprites.Length - 1;
+                    GlobalAudioManager.Instance.StopRunSound();
                     SetSprite(slideSprites[frame], slideSize, slideOffset);
                 }
                 else if (attack_flag)
                 {
                     int frame = Mathf.FloorToInt((attack_cnt / attack_time) * attackSprites.Length);
                     if (frame >= attackSprites.Length) frame = attackSprites.Length - 1;
+                    GlobalAudioManager.Instance.StopRunSound();
                     SetSprite(attackSprites[frame], attackSize, attackOffset);
                 }
                 else if (Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.RightArrow))
                 {
                     int cycle = ((int)(walkTimer / walkswitch)) % 4;
                     int index = (cycle == 3) ? 1 : cycle;
+                    GlobalAudioManager.Instance.StartRunSound();
                     SetSprite(walkSprites[index], walkSize, walkOffset);
                 }
                 else
                 {
                     walkTimer = 0;
                     rb.velocity = Vector2.zero;
+                    GlobalAudioManager.Instance.StopRunSound();
                     SetSprite(idleSprite, idleSize, idleOffset);
                 }
             }
@@ -319,6 +332,7 @@ public class PlayerController : MonoBehaviour
                     {
                         CheakPosition = false;
                         PlayerController player = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
+                        GlobalAudioManager.Instance.StopRunSound();
                         player.controlEnabled = true;//啟用行動
                     }
                     break;
@@ -332,6 +346,7 @@ public class PlayerController : MonoBehaviour
                     {
                         CheakPosition = false;
                         PlayerController player = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
+                        GlobalAudioManager.Instance.StopRunSound();
                         player.controlEnabled = true;//啟用行動
                     }
                     break;
@@ -345,6 +360,7 @@ public class PlayerController : MonoBehaviour
                     {
                         CheakPosition = false;
                         PlayerController player = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
+                        GlobalAudioManager.Instance.StopRunSound();
                         player.controlEnabled = true;//啟用行動
                     }
                     break;
@@ -443,14 +459,42 @@ public class PlayerController : MonoBehaviour
             life -= 5;
             HP.GetComponent<HP>().HP_Change(life);
             Debug.Log(life);
-            GlobalAudioManager.Instance.PlayDamageSound();//音效
-            StartCoroutine(InvincibilityCoroutine());
+            GlobalAudioManager.Instance.PlayDamageSound();
+
+            if (life < 50 && life > 25){
+                if (life == 45){
+                    GlobalAudioManager.Instance.PlayExtraHitSound1();
+                }
+                else if (Random.value < (2f / 3f)){
+                    GlobalAudioManager.Instance.PlayExtraHitSound1();
+                }
+            }
+            else if (life <= 25){
+                if (life == 25)
+                {
+                    GlobalAudioManager.Instance.PlayExtraHitSound2();
+                }
+                else if ((Time.time - lastExtraHit2Time < 2.5f)){
+                    if (Random.value < 0.75f){
+                        GlobalAudioManager.Instance.PlayExtraHitSound2();
+                    }
+                }
+                else{
+                    if (Random.value < 0.75f){
+                        GlobalAudioManager.Instance.PlayExtraHitSound1();
+                        lastExtraHit2Time = Time.time;
+                    }
+                }
+            }
+                StartCoroutine(InvincibilityCoroutine());
         }
         
         if (life <= 0)
         {
             HP.GetComponent<HP>().HP_Change(life);
             die = true;
+            GlobalAudioManager.Instance.StopRunSound();
+            GlobalAudioManager.Instance.PlayDeadSound();//音效
             Debug.Log("die");
             //Time.timeScale = 0;
         }
@@ -510,7 +554,8 @@ public class PlayerController : MonoBehaviour
 
     public IEnumerator AutoMoveToZero()//移動到x=0
     {
-        GameObject.Find("Ball").GetComponent<BallBehavior>().LevelChanging();//球清除
+        GameObject.Find("Ball").GetComponent<BallBehavior>().LevelChanging();
+        GlobalAudioManager.Instance.StartRunSound();
         while (Mathf.Abs(transform.position.x) > 0.1f)
         {
             float direction = transform.position.x > 0 ? -1f : 1f;
@@ -528,8 +573,20 @@ public class PlayerController : MonoBehaviour
             SetSprite(walkSprites[index], walkSize, walkOffset);
             yield return null;
         }
+
         rb.velocity = Vector2.zero;
+        float transitionTimer = 0f;
+        while (!controlEnabled)
+        {
+            transitionTimer += Time.deltaTime;
+            int runIndex = (int)(transitionTimer / transitionSwitch) % 3;
+            SetSprite(transitionRunSprites[runIndex], transitionRunSize, transitionRunOffset);
+            yield return null;
+        }
+
         SetSprite(idleSprite, idleSize, idleOffset);
         yield break;
     }
+
+
 }

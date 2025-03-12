@@ -12,6 +12,7 @@ public class A_Block : MonoBehaviour
     {
         if (collision.gameObject.layer == LayerMask.NameToLayer("Ball"))
         {
+            GlobalAudioManager.Instance.PlayBallToBlockSound();
             if (OnCollisionTimes == 1)
             {
                 bool dropEBlock = false;

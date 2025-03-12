@@ -37,4 +37,12 @@ public class BallBehavior : MonoBehaviour
         GetComponent<SpriteRenderer>().enabled = false;
         hasLaunched = false;
     }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.CompareTag("Wall"))
+        {
+            GlobalAudioManager.Instance.PlayBallToWallSound();
+        }
+    }
 }

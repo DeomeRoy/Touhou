@@ -22,6 +22,7 @@ public class D_BallSpawner : MonoBehaviour
         for (int i = 0; i < ballsToSpawn; i++)
         {
             Instantiate(ballPrefab, spawnPosition, Quaternion.identity);
+            GlobalAudioManager.Instance.PlayBlockFireSound();
             yield return new WaitForSeconds(delayBetweenBalls);
         }
         Destroy(gameObject);

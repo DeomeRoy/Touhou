@@ -5377,7 +5377,9 @@ MonoBehaviour:
   playerslide: 27
   score: 0
   life: 0
+  invincible: 0
   invincibilitytime: 0.5
+  die: 0
   strikeForceMultiplier: 15
   angleRangeModifier: 1
   angularForceMultiplier: 10
@@ -5399,19 +5401,26 @@ MonoBehaviour:
   slideSprites:
   - {fileID: 21300000, guid: 0b9a36face0f42e47a50a683090beb0b, type: 3}
   - {fileID: 21300000, guid: b0cc44af42186744fb566fe66fd0743b, type: 3}
+  transitionRunSprites:
+  - {fileID: 21300000, guid: 7627ed735ea8d864783005219dc3089c, type: 3}
+  - {fileID: 21300000, guid: 5e48f489f79b0d144a2ae3765cd6626c, type: 3}
+  - {fileID: 21300000, guid: 1ae10871c94417d42ad1748682c1fac0, type: 3}
   idleSize: {x: 1.32, y: 1.23}
-  deadSize: {x: 1, y: 1}
+  deadSize: {x: 1.32, y: 1.23}
   walkSize: {x: 1.32, y: 1.23}
   attackSize: {x: 1.32, y: 1.23}
   slideSize: {x: 1.32, y: 1.23}
   bulletSize: {x: 1.32, y: 1.23}
+  transitionRunSize: {x: 1.32, y: 1.23}
   idleOffset: {x: 0, y: 1.66}
-  deadOffset: {x: 0, y: 0}
+  deadOffset: {x: 0, y: 1.66}
   walkOffset: {x: 0, y: 1.66}
   attackOffset: {x: 0, y: 1.66}
   slideOffset: {x: 0, y: 1.66}
   bulletOffset: {x: 0, y: 1.66}
+  transitionRunOffset: {x: 0, y: 1.66}
   walkswitch: 0.2
+  transitionSwitch: 0.15
 --- !u!4 &1175098145
 Transform:
   m_ObjectHideFlags: 0
@@ -5509,7 +5518,7 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0.7}
+  m_Offset: {x: 0, y: 0.42}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -6546,7 +6555,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.8301887, g: 0.71107316, b: 0.26237094, a: 1}
+  m_Color: {r: 0.3135055, g: 0.83137256, b: 0.26274508, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1

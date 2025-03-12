@@ -583,28 +583,50 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c994400bbcda87b47b5cf6852c1b3476, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damageSound: {fileID: 8300000, guid: 1d5f575186c0d2846aa5018435cf0e58, type: 3}
-  explosionSound: {fileID: 0}
   buttonSound: {fileID: 8300000, guid: 92e314e8e15669c4187d56913cae66aa, type: 3}
+  runSound: {fileID: 8300000, guid: 37fa9e9cf4c36a44fba7e7f1ba75c723, type: 3}
   attackSound: {fileID: 8300000, guid: fcda2467dff8f1f418ad626ed0523e8c, type: 3}
+  slideSound: {fileID: 8300000, guid: 47a709260d1257943bc0d2dc71e33661, type: 3}
+  bulletSound: {fileID: 8300000, guid: c90009d4d4806c642a5da678271080f6, type: 3}
+  explosionSound: {fileID: 8300000, guid: 1d03563271f979246b015ff94b6114ad, type: 3}
+  addhp: {fileID: 8300000, guid: c93034c8963669c46bd605be1e08a7e4, type: 3}
+  addmp: {fileID: 8300000, guid: c93034c8963669c46bd605be1e08a7e4, type: 3}
+  damageSound: {fileID: 8300000, guid: 2c415d68143f10640acbeef73743ce9b, type: 3}
+  extraHitSound1: {fileID: 8300000, guid: 1791e6dd9b30054478fc5e5eef5c4844, type: 3}
+  extraHitSound2: {fileID: 8300000, guid: 5338a0a44abedb04d985e6e0c581ceb2, type: 3}
+  deadSound: {fileID: 8300000, guid: 6a6fd621715378c40bd3a2cab0fa6045, type: 3}
+  blockfireSound: {fileID: 8300000, guid: b45c5d2ef606ab446903ec27c787a91a, type: 3}
+  balltoblockSound: {fileID: 8300000, guid: 1c2f2c1d15cc34542b0dc5926a2f298c, type: 3}
+  balltowallSound: {fileID: 8300000, guid: 523b673d916383d4181fe013434ad866, type: 3}
   mainMenuMusic: {fileID: 8300000, guid: ecf43021d081edc45b78b979d374a851, type: 3}
   stage1Music: {fileID: 8300000, guid: 230491154cf8d494f8add78eb5e9a919, type: 3}
   stage2Music: {fileID: 8300000, guid: 230491154cf8d494f8add78eb5e9a919, type: 3}
   stage3Music: {fileID: 8300000, guid: 230491154cf8d494f8add78eb5e9a919, type: 3}
-  bossMusic: {fileID: 8300000, guid: f7b68d7933a691746b74e4c9943b31ae, type: 3}
+  bossMusic: {fileID: 8300000, guid: 9fa8d7e5ef05ad645a10be80592e115f, type: 3}
   globalVolume: 1
   musicSource1: {fileID: 0}
   musicSource2: {fileID: 0}
   defaultFadeDuration: 2
+  buttonVolume: 0.01
+  runVolume: 0.01
+  attackVolume: 0.01
+  slideVolume: 0.02
+  bulletVolume: 0.01
+  explosionVolume: 0.01
+  addhpVolume: 0.01
+  addmpVolume: 0.01
+  damageVolume: 0.01
+  extraHitVolume1: 0.01
+  extraHitVolume2: 0.005
+  deadVolume: 0.01
+  blockfireVolume: 0.01
+  balltoblockVolume: 0.01
+  balltowallVolume: 0.01
   mainMenuVolume: 0.01
   stage1Volume: 0.005
   stage2Volume: 0.005
   stage3Volume: 0.005
-  bossVolume: 0.01
-  damageVolume: 0.03
-  explosionVolume: 0.01
-  buttonVolume: 0.01
-  attackVolume: 0.01
+  bossVolume: 0.015
 --- !u!114 &177713139
 MonoBehaviour:
   m_ObjectHideFlags: 0

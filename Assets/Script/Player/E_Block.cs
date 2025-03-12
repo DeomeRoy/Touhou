@@ -30,6 +30,7 @@ public class E_Block : MonoBehaviour
             PlayerController player = other.GetComponent<PlayerController>();
             player.life += 25;
             player.HP.GetComponent<HP>().HP_Change(player.life);
+            GlobalAudioManager.Instance.PlayAddHpSound();
             Destroy(gameObject);
         }
         else if (other.CompareTag("Wall"))

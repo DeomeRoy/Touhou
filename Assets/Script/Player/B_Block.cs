@@ -31,6 +31,7 @@ public class B_Block : MonoBehaviour
             PlayerController player = other.GetComponent<PlayerController>();
             player.score += 10;
             player.GetScore();
+            GlobalAudioManager.Instance.PlayAddMpSound();
             Destroy(gameObject);
         }
         else if (other.CompareTag("Wall"))
