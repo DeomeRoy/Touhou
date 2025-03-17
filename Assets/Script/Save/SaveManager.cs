@@ -91,12 +91,12 @@ public class SaveManager : MonoBehaviour
                     {
                         data = new GameSaveData();
                         data.sceneName = reader["sceneName"].ToString();
-                        //data.masterCase = int.Parse(reader["masterCase"].ToString());
-                        data.masterCase = 3;
-                        //data.playerHP = int.Parse(reader["playerHP"].ToString());
-                        data.playerHP = 100;
-                        //data.playerMP = int.Parse(reader["playerMP"].ToString());
-                        data.playerMP = 100;
+                        data.masterCase = int.Parse(reader["masterCase"].ToString());
+                        //data.masterCase = 3;
+                        data.playerHP = int.Parse(reader["playerHP"].ToString());
+                        //data.playerHP = 100;
+                        data.playerMP = int.Parse(reader["playerMP"].ToString());
+                        //data.playerMP = 100;
                     }
                     reader.Close();
                 }
