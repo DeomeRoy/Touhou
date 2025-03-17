@@ -6,4 +6,5 @@ public class StorySequence
 {
     public string storyID;//儲存劇情的ID
     public StoryStep[] steps;//這段劇情的所有步驟
+    public bool autoLoadNextScene;
 }

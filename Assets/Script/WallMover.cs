@@ -8,17 +8,17 @@ public class WallMover : MonoBehaviour
     public Transform wall1_2, wall1_3, wall1_X;
     public float speed = 2.0f;
     private Vector3 targetPosition;
-    private int Level;
+    public int Level;
 
     void Start()
     {
         Level = 1;
-
         //讀檔
         GameSaveData saveData = SaveManager.Instance.LoadGame();
         if (GameManager.isContinue && saveData != null && saveData.sceneName == SceneManager.GetActiveScene().name)
         {
             int savedCase = saveData.masterCase;
+            FindObjectOfType<LevelImageFader>().FadeForLevel(savedCase);
             switch (savedCase)
             {
                 case 2:
@@ -63,12 +63,9 @@ public class WallMover : MonoBehaviour
     public void LevelPush()
     {
         Level += 1;
-        if (Level == 4)
+        FindObjectOfType<LevelImageFader>().FadeForLevel(Level);
+        if (Level == 4)//僅限case4的存檔功能，如有需要可以移除判斷讓其他case也能存檔
         {
-            float totalTransitionTime = Vector3.Distance(transform.position, wall1_X.position) / speed;
-
-            StartCoroutine(TriggerStoryByDistance(totalTransitionTime));//先淡出，再進劇情or Boss
-
             //存檔
             GameSaveData data = new GameSaveData();
             data.sceneName = SceneManager.GetActiveScene().name;
@@ -79,6 +76,11 @@ public class WallMover : MonoBehaviour
             data.playerMP = player.score;
 
             SaveManager.Instance.SaveGame(data);
+        }
+        if (Level == 4)
+        {
+            float totalTransitionTime = Vector3.Distance(transform.position, wall1_X.position) / speed;
+            StartCoroutine(TriggerStoryByDistance(totalTransitionTime));//先淡出，再進劇情or Boss
         }
     }
 

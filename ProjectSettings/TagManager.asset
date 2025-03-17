@@ -15,6 +15,7 @@ TagManager:
   - Ball
   - Fake_Wall
   - E_Block
+  - D_Ball_Spawner
   layers:
   - Default
   - TransparentFX

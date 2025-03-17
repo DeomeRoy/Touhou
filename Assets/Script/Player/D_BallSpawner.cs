@@ -8,6 +8,11 @@ public class D_BallSpawner : MonoBehaviour
     private int ballsToSpawn;
     private float delayBetweenBalls;
 
+    void Awake()
+    {
+        gameObject.tag = "D_Ball_Spawner";
+    }
+
     public void Initialize(GameObject prefab, Vector2 position, int count, float delay)
     {
         ballPrefab = prefab;

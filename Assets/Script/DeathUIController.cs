@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using System.Collections;
+using DG.Tweening;
 
 public class DeathUIController : MonoBehaviour
 {
@@ -9,7 +10,7 @@ public class DeathUIController : MonoBehaviour
     public Button mainMenuButton;
     public Button continueButton;
 
-    public float fadeDuration = 1.5f;
+    public float fadeDuration = 2.5f;
     public CanvasGroup fadeCanvasGroup;
 
     void Start()
@@ -34,31 +35,13 @@ public class DeathUIController : MonoBehaviour
 
     private IEnumerator FadeOutAndLoadScene(string sceneName)
     {
-        fadeCanvasGroup = TitleSceneController.Instance.CutscenePanel;
-        AudioSource musicSource = GlobalAudioManager.Instance.musicSource1;
-        yield return StartCoroutine(CombinedFadeOut(fadeCanvasGroup, musicSource, fadeDuration));
-        SceneManager.LoadScene(sceneName);
-    }
+        GameObject obj = GameObject.Find("CutscenePanel");
+        CanvasGroup cg = obj.GetComponent<CanvasGroup>();
 
-    public IEnumerator CombinedFadeOut(CanvasGroup cg, AudioSource source, float duration)
-    {
-        if (cg == null || source == null)
-        {
-            yield break;
-        }
-        float startAlpha = cg.alpha;
-        float startVol = source.volume;
-        float t = 0f;
-        while (t < duration)
-        {
-            t += Time.deltaTime;
-            float factor = t / duration;
-            cg.alpha = Mathf.Lerp(startAlpha, 1f, factor);
-            source.volume = Mathf.Lerp(startVol, 0f, factor);
-            yield return null;
-        }
-        cg.alpha = 1f;
-        source.volume = 0f;
-        source.Stop();
+        cg.blocksRaycasts = true;
+        cg.DOFade(1f, fadeDuration);
+        GlobalAudioManager.Instance.FadeOutMusic(fadeDuration);
+        yield return new WaitForSeconds(fadeDuration);
+        SceneManager.LoadScene(sceneName);
     }
 }

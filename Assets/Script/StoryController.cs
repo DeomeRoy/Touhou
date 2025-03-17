@@ -4,6 +4,8 @@ using TMPro;
 using System.Collections;
 using System.Linq;
 using System.Collections.Generic;
+using UnityEngine.SceneManagement;
+using DG.Tweening;
 
 public class StoryController : MonoBehaviour
 {
@@ -41,6 +43,7 @@ public class StoryController : MonoBehaviour
 
     private float fadeDuration = 0.2f;//角色在劇情淡入淡出的時間
     private float moveDuration = 0.2f;//角色在劇情上下彈的時間
+    private Dictionary<string, bool> hasBeenDisplayed = new Dictionary<string, bool>();
 
     void Awake()
     {
@@ -49,7 +52,7 @@ public class StoryController : MonoBehaviour
 
     void Start()
     {
-        //簡單來說在被特定角色呼叫前這些劇情物件都不顯示
+        //在被特定角色呼叫前這些劇情物件都不顯示
         currentlyVisible["Player"] = false;
         currentlyVisible["Enemy"] = false;
         storyPanel.SetActive(false);
@@ -63,7 +66,7 @@ public class StoryController : MonoBehaviour
     //透過其他腳本呼叫，收到傳入劇情ID再播放對應劇情
     public void StartStory(string storyID)
     {
-        currentSequence = allStories.FirstOrDefault(s => s.storyID == storyID);//找到對應的劇情
+        currentSequence = allStories.FirstOrDefault(s => s.storyID == storyID);
 
         //開始劇情時禁用玩家行動
         PlayerController player = FindObjectOfType<PlayerController>();
@@ -78,16 +81,12 @@ public class StoryController : MonoBehaviour
         StartCoroutine(WaitAndStartStory());
     }
 
-    /// <summary>
-    /// 等待淡出音樂 → 等 fadeInDelay → 面板淡入
-    /// </summary>
+    // 等待淡出音樂 > 等 fadeInDelay > 面板淡入
     private IEnumerator WaitAndStartStory()
     {
         //yield return new WaitForSeconds(GlobalAudioManager.Instance.storyFadeDuration);//這裡原本用來淡出，但是音樂改到wallmover，暫時註解
 
-        yield return new WaitForSeconds(fadeInDelay);//等待fadeInDelay後再WaitForSeconds
-
-        //劇情物件淡入
+        yield return new WaitForSeconds(fadeInDelay);
         storyPanel.SetActive(true);
         storyCanvasGroup.alpha = 0f;
         yield return StartCoroutine(
@@ -129,6 +128,7 @@ public class StoryController : MonoBehaviour
         //顯示或隱藏角色
         var playerData = allCharacters.FirstOrDefault(c => c.characterID == "Player");
         var enemyData = allCharacters.FirstOrDefault(c => c.characterID == "Enemy");
+
         ShowOrHideCharacter(playerData, step.showPlayer);
         ShowOrHideCharacter(enemyData, step.showEnemy);
 
@@ -176,28 +176,67 @@ public class StoryController : MonoBehaviour
                 }
             }
         }
-
         previousSpeakerID = step.speakerID;
     }
 
-    // 故事結束後故事音樂跟劇情物件一起淡出 → 播Boss音樂 → 恢復玩家行動
+    // 故事結束後故事音樂跟劇情物件一起淡出 > 播Boss音樂 > 恢復玩家行動
     private IEnumerator EndStory()
     {
         if (!isPlaying) yield break;
+        bool autoNext = currentSequence != null && currentSequence.autoLoadNextScene;
         StartCoroutine(FadeCanvasGroup(storyCanvasGroup, 1f, 0f, endFadeDuration));//淡出
         GlobalAudioManager.Instance.FadeOutMusic(endFadeDuration);
-
         yield return new WaitForSeconds(endFadeDuration);
-
         storyPanel.SetActive(false);
-        yield return StartCoroutine(GlobalAudioManager.Instance.CrossfadeToBossMusic());
-
-        PlayerController player = FindObjectOfType<PlayerController>();
-        if (player != null)
-            player.controlEnabled = true;
-
         isPlaying = false;
-        currentSequence = null;
+        if (autoNext)
+        {
+            string currentSceneName = SceneManager.GetActiveScene().name;
+            string nextSceneName = GetNextSceneName(currentSceneName);
+            GameObject obj = GameObject.Find("CutscenePanel");
+            CanvasGroup cg = obj.GetComponent<CanvasGroup>();
+            cg.blocksRaycasts = true;
+            cg.DOFade(1f, endFadeDuration);
+            GlobalAudioManager.Instance.FadeOutMusic(endFadeDuration);
+            yield return new WaitForSeconds(endFadeDuration);
+            GameSaveData data = new GameSaveData();
+            data.sceneName = nextSceneName;
+            data.masterCase = 1;
+            PlayerController player = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
+            data.playerHP = 100;
+            data.playerMP = 50;
+            SaveManager.Instance.SaveGame(data);
+            SceneManager.LoadScene(nextSceneName);
+        }
+        else
+        {
+            currentSequence = null;
+            yield return StartCoroutine(GlobalAudioManager.Instance.CrossfadeToBossMusic());
+            PlayerController player = FindObjectOfType<PlayerController>();
+            player.controlEnabled = true;
+        }
+    }
+
+    private string GetNextSceneName(string currentName)
+    {
+        int index = currentName.Length - 1;
+        while (index >= 0 && char.IsDigit(currentName[index]))
+        {
+            index--;
+        }
+        index++;
+        if (index < currentName.Length)
+        {
+            string prefix = currentName.Substring(0, index);
+            string numberPart = currentName.Substring(index);
+            int number;
+            if (int.TryParse(numberPart, out number))
+            {
+                number++;
+                return prefix + number.ToString();
+            }
+        }
+        return currentName + "1";
     }
 
     //Coroutines
@@ -210,6 +249,25 @@ public class StoryController : MonoBehaviour
         {
             wasShowing = false;
             currentlyVisible[charData.characterID] = false;
+        }
+        if (!hasBeenDisplayed.ContainsKey(charData.characterID))
+        {
+            hasBeenDisplayed[charData.characterID] = true;
+            if (wantShow)
+            {
+                charData.characterImage.gameObject.SetActive(true);
+                Color c = charData.characterImage.color;
+                charData.characterImage.color = new Color(c.r, c.g, c.b, 1f);
+                currentlyVisible[charData.characterID] = true;
+            }
+            else
+            {
+                charData.characterImage.gameObject.SetActive(false);
+                Color c = charData.characterImage.color;
+                charData.characterImage.color = new Color(c.r, c.g, c.b, 0f);
+                currentlyVisible[charData.characterID] = false;
+            }
+            return;
         }
 
         if (wantShow && !wasShowing)

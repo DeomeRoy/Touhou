@@ -34,9 +34,25 @@ public class SaveManager : MonoBehaviour
                 dbCmd.CommandText = sqlQuery;
                 dbCmd.ExecuteNonQuery();
             }
+
+            using (IDbCommand dbCmd = dbConnection.CreateCommand())
+            {
+                dbCmd.CommandText = "SELECT COUNT(*) FROM SaveGame WHERE id = 1";
+                int count = int.Parse(dbCmd.ExecuteScalar().ToString());
+                if (count == 0)
+                {
+                    using (IDbCommand insertCmd = dbConnection.CreateCommand())
+                    {
+                        string insertQuery = "INSERT INTO SaveGame (id, sceneName, masterCase, playerHP, playerMP) VALUES (1, 'Stage1', 1, 100, 50)";
+                        insertCmd.CommandText = insertQuery;
+                        insertCmd.ExecuteNonQuery();
+                    }
+                }
+            }
             dbConnection.Close();
         }
     }
+
 
     public void SaveGame(GameSaveData data)
     {
@@ -72,7 +88,7 @@ public class SaveManager : MonoBehaviour
             }
             dbConnection.Close();
         }
-        Debug.Log("scenes=" + data.sceneName + "case=" + data.masterCase);
+        Debug.Log("scenes=" + data.sceneName + "case=" + data.masterCase +"hp="+data.playerHP+"mp="+data.playerMP);
     }
 
     public GameSaveData LoadGame()
@@ -104,9 +120,7 @@ public class SaveManager : MonoBehaviour
             dbConnection.Close();
         }
         if (data != null)
-            Debug.Log("scenes=" + data.sceneName + "case=" + data.masterCase);
-        else
-            Debug.Log("null");
+            Debug.Log("scenes=" + data.sceneName + "case=" + data.masterCase + "hp=" + data.playerHP + "mp=" + data.playerMP);
         return data;
     }
 }

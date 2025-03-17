@@ -38,11 +38,23 @@ public class BallBehavior : MonoBehaviour
         hasLaunched = false;
     }
 
+    private IEnumerator ApplyHorizontalCorrection(float forceMagnitude, float direction)
+    {
+        yield return new WaitForFixedUpdate();
+        rb.AddForce(new Vector2(direction * forceMagnitude, 0f), ForceMode2D.Impulse);
+    }
+
     private void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.gameObject.CompareTag("Wall"))
         {
             GlobalAudioManager.Instance.PlayBallToWallSound();
+            float totalSpeed = rb.velocity.magnitude;
+            if (totalSpeed == 0) return;
+            float verticalRatio = Mathf.Abs(rb.velocity.y) / totalSpeed;
+            float forceMagnitude = Mathf.Lerp(2f, 5f, verticalRatio);
+            float direction = (collision.contacts[0].normal.x > 0) ? 1f : -1f;
+            StartCoroutine(ApplyHorizontalCorrection(forceMagnitude, direction));
         }
     }
 }
