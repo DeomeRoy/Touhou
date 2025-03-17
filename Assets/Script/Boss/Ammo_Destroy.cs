@@ -14,4 +14,16 @@ public class Ammo_Destroy : MonoBehaviour{
             }
         }
     }
+    void OnCollisionEnter2D(Collision2D other) {
+        if (other.gameObject.tag == "Player"){
+            // PlayerController player = other.GetComponent<PlayerController>();
+            // player.LoseLife();
+            Destroy(gameObject);
+        }
+    }
+    void OnTriggerEnter2D(Collider2D collision){
+        if (collision.CompareTag("Player")){
+            Destroy(gameObject);
+        }
+    }
 }
