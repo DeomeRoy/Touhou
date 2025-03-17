@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class PlayerController : MonoBehaviour
 {
@@ -97,6 +98,26 @@ public class PlayerController : MonoBehaviour
         originalColor = spriteRenderer.color;
         SetSprite(idleSprite, idleSize, idleOffset);
 
+        if (GameManager.isContinue)
+        {
+            GameSaveData saveData = SaveManager.Instance.LoadGame();
+            if (saveData != null && saveData.sceneName == SceneManager.GetActiveScene().name)
+            {
+                life = saveData.playerHP;
+                score = saveData.playerMP;
+                float yPos = GetYPositionForCase(saveData.masterCase);
+                transform.position = new Vector3(0, yPos, transform.position.z);
+                HP.GetComponent<HP>().HP_Change(life);
+                MP.GetComponent<MP>().MP_Change(score);
+                level = saveData.masterCase;
+            }
+        }
+        else
+        {
+            //重新開始
+            transform.position = new Vector3(0, -4.146f, transform.position.z);
+        }
+
         GameObject ball = GameObject.FindGameObjectWithTag("Ball");
         if (ball != null)
         {
@@ -109,7 +130,6 @@ public class PlayerController : MonoBehaviour
         BoxCollider.enabled = true;
         CircleCollider.enabled = false;
         PolygonCollider.enabled = false;
-        transform.position = new Vector3(0, -4.146f, 0);
     }
 
     void Update()
@@ -361,7 +381,6 @@ public class PlayerController : MonoBehaviour
                         CheakPosition = false;
                         PlayerController player = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
                         GlobalAudioManager.Instance.StopRunSound();
-                        player.controlEnabled = true;//啟用行動
                     }
                     break;
             }
@@ -495,6 +514,8 @@ public class PlayerController : MonoBehaviour
             die = true;
             GlobalAudioManager.Instance.StopRunSound();
             GlobalAudioManager.Instance.PlayDeadSound();//音效
+            Leveloader leveloader = GameObject.Find("System").GetComponent<Leveloader>();
+            leveloader.Death();
             Debug.Log("die");
             //Time.timeScale = 0;
         }
@@ -578,9 +599,19 @@ public class PlayerController : MonoBehaviour
         float transitionTimer = 0f;
         while (!controlEnabled)
         {
-            transitionTimer += Time.deltaTime;
-            int runIndex = (int)(transitionTimer / transitionSwitch) % 3;
-            SetSprite(transitionRunSprites[runIndex], transitionRunSize, transitionRunOffset);
+            if (Mathf.Abs(transform.position.y - 25.95f) > 0.1f)
+            {
+                transitionTimer += Time.deltaTime;
+                int runIndex = (int)(transitionTimer / transitionSwitch) % 3;
+                SetSprite(transitionRunSprites[runIndex], transitionRunSize, transitionRunOffset);
+                GlobalAudioManager.Instance.StartRunSound();
+            }
+            else
+            {
+                rb.velocity = Vector2.zero;
+                GlobalAudioManager.Instance.StopRunSound();
+                SetSprite(idleSprite, idleSize, idleOffset);
+            }
             yield return null;
         }
 
@@ -588,5 +619,54 @@ public class PlayerController : MonoBehaviour
         yield break;
     }
 
+    private float GetYPositionForCase(int caseNum)
+    {
+        switch (caseNum)
+        {
+            case 1: return -4.146f;
+            case 2: return 5.9f;
+            case 3: return 15.9f;
+            case 4: return 25.95f;
+            default: return -4.146f;
+        }
+    }
 
+    public int GetCurrentCase()
+    {
+        float y = transform.position.y;
+        //0.5=誤差
+        if (Mathf.Abs(y - (-4.146f)) < 0.5f)
+            return 1;
+        else if (Mathf.Abs(y - 5.9f) < 0.5f)
+            return 2;
+        else if (Mathf.Abs(y - 15.9f) < 0.5f)
+            return 3;
+        else if (Mathf.Abs(y - 25.95f) < 0.5f)
+            return 4;
+        return 1;//預設case=1
+    }
+
+    void OnApplicationQuit()
+    {
+        SaveCurrentProgress();
+    }
+
+    void OnApplicationPause(bool pauseStatus)
+    {
+        if (pauseStatus)
+            SaveCurrentProgress();
+    }
+
+    void SaveCurrentProgress()
+    {
+        GameSaveData data = new GameSaveData();
+        data.sceneName = SceneManager.GetActiveScene().name;
+        PlayerController player = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
+        WallMover wall = GameObject.Find("TWall").GetComponent<WallMover>();
+        CamaraMover cameraMover = GameObject.FindObjectOfType<CamaraMover>();
+        data.masterCase = wall.GetCurrentCase();
+        data.playerHP = player.life;
+        data.playerMP = player.score;
+        SaveManager.Instance.SaveGame(data);
+    }
 }

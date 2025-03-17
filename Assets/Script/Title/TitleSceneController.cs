@@ -8,12 +8,15 @@ using DG.Tweening;
 
 public class TitleSceneController : MonoBehaviour
 {
+    public static TitleSceneController Instance;
+
     [HideInInspector] public bool Mainpanel, Savepanel, Settingpanel;
     public GameObject Background_001, Background_002, Options, ContinuePane, SettingPane;
     [HideInInspector] public CanvasGroup CutscenePanel;
 
     void Start()
     {
+        Instance = this;
         GameObject obj = GameObject.Find("CutscenePanel");
         CutscenePanel = obj.GetComponent<CanvasGroup>();
         CutscenePanel.DOFade(1f, 0f);
@@ -43,6 +46,7 @@ public class TitleSceneController : MonoBehaviour
                     case "Start":
                         FadeOut();
                         StartCoroutine(Cutscene());
+                        GameManager.isContinue = false;
                         break;
                     case "Information":
                         SceneManager.LoadScene("Information");
@@ -62,13 +66,14 @@ public class TitleSceneController : MonoBehaviour
         }
     }
 
-    void FadeOut()
+    public void FadeOut()
     {
         GameObject obj = GameObject.Find("CutscenePanel");
         CutscenePanel = obj.GetComponent<CanvasGroup>();
         float fadeTime = 150f * Time.deltaTime;
         CutscenePanel.DOFade(1f, fadeTime);
         GlobalAudioManager.Instance.FadeOutMusic(fadeTime);
+        Debug.Log("FadeOut");
     }
 
     void Continue()
@@ -99,6 +104,7 @@ public class TitleSceneController : MonoBehaviour
 
     IEnumerator Cutscene()
     {
+        GameManager.isContinue = false;
         yield return new WaitForSeconds(160f * Time.deltaTime);
         Debug.Log("GameStart");
         SceneManager.LoadScene("Stage1");

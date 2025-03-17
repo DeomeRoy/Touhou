@@ -12,6 +12,9 @@ EditorBuildSettings:
     path: Assets/Scenes/Level/Stage1.unity
     guid: 5cfb4edac3c2b7043bff1c9747a90090
   - enabled: 1
+    path: Assets/Scenes/Level/Stage2.unity
+    guid: a30913d919696714786d50e2f8d70c7b
+  - enabled: 1
     path: Assets/Scenes/Title/Information.unity
     guid: 421df920625ba3045865a216650d721a
   - enabled: 1
@@ -19,10 +22,10 @@ EditorBuildSettings:
     guid: 329fc91f9e18bf54380cc34eaece12a8
   - enabled: 1
     path: Assets/Scenes/Title/Boss_B.unity
-    guid: 73226d07da2d3ae428fda6655a7efc05
+    guid: 64b0e42714e7deb44a16256208a71aff
   - enabled: 1
     path: Assets/Scenes/Title/Boss_C.unity
-    guid: 5e2a2fb9568c0194ea61c36df552cb3d
+    guid: 22358b60142d4d747bee2c5fbeb32fb9
   - enabled: 1
     path: Assets/Scenes/Title/BossSelect.unity
     guid: 617d75cb7e87d9d44a1d68b8f22999d3

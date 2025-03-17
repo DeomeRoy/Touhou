@@ -6,9 +6,9 @@ using System.Collections;
 public class SceneAudioManager : MonoBehaviour
 {
     public static SceneAudioManager Instance;
-    public float titleFadeOutDuration = 3f;     
-    public float stageFadeOutDuration = 2f;      
-    public float stageFadeInDuration = 2f;    
+    public float titleFadeOutDuration = 3f;
+    public float stageFadeOutDuration = 2f;
+    public float stageFadeInDuration = 2f;
 
     private static string previousScene = "";
 
@@ -28,31 +28,34 @@ public class SceneAudioManager : MonoBehaviour
 
     void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
+        GameSaveData data = SaveManager.Instance.LoadGame();
+        int gsd = data != null ? data.masterCase : 0;
+
         if (scene.name == "TitleScene")
         {
             if (string.IsNullOrEmpty(previousScene) ||
                 previousScene == "Stage1" || previousScene == "Stage2" || previousScene == "Stage3")
             {
+                GlobalAudioManager.Instance.StopAllMusic();
                 GlobalAudioManager.Instance.PlayMainMenuMusic();
             }
         }
+        else if (GameManager.isContinue && gsd == 4 &&
+                (scene.name == "Stage1" || scene.name == "Stage2" || scene.name == "Stage3"))
+        {
+            GlobalAudioManager.Instance.PlayMusicDirectly(GlobalAudioManager.Instance.bossMusic, GlobalAudioManager.Instance.bossVolume);
+        }
         else if (scene.name == "Stage1")
         {
-            GlobalAudioManager.Instance.PlayMusicDirectly(
-            GlobalAudioManager.Instance.stage1Music,
-            GlobalAudioManager.Instance.stage1Volume);
+            GlobalAudioManager.Instance.PlayMusicDirectly(GlobalAudioManager.Instance.stage1Music, GlobalAudioManager.Instance.stage1Volume);
         }
         else if (scene.name == "Stage2")
         {
-            GlobalAudioManager.Instance.PlayMusicDirectly(
-            GlobalAudioManager.Instance.stage2Music,
-            GlobalAudioManager.Instance.stage2Volume);
+            GlobalAudioManager.Instance.PlayMusicDirectly(GlobalAudioManager.Instance.stage2Music, GlobalAudioManager.Instance.stage2Volume);
         }
         else if (scene.name == "Stage3")
         {
-            GlobalAudioManager.Instance.PlayMusicDirectly(
-            GlobalAudioManager.Instance.stage3Music,
-            GlobalAudioManager.Instance.stage3Volume);
+            GlobalAudioManager.Instance.PlayMusicDirectly(GlobalAudioManager.Instance.stage3Music, GlobalAudioManager.Instance.stage3Volume);
         }
 
         previousScene = scene.name;

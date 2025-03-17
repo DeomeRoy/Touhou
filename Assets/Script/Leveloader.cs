@@ -9,6 +9,7 @@ public class Leveloader : MonoBehaviour{
     public Transform Wall;
     public bool Open_flag,Stop_flag,Exit;
     public GameObject StopPanel,StopText,MenuPanel,StopButton,ExitButton;
+    public GameObject DeathPanel;
     // public UnityEngine.UI.Image OnStop,UnStop;
     public void Start(){
         MenuPanel.SetActive(false);
@@ -16,6 +17,7 @@ public class Leveloader : MonoBehaviour{
         ExitButton.SetActive(false);
         StopPanel.SetActive(false);
         StopText.SetActive(false);
+        DeathPanel.SetActive(false);
     }
     public void LevelPush(){
         GameObject.Find("Main Camera").GetComponent<CamaraMover>().LevelPush();
@@ -54,5 +56,14 @@ public class Leveloader : MonoBehaviour{
     }
     public void ExitGame(){
         SceneManager.LoadScene("TitleScene");
+    }
+
+    public void Death()
+    {
+        Open_flag = false;
+        MenuPanel.SetActive(false);
+        StopButton.SetActive(false);
+        ExitButton.SetActive(false);
+        DeathPanel.SetActive(true);
     }
 }

@@ -7,7 +7,7 @@ public class GlobalAudioManager : MonoBehaviour
 
     public AudioClip buttonSound;
     public AudioClip runSound;
-    public AudioClip attackSound;    
+    public AudioClip attackSound;
     public AudioClip slideSound;
     public AudioClip bulletSound;
     public AudioClip explosionSound;
@@ -26,11 +26,12 @@ public class GlobalAudioManager : MonoBehaviour
     public AudioClip stage1Music;
     public AudioClip stage2Music;
     public AudioClip stage3Music;
+    public AudioClip storyMusic;
     public AudioClip bossMusic;
 
     public float globalVolume = 1f;
 
-    // 多音效使用
+    //用於音樂與音效的聲源
     private AudioSource sfxSource;
     private AudioSource runAudioSource;
     private AudioSource slideAudioSource;
@@ -40,8 +41,7 @@ public class GlobalAudioManager : MonoBehaviour
 
     public float defaultFadeDuration = 2.0f;
 
-    // 個別音量控制
-
+    //音量設定
     public float buttonVolume = 1f;
     public float runVolume = 1f;
     public float attackVolume = 1f;
@@ -63,7 +63,14 @@ public class GlobalAudioManager : MonoBehaviour
     public float stage1Volume = 0.8f;
     public float stage2Volume = 0.8f;
     public float stage3Volume = 0.8f;
+    public float storyVolume = 0.8f;
     public float bossVolume = 1f;
+
+    //切換到Boss音樂
+    public float crossFadeOutTime = 0.5f;//淡出時間
+    public float crossFadeInTime = 0.5f;//淡入時間
+
+    //public float storyFadeDuration = 0.5f;//劇情淡出時間
 
     void Awake()
     {
@@ -125,17 +132,13 @@ public class GlobalAudioManager : MonoBehaviour
     public void StopRunSound()
     {
         if (runAudioSource.isPlaying)
-        {
             runAudioSource.Stop();
-        }
     }
 
     public void PlaySlideSoundOnce(float volumeScale = 1f)
     {
         if (slideAudioSource.isPlaying)
-        {
             slideAudioSource.Stop();
-        }
         slideAudioSource.clip = slideSound;
         slideAudioSource.volume = slideVolume * volumeScale;
         slideAudioSource.Play();
@@ -186,7 +189,6 @@ public class GlobalAudioManager : MonoBehaviour
         sfxSource.PlayOneShot(deadSound, deadVolume * volumeScale);
     }
 
-    //方塊音效
     public void PlayBlockFireSound(float volumeScale = 1f)
     {
         sfxSource.PlayOneShot(blockfireSound, blockfireVolume * volumeScale);
@@ -215,8 +217,8 @@ public class GlobalAudioManager : MonoBehaviour
     public void PlayMusicDirectly(AudioClip newClip, float targetVolume, bool forceChange = false)
     {
         if (!forceChange && activeMusicSource.clip == newClip && activeMusicSource.isPlaying)
-           return;
-                
+            return;
+
         activeMusicSource.Stop();
         activeMusicSource.clip = newClip;
         activeMusicSource.volume = targetVolume;
@@ -251,15 +253,71 @@ public class GlobalAudioManager : MonoBehaviour
         CrossfadeToMusicWithTarget(stage3Music, stage3Volume, fadeOutDuration, fadeInDuration);
     }
 
-    public void PlayBossMusicWithFadeIn(float fadeInDuration)
+    //fadeout & fadeinto boss music
+    public IEnumerator CrossfadeToBossMusic()
     {
-        AudioSource newSource = (activeMusicSource == musicSource1) ? musicSource2 : musicSource1;
-        newSource.clip = bossMusic;
-        newSource.volume = 0f;
-        newSource.loop = true;
-        newSource.Play();
-        StartCoroutine(FadeIn(newSource, fadeInDuration, bossVolume));
-        activeMusicSource = newSource;
+        if (activeMusicSource == null)
+        {
+            yield break;
+        }
+
+        float t = 0f;
+        float startVol = activeMusicSource.volume;
+
+        while (t < crossFadeOutTime)
+        {
+            t += Time.deltaTime;
+            activeMusicSource.volume = Mathf.Lerp(startVol, 0f, t / crossFadeOutTime);
+            yield return null;
+        }
+        activeMusicSource.volume = 0f;
+        activeMusicSource.Stop();
+
+        activeMusicSource.clip = bossMusic;//play boss
+        activeMusicSource.volume = 0f;
+        activeMusicSource.loop = true;
+        activeMusicSource.Play();
+        t = 0f;
+        while (t < crossFadeInTime)
+        {
+            t += Time.deltaTime;
+            activeMusicSource.volume = Mathf.Lerp(0f, bossVolume, t / crossFadeInTime);
+            yield return null;
+        }
+        activeMusicSource.volume = bossVolume;
+    }
+
+    public IEnumerator FadeInMusic(AudioSource source, float duration, float targetVolume)
+    {
+        float t = 0f;
+        while (t < duration)
+        {
+            t += Time.deltaTime;
+            source.volume = Mathf.Lerp(0f, targetVolume, t / duration);
+            yield return null;
+        }
+        source.volume = targetVolume;
+    }
+
+    public void PlayStoryMusicWithFadeIn(float fadeInDuration)
+    {
+        StopAllMusic();
+        activeMusicSource = musicSource1;
+        activeMusicSource.clip = storyMusic;
+        activeMusicSource.volume = 0f;
+        activeMusicSource.loop = true;
+        activeMusicSource.Play();
+        StartCoroutine(FadeInMusic(activeMusicSource, fadeInDuration, storyVolume));
+    }
+
+    public void PlayBossMusicDirectly()
+    {
+        StopAllMusic();
+        activeMusicSource = musicSource1;
+        activeMusicSource.clip = bossMusic;
+        activeMusicSource.volume = bossVolume;
+        activeMusicSource.loop = true;
+        activeMusicSource.Play();
     }
 
     IEnumerator FadeIn(AudioSource source, float duration, float targetVolume)
@@ -298,18 +356,26 @@ public class GlobalAudioManager : MonoBehaviour
         float time = 0;
         float maxDuration = Mathf.Max(fadeOutDuration, fadeInDuration);
         float fromStartVolume = fromSource.volume;
+
         while (time < maxDuration)
         {
             if (time < fadeOutDuration)
+            {
                 fromSource.volume = Mathf.Lerp(fromStartVolume, 0, time / fadeOutDuration);
+            }
             else
+            {
                 fromSource.volume = 0;
+            }
 
             if (time < fadeInDuration)
+            {
                 toSource.volume = Mathf.Lerp(0, targetVolume, time / fadeInDuration);
+            }
             else
+            {
                 toSource.volume = targetVolume;
-
+            }
             time += Time.deltaTime;
             yield return null;
         }
@@ -322,4 +388,3 @@ public class GlobalAudioManager : MonoBehaviour
         musicSource2.Stop();
     }
 }
-
