@@ -100,17 +100,7 @@ public class PlayerController : MonoBehaviour
 
         if (GameManager.isContinue)
         {
-            GameSaveData saveData = SaveManager.Instance.LoadGame();
-            if (saveData != null && saveData.sceneName == SceneManager.GetActiveScene().name)
-            {
-                life = saveData.playerHP;
-                score = saveData.playerMP;
-                float yPos = GetYPositionForCase(saveData.masterCase);
-                transform.position = new Vector3(0, yPos, transform.position.z);
-                HP.GetComponent<HP>().HP_Change(life);
-                MP.GetComponent<MP>().MP_Change(score);
-                level = saveData.masterCase;
-            }
+            GameSaveSystem.ApplySavedGameToScene();
         }
         else
         {
@@ -513,7 +503,7 @@ public class PlayerController : MonoBehaviour
             HP.GetComponent<HP>().HP_Change(life);
             die = true;
             GlobalAudioManager.Instance.StopRunSound();
-            GlobalAudioManager.Instance.PlayDeadSound();//音效
+            GlobalAudioManager.Instance.PlayDeadSound();
             Leveloader leveloader = GameObject.Find("System").GetComponent<Leveloader>();
             leveloader.Death();
             Debug.Log("die");
@@ -619,7 +609,7 @@ public class PlayerController : MonoBehaviour
         yield break;
     }
 
-    private float GetYPositionForCase(int caseNum)
+    public float GetYPositionForCase(int caseNum)
     {
         switch (caseNum)
         {
@@ -648,25 +638,12 @@ public class PlayerController : MonoBehaviour
 
     void OnApplicationQuit()
     {
-        SaveCurrentProgress();
+        GameSaveSystem.SaveCurrentProgress();
     }
 
     void OnApplicationPause(bool pauseStatus)
     {
         if (pauseStatus)
-            SaveCurrentProgress();
-    }
-
-    void SaveCurrentProgress()
-    {
-        GameSaveData data = new GameSaveData();
-        data.sceneName = SceneManager.GetActiveScene().name;
-        PlayerController player = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
-        WallMover wall = GameObject.Find("TWall").GetComponent<WallMover>();
-        CamaraMover cameraMover = GameObject.FindObjectOfType<CamaraMover>();
-        data.masterCase = wall.GetCurrentCase();
-        data.playerHP = player.life;
-        data.playerMP = player.score;
-        SaveManager.Instance.SaveGame(data);
+            GameSaveSystem.SaveCurrentProgress();
     }
 }

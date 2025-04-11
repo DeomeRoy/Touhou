@@ -69,6 +69,7 @@ public class ContinueButtonController : MonoBehaviour, IPointerDownHandler, IPoi
         if (data != null) 
         {
             if (data.masterCase == 4 || (data.sceneName != "Stage1" && data.masterCase == 1))//特殊關卡載入判斷，有需要可刪除或修改
+            //if (data.masterCase == 4 || data.masterCase == 3 ||(data.sceneName != "Stage1" && data.masterCase == 1))
             {
                 GameManager.isContinue = true;
                 StartCoroutine(ContinueSequence());
@@ -78,12 +79,12 @@ public class ContinueButtonController : MonoBehaviour, IPointerDownHandler, IPoi
 
     private System.Collections.IEnumerator ContinueSequence()
     {
-        float fadeDuration = 1.2f;
+        TitleSceneController ts = FindObjectOfType<TitleSceneController>();
+        float fD = ts.fadeTime;
 
-        StartCoroutine(SimpleFadeOut(fadeDuration));
-        StartCoroutine(SimpleMusicFadeOut(GlobalAudioManager.Instance.musicSource1, fadeDuration));
-
-        yield return new WaitForSeconds(fadeDuration);
+        StartCoroutine(SimpleFadeOut(fD));
+        SceneAudioManager.Instance.FadeOutSceneMusic(fD);
+        yield return new WaitForSeconds(fD);
         GameSaveData data = SaveManager.Instance.LoadGame();
         SceneManager.LoadScene(data.sceneName);
     }
@@ -103,23 +104,6 @@ public class ContinueButtonController : MonoBehaviour, IPointerDownHandler, IPoi
             yield return null;
         }
         cg.alpha = 1f;
-    }
-
-    public System.Collections.IEnumerator SimpleMusicFadeOut(AudioSource source, float duration)
-    {
-        if (source == null)
-            yield break;
-
-        float startVol = source.volume;
-        float t = 0f;
-        while (t < duration)
-        {
-            t += Time.deltaTime;
-            source.volume = Mathf.Lerp(startVol, 0f, t / duration);
-            yield return null;
-        }
-        source.volume = 0f;
-        source.Stop();
     }
 
     public void OnPointerDown(PointerEventData eventData)

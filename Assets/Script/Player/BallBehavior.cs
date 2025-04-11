@@ -46,15 +46,19 @@ public class BallBehavior : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.gameObject.CompareTag("Wall"))
+        if (collision.gameObject.CompareTag("Wall")) 
         {
             GlobalAudioManager.Instance.PlayBallToWallSound();
-            float totalSpeed = rb.velocity.magnitude;
-            if (totalSpeed == 0) return;
-            float verticalRatio = Mathf.Abs(rb.velocity.y) / totalSpeed;
-            float forceMagnitude = Mathf.Lerp(2f, 5f, verticalRatio);
-            float direction = (collision.contacts[0].normal.x > 0) ? 1f : -1f;
-            StartCoroutine(ApplyHorizontalCorrection(forceMagnitude, direction));
+            if (collision.gameObject.name != "BWall")
+            {
+                float totalSpeed = rb.velocity.magnitude;
+                if (totalSpeed == 0) return;
+                float verticalRatio = Mathf.Abs(rb.velocity.y) / totalSpeed;
+                float forceMagnitude = Mathf.Lerp(2f, 5f, verticalRatio);
+                float direction = (collision.contacts[0].normal.x > 0) ? 1f : -1f;
+                StartCoroutine(ApplyHorizontalCorrection(forceMagnitude, direction));
+            }
         }
+            
     }
 }

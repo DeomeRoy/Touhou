@@ -339,16 +339,25 @@ public class GlobalAudioManager : MonoBehaviour
 
     IEnumerator FadeOut(AudioSource source, float duration)
     {
-        float startVolume = source.volume;
+        AudioSource lockedSource = source;
+        float startVolume = lockedSource.volume;
         float time = 0;
+
         while (time < duration)
         {
-            source.volume = Mathf.Lerp(startVolume, 0, time / duration);
             time += Time.deltaTime;
+            if (activeMusicSource != lockedSource)
+                yield break;
+
+            lockedSource.volume = Mathf.Lerp(startVolume, 0, time / duration);
             yield return null;
         }
-        source.volume = 0;
-        source.Stop();
+
+        if (activeMusicSource == lockedSource)
+        {
+            lockedSource.volume = 0;
+            lockedSource.Stop();
+        }
     }
 
     IEnumerator Crossfade(AudioSource fromSource, AudioSource toSource, float fadeOutDuration, float fadeInDuration, float targetVolume)

@@ -183,35 +183,43 @@ public class StoryController : MonoBehaviour
     private IEnumerator EndStory()
     {
         if (!isPlaying) yield break;
+
         bool autoNext = currentSequence != null && currentSequence.autoLoadNextScene;
-        StartCoroutine(FadeCanvasGroup(storyCanvasGroup, 1f, 0f, endFadeDuration));//淡出
-        GlobalAudioManager.Instance.FadeOutMusic(endFadeDuration);
+
+        // 音樂與面板淡出
+        StartCoroutine(FadeCanvasGroup(storyCanvasGroup, 1f, 0f, endFadeDuration));
+        SceneAudioManager.Instance.FadeOutSceneMusic(endFadeDuration);
+
         yield return new WaitForSeconds(endFadeDuration);
+
         storyPanel.SetActive(false);
         isPlaying = false;
+
         if (autoNext)
         {
             string currentSceneName = SceneManager.GetActiveScene().name;
             string nextSceneName = GetNextSceneName(currentSceneName);
+
             GameObject obj = GameObject.Find("CutscenePanel");
-            CanvasGroup cg = obj.GetComponent<CanvasGroup>();
-            cg.blocksRaycasts = true;
-            cg.DOFade(1f, endFadeDuration);
-            GlobalAudioManager.Instance.FadeOutMusic(endFadeDuration);
-            yield return new WaitForSeconds(endFadeDuration);
-            GameSaveData data = new GameSaveData();
-            data.sceneName = nextSceneName;
-            data.masterCase = 1;
-            PlayerController player = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
-            data.playerHP = 100;
-            data.playerMP = 50;
-            SaveManager.Instance.SaveGame(data);
+            CanvasGroup CutscenePanel = obj.GetComponent<CanvasGroup>();
+
+            CutscenePanel.blocksRaycasts = true;
+            CutscenePanel.DOFade(1f, endFadeDuration);
+
+            yield return new WaitForSeconds(endFadeDuration); 
+
+            if (nextSceneName != "Stage4")
+            {
+                GameSaveSystem.SaveFixedStoryProgress(nextSceneName, 1, 100, 50);
+            }
+
             SceneManager.LoadScene(nextSceneName);
         }
         else
         {
             currentSequence = null;
-            yield return StartCoroutine(GlobalAudioManager.Instance.CrossfadeToBossMusic());
+            yield return StartCoroutine(SceneAudioManager.Instance.FadeToBoss());
+
             PlayerController player = FindObjectOfType<PlayerController>();
             player.controlEnabled = true;
         }

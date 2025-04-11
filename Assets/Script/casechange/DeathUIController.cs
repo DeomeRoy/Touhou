@@ -9,8 +9,6 @@ public class DeathUIController : MonoBehaviour
     public GameObject deathPanel;
     public Button mainMenuButton;
     public Button continueButton;
-
-    public float fadeDuration = 2.5f;
     public CanvasGroup fadeCanvasGroup;
 
     void Start()
@@ -35,13 +33,11 @@ public class DeathUIController : MonoBehaviour
 
     private IEnumerator FadeOutAndLoadScene(string sceneName)
     {
-        GameObject obj = GameObject.Find("CutscenePanel");
-        CanvasGroup cg = obj.GetComponent<CanvasGroup>();
-
-        cg.blocksRaycasts = true;
-        cg.DOFade(1f, fadeDuration);
-        GlobalAudioManager.Instance.FadeOutMusic(fadeDuration);
-        yield return new WaitForSeconds(fadeDuration);
+        float fD = 150f * Time.deltaTime;//from TitleSceneController
+        fadeCanvasGroup.blocksRaycasts = true;
+        fadeCanvasGroup.DOFade(1f, fD);
+        SceneAudioManager.Instance.FadeOutSceneMusic(fD);
+        yield return new WaitForSeconds(fD);
         SceneManager.LoadScene(sceneName);
     }
 }

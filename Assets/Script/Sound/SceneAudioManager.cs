@@ -3,10 +3,10 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using System.Collections;
 
+
 public class SceneAudioManager : MonoBehaviour
 {
-    public static SceneAudioManager Instance;
-    public float titleFadeOutDuration = 3f;
+    public static SceneAudioManager Instance { get; private set; }
     public float stageFadeOutDuration = 2f;
     public float stageFadeInDuration = 2f;
 
@@ -48,6 +48,7 @@ public class SceneAudioManager : MonoBehaviour
         else if (scene.name == "Stage1")
         {
             GlobalAudioManager.Instance.PlayMusicDirectly(GlobalAudioManager.Instance.stage1Music, GlobalAudioManager.Instance.stage1Volume);
+            Debug.Log("播放 Stage1 音樂");
         }
         else if (scene.name == "Stage2")
         {
@@ -62,17 +63,10 @@ public class SceneAudioManager : MonoBehaviour
         RegisterButtonListeners();
     }
 
-    IEnumerator SwitchToMainMenuMusic()
-    {
-        float fadeOutDuration = titleFadeOutDuration;
-        GlobalAudioManager.Instance.StopAllMusic();
-        yield return new WaitForSeconds(fadeOutDuration);
-        GlobalAudioManager.Instance.PlayMainMenuMusic();
-    }
-
     void RegisterButtonListeners()
     {
-        Button[] buttons = FindObjectsOfType<Button>();
+        Button[] buttons = FindObjectsOfType<Button>(true);
+
         foreach (Button btn in buttons)
         {
             btn.onClick.RemoveListener(PlayButtonSound);
@@ -83,5 +77,23 @@ public class SceneAudioManager : MonoBehaviour
     void PlayButtonSound()
     {
         GlobalAudioManager.Instance.PlayButtonSound();
+    }
+
+    //DeathUIController,WallMover,ContinueButtonController,StoryController
+    public void FadeOutSceneMusic(float sec)
+    {
+        GlobalAudioManager.Instance.FadeOutMusic(sec);
+    }
+
+    //WallMover
+    public void PlayStoryMusicWithFadeIn(float x)
+    {
+        GlobalAudioManager.Instance.PlayStoryMusicWithFadeIn(x);
+    }
+
+    //StoryController
+    public IEnumerator FadeToBoss()
+    {
+        yield return GlobalAudioManager.Instance.CrossfadeToBossMusic();
     }
 }

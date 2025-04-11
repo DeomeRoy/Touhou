@@ -12,11 +12,8 @@ public class CamaraMover : MonoBehaviour{
     void Start(){
         Level = 1;
 
-        GameSaveData saveData = SaveManager.Instance.LoadGame();
-        if (GameManager.isContinue && saveData != null && saveData.sceneName == SceneManager.GetActiveScene().name)
-        {
-            ApplySaveData(saveData.masterCase);
-        }
+        if (GameManager.isContinue)
+            GameSaveSystem.ApplySavedGameToScene();
     }
 
     void Update(){

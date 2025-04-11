@@ -14,29 +14,8 @@ public class WallMover : MonoBehaviour
     {
         Level = 1;
         //讀檔
-        GameSaveData saveData = SaveManager.Instance.LoadGame();
-        if (GameManager.isContinue && saveData != null && saveData.sceneName == SceneManager.GetActiveScene().name)
-        {
-            int savedCase = saveData.masterCase;
-            FindObjectOfType<LevelImageFader>().FadeForLevel(savedCase);
-            switch (savedCase)
-            {
-                case 2:
-                    transform.position = new Vector3(wall1_2.position.x, wall1_2.position.y, transform.position.z);
-                    Level = 2;
-                    break;
-                case 3:
-                    transform.position = new Vector3(wall1_3.position.x, wall1_3.position.y, transform.position.z);
-                    Level = 3;
-                    break;
-                case 4:
-                    transform.position = new Vector3(wall1_X.position.x, wall1_X.position.y, transform.position.z);
-                    Level = 4;
-                    break;
-                default:
-                    break;
-            }
-        }
+        if (GameManager.isContinue)
+            GameSaveSystem.ApplySavedGameToScene();
     }
 
     void Update()
@@ -66,16 +45,7 @@ public class WallMover : MonoBehaviour
         FindObjectOfType<LevelImageFader>().FadeForLevel(Level);
         if (Level == 4)//僅限case4的存檔功能，如有需要可以移除判斷讓其他case也能存檔
         {
-            //存檔
-            GameSaveData data = new GameSaveData();
-            data.sceneName = SceneManager.GetActiveScene().name;
-            data.masterCase = Level;
-
-            PlayerController player = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
-            data.playerHP = player.life;
-            data.playerMP = player.score;
-
-            SaveManager.Instance.SaveGame(data);
+            GameSaveSystem.SaveCurrentProgress();
         }
         if (Level == 4)
         {
@@ -84,29 +54,58 @@ public class WallMover : MonoBehaviour
         }
     }
 
+    public void ApplySaveData(int savedCase)
+    {
+        FindObjectOfType<LevelImageFader>().FadeForLevel(savedCase);
+        switch (savedCase)
+        {
+            case 2:
+                transform.position = new Vector3(wall1_2.position.x, wall1_2.position.y, transform.position.z);
+                Level = 2;
+                break;
+            case 3:
+                transform.position = new Vector3(wall1_3.position.x, wall1_3.position.y, transform.position.z);
+                Level = 3;
+                break;
+            case 4:
+                transform.position = new Vector3(wall1_X.position.x, wall1_X.position.y, transform.position.z);
+                Level = 4;
+                break;
+        }
+    }
+
+
     private IEnumerator TriggerStoryByDistance(float totalTransitionTime)//進入劇情的引用
     {
         float fadeOutTime = totalTransitionTime * 0.7f;//關卡淡出
         float fadeInTime = totalTransitionTime * 0.3f;//劇情淡入
 
-        GlobalAudioManager.Instance.FadeOutMusic(fadeOutTime);
+        SceneAudioManager.Instance.FadeOutSceneMusic(fadeOutTime);
         yield return new WaitForSeconds(fadeOutTime);
-        GlobalAudioManager.Instance.PlayStoryMusicWithFadeIn(fadeInTime);
+        SceneAudioManager.Instance.PlayStoryMusicWithFadeIn(fadeInTime);
 
-        //呼叫劇情
-        StoryController storyCtrl = FindObjectOfType<StoryController>();
-        storyCtrl.StartStory("BossPreFight");
-    }
+        string sceneName = SceneManager.GetActiveScene().name;
+        string storyID = "";
 
-    /*
-    IEnumerator WaitAndTriggerStory(float waitTime)
-    {
-        yield return new WaitForSeconds(waitTime);
+        switch (sceneName)
+        {
+            case "Stage0":
+                storyID = "BossPreFight";
+                break;
+            case "Stage1":
+                storyID = "BossPreFight";
+                break;
+            case "Stage2":
+                storyID = "BossPreFight";
+                break;
+            case "Stage3":
+                storyID = "BossPreFight";
+                break;
+        }
+
         StoryController storyCtrl = FindObjectOfType<StoryController>();
-        if (storyCtrl != null)
-            storyCtrl.StartStory();
+        storyCtrl.StartStory(storyID);
     }
-    */
 
     public int GetCurrentCase()
     {
