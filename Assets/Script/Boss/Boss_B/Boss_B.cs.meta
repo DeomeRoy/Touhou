@@ -1,0 +1,21 @@
+fileFormatVersion: 2
+guid: f42931cd8f59bbc4189a4b09e57e5536
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - Bullet: {instanceID: 0}
+  - Bullet_A: {instanceID: 0}
+  - Bullet_C: {instanceID: 0}
+  - Bullet_D: {instanceID: 0}
+  - BOSS: {instanceID: 0}
+  - Target: {instanceID: 0}
+  - BossTransform: {instanceID: 0}
+  - Transform_SATK_D: {instanceID: 0}
+  - Idle: {instanceID: 0}
+  - Walk: {instanceID: 0}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

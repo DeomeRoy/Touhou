@@ -10,7 +10,7 @@ public class Boss_A_SATK_C : MonoBehaviour{
         Clock += Time.deltaTime;
         if(Clock - Gap > 0.05f){
             Gap += 0.05f;
-            transform.localScale += new Vector3(0.005f, 0.005f, 0.005f);
+            transform.localScale += new Vector3(0.001f, 0.001f, 0.001f);
         }
     }
 }

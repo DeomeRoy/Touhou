@@ -16,6 +16,7 @@ TagManager:
   - Fake_Wall
   - E_Block
   - D_Ball_Spawner
+  - Boss
   layers:
   - Default
   - TransparentFX

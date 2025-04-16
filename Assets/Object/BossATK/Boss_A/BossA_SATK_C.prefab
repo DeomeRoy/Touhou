@@ -12,11 +12,12 @@ GameObject:
   - component: {fileID: 4021496243664976590}
   - component: {fileID: -1589041086601190586}
   - component: {fileID: 3517036216329798937}
-  - component: {fileID: 2165165075398724824}
-  - component: {fileID: 6051064709524030147}
+  - component: {fileID: -165681760551378554}
+  - component: {fileID: 5026979330961564655}
+  - component: {fileID: -6141105360845539922}
   m_Layer: 12
-  m_Name: BossA_SATK_D
-  m_TagString: Untagged
+  m_Name: BossA_SATK_C
+  m_TagString: D_Ball
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -30,8 +31,8 @@ Transform:
   m_GameObject: {fileID: 7494510092233598822}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.281, y: 2.387, z: 2}
-  m_LocalScale: {x: 0.1, y: 0.1, z: 0.1}
+  m_LocalPosition: {x: 0.271, y: 2.359, z: 0}
+  m_LocalScale: {x: 0.05, y: 0.05, z: 0.05}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 0}
@@ -150,19 +151,7 @@ CircleCollider2D:
   m_Offset: {x: 0.2, y: -1.3}
   serializedVersion: 2
   m_Radius: 0.6
---- !u!114 &2165165075398724824
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7494510092233598822}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a493fa0a632fca04da744d9a020f3828, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &6051064709524030147
+--- !u!114 &-165681760551378554
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -176,3 +165,39 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Clock: 0
   Gap: 0
+--- !u!114 &5026979330961564655
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7494510092233598822}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 582bf15402d788445afb91c5f7441f8b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Bullet_C: {fileID: 7494510092233598822}
+  Gap: 0
+  Clock: 0
+--- !u!95 &-6141105360845539922
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7494510092233598822}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 4b07923ed31936d4588f886a411586b7, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0

@@ -195,6 +195,9 @@ public class StoryController : MonoBehaviour
         storyPanel.SetActive(false);
         isPlaying = false;
 
+        Boss_A Boss = FindObjectOfType<Boss_A>();
+        Boss.ChatEnd();
+
         if (autoNext)
         {
             string currentSceneName = SceneManager.GetActiveScene().name;
