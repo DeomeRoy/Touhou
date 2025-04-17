@@ -17,13 +17,17 @@ class Boss_A : MonoBehaviour{
     public bool NA,NB,SA,SB,SC,SD;
     public float AttackTimes;
     public void Start(){
+        //Boss初始位置設定,攻擊角度初始化,技能間隔初始化,計時歸零
+        SetUPosition = BOSS.transform.position;
         transform.rotation = Quaternion.Euler(0, 0, 0);
         GapA = 0;GapB = 0;
-        SetUPosition = BOSS.transform.position;
+        AttackTimes = 0;
+        //初始上個位置為初始位置,預設自動攻擊關(對話後會開)
         LastPosition = SetUPosition;
         AutoAttackTimer = false;
-        AttackTimes = 0;
+        //正在攻擊預設關
         OnAttack = false;
+        //Boss血量與戰鬥是否結束(預設否
         BossHP = 10;
         End = false;
     }
@@ -81,14 +85,10 @@ class Boss_A : MonoBehaviour{
         else{
                 BOSS.GetComponent<SpriteRenderer>().sprite = Idle;
             }
-        //--------------------------------------------------------------BOSS招式
+        {//--------------------------------------------------------------BOSS招式
         if(NA){
-                NA = false;
-                OnMove = true;
-                NATK_A = true;
-                SkillTime = 0f;
+                SkillStart(ref NA,ref OnMove,ref OnAttack,ref NATK_A,0f);
                 MoveSpeed = Mathf.Abs(BOSS.transform.position.x-SetUPosition.x);
-                OnAttack = true;
             }
         if(NATK_A == true){
                 BOSS.transform.position = Vector3.MoveTowards(BOSS.transform.position, SetUPosition, MoveSpeed * Time.deltaTime);
@@ -105,19 +105,13 @@ class Boss_A : MonoBehaviour{
                         bulletA.GetComponent<Rigidbody2D>().velocity = BossTransform.up * -BulletSpeed;
                     }
                     if(SkillTime>5){
-                        NATK_A = false;
-                        GapA = 0;
                         OnMove = false;
-                        OnAttack = false;
-                        SkillTime = 0;
-                        transform.rotation = Quaternion.Euler(0, 0, 0);
+                        SkillEnd(ref NATK_A,0);
                     }
                 }
             }
         if(NB){
-                OnMove = true;
-                NATK_B = true;
-                SkillTime = 0f;
+                SkillStart(ref NB,ref OnMove,ref OnAttack,ref NATK_B,0f);
                 if(transform.position.x > 0){
                     PositionX = Random.Range(-7.5f,-4f);
                     }
@@ -133,8 +127,6 @@ class Boss_A : MonoBehaviour{
                 PositionY = Random.Range(SetUPosition.y+0.5f,SetUPosition.y-3.5f);
                 MovePosition = new Vector3(PositionX, PositionY, BOSS.transform.position.z);
                 MoveSpeed = Mathf.Abs(BOSS.transform.position.x-PositionX)/4f;
-                NB = false;
-                OnAttack = true;
             }
         if(NATK_B == true){
                 BOSS.transform.position = Vector3.MoveTowards(BOSS.transform.position, MovePosition, MoveSpeed * Time.deltaTime);
@@ -150,21 +142,13 @@ class Boss_A : MonoBehaviour{
                     }
                     if(SkillTime>4f){
                         OnMove = false;
-                        NATK_B = false;
-                        GapA = 0;
-                        OnAttack = false;
-                        SkillTime = 0;
-                        transform.rotation = Quaternion.Euler(0, 0, 0);
+                        SkillEnd(ref NATK_B,0);
                     }
                 }
             }
         if(SA){
-                OnMove = true;
-                SATK_A = true;
-                SkillTime = 0f;
+                SkillStart(ref SA,ref OnMove,ref OnAttack,ref SATK_A,0f);
                 MoveSpeed = 15;
-                SA = false;
-                OnAttack = true;
             }
         if(SATK_A == true){
                 if(SkillTime < 5){
@@ -185,22 +169,13 @@ class Boss_A : MonoBehaviour{
                     Instantiate(Bullet_A, BossTransform.position, BossTransform.rotation);
                 }
                 if(SkillTime>10){
-                        OnMove = false;
-                        SATK_A = false;
-                        GapA = 0;
-                        OnAttack = false;
-                        SkillTime = 0;
-                        transform.rotation = Quaternion.Euler(0, 0, 0);
+                    SkillEnd(ref SATK_A,0);
                 }
             }
         if(SB){
+                SkillStart(ref SB,ref OnMove,ref OnAttack,ref SATK_B,0f);
                 BulletSpeed = 1f;
-                SATK_B = true;
-                SkillTime = 0f;
-                SB = false;
-                OnAttack = true;
                 MoveSpeed = Mathf.Abs(BOSS.transform.position.x-SetUPosition.x);
-                OnMove = true;
             }
         if(SATK_B == true){
                 if(BOSS.transform.position == SetUPosition){
@@ -214,20 +189,12 @@ class Boss_A : MonoBehaviour{
                     GapA = SkillTime;
                 }
                 if(SkillTime>12){
-                    SATK_B = false;
-                    GapA = 0;
-                    OnAttack = false;
-                    SkillTime = -4;
-                    transform.rotation = Quaternion.Euler(0, 0, 0);
+                    SkillEnd(ref SATK_B,-4);
                 }
             }
         if(SC){
-                OnMove = true;
-                SATK_C = true;
-                SkillTime = 0f;
+                SkillStart(ref SC,ref OnMove,ref OnAttack,ref SATK_C,0f);
                 MoveSpeed = Mathf.Abs(BOSS.transform.position.x-SetUPosition.x);
-                SC = false;
-                OnAttack = true;
             }
         if(SATK_C == true){
                 BOSS.transform.position = Vector3.MoveTowards(BOSS.transform.position, SetUPosition, MoveSpeed * Time.deltaTime);
@@ -253,26 +220,17 @@ class Boss_A : MonoBehaviour{
                     }
                 }
                 if(SkillTime>10){
-                    SATK_C = false;
-                    GapA = 0;
-                    GapB = 0;
-                    OnAttack = false;
-                    SkillTime = 0;
-                    transform.rotation = Quaternion.Euler(0, 0, 0);
+                    SkillEnd(ref SATK_C,0);
                 }
             }
         if(SD){
-                OnMove = true;
+                SkillStart(ref SD,ref OnMove,ref OnAttack,ref SATK_D,0f);
                 BulletSpeed = 2f;
-                SATK_D = true;
-                SkillTime = 0f;
                 MoveSpeed = Mathf.Abs(BOSS.transform.position.x-8);
-                SD = false;
-                OnAttack = true;
             }
         if(SATK_D == true){
                 BOSS.transform.position = Vector3.MoveTowards(BOSS.transform.position,new Vector3(SetUPosition.x+8,SetUPosition.y,0), MoveSpeed * Time.deltaTime);
-                if(BOSS.transform.position == new Vector3(8,3,0)){
+                if(BOSS.transform.position == new Vector3(SetUPosition.x+8,SetUPosition.y,0)){
                     OnMove = false;
                 }
                 if(SkillTime - GapA > 0.2f && BOSS.transform.position == new Vector3(SetUPosition.x+8,SetUPosition.y,0)){
@@ -281,35 +239,29 @@ class Boss_A : MonoBehaviour{
                     GapA = SkillTime;
                 }
                 if(SkillTime>15){
-                    SATK_D = false;
-                    GapA = 0;
-                    OnAttack = false;
-                    SkillTime = 0;
-                    transform.rotation = Quaternion.Euler(0, 0, 0);
+                    SkillEnd(ref SATK_D,0);
                 }
             }
+        }
+        
+        //Boss血量歸零的判定程式(開始對話+關閉計時器+隱藏球+玩家無敵+強制結束招式+避免重複判定
         if(BossHP <= 0 && !End){
             StartCoroutine(TriggerStoryByDistance(1));
             AutoAttackTimer = false;
             BallBehavior Ball = FindObjectOfType<BallBehavior>();
+            PlayerController Player = FindObjectOfType<PlayerController>();
             Ball.LevelChanging();
+            Player.invincible = true;
+            SkillTime = 100;
             End = true;
         }
     }
+    //對話結束恢復計時器
     public void ChatEnd(){
         AutoAttackTimer = !AutoAttackTimer;
     }
-    public void LoseLife(int x){
-        switch(x){
-            case 1:
-                BossHP -= 5;
-                break;
-            case 2:
-                BossHP -= 30;
-                break;
-        }
-    }
-    private IEnumerator TriggerStoryByDistance(float totalTransitionTime)//進入劇情的引用
+    //進入勝利劇情
+    private IEnumerator TriggerStoryByDistance(float totalTransitionTime)
     {
         BOSS.GetComponent<SpriteRenderer>().enabled = false;
         float fadeOutTime = totalTransitionTime * 0.7f;//關卡淡出
@@ -324,9 +276,41 @@ class Boss_A : MonoBehaviour{
         StoryController storyCtrl = FindObjectOfType<StoryController>();
         storyCtrl.StartStory(storyID);
     }
+    //Boss碰到球的判定
     void OnCollisionEnter2D(Collision2D collision){
         if (collision.gameObject.CompareTag("Ball")){
             LoseLife(1);
         }
+    }
+    //Boss的扣血判定
+    public void LoseLife(int x){
+        switch(x){
+            case 1:
+                BossHP -= 5;
+                break;
+            case 2:
+                BossHP -= 30;
+                break;
+        }
+        Boss_HP_Bar_Follow UpdateBossHP = FindObjectOfType<Boss_HP_Bar_Follow>();
+        UpdateBossHP.UpdateBossHP(x);
+    }
+    //技能啟動
+    public void SkillStart(ref bool AutoSkill,ref bool Move,ref bool Attack,ref bool SkillName,float Time){
+        AutoSkill = false;
+        Move = true;
+        Attack = true;
+        SkillName = true;
+        SkillTime = Time;
+    }
+    //技能結束
+    public void SkillEnd(ref bool SkillName,float Time){
+        SkillName = false;
+        SkillTime = Time;
+
+        OnAttack = false;
+        GapA = 0;
+        GapB = 0;
+        transform.rotation = Quaternion.Euler(0, 0, 0);
     }
 }
