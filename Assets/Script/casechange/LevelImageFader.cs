@@ -2,10 +2,12 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using System.Collections;
+using DG.Tweening;
 
 public class LevelImageFader : MonoBehaviour
 {
     public Image faderImage;//用來淡入淡出的圖片
+    public CanvasGroup fadeCanvasGroup;//控制alpha
 
     //關卡圖片
     public Sprite stage1Sprite;
@@ -21,7 +23,6 @@ public class LevelImageFader : MonoBehaviour
 
     void Start()
     {
-        faderImage.canvasRenderer.SetAlpha(0f);
         if (faderImage != null)
         {
             if (SceneManager.GetActiveScene().name == "Stage1")
@@ -66,12 +67,12 @@ public class LevelImageFader : MonoBehaviour
 
     private IEnumerator FadeInOut()
     {
-        faderImage.CrossFadeAlpha(1f, fadeDuration, false);//alpha*fadetime
+        fadeCanvasGroup.DOFade(1f, fadeDuration);
         yield return new WaitForSeconds(fadeDuration);
 
         yield return new WaitForSeconds(holdDuration);
 
-        faderImage.CrossFadeAlpha(0f, fadeDuration, false);
+        fadeCanvasGroup.DOFade(0f, fadeDuration);
         yield return new WaitForSeconds(fadeDuration);
     }
 }

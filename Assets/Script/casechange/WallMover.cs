@@ -81,7 +81,7 @@ public class WallMover : MonoBehaviour
         float fadeInTime = totalTransitionTime * 0.3f;//劇情淡入
 
         SceneAudioManager.Instance.FadeOutSceneMusic(fadeOutTime);
-        yield return new WaitForSeconds(fadeOutTime);
+        yield return new WaitForSeconds(fadeOutTime + 0.167f);
         SceneAudioManager.Instance.PlayStoryMusicWithFadeIn(fadeInTime);
 
         string sceneName = SceneManager.GetActiveScene().name;

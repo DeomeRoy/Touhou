@@ -268,13 +268,11 @@ class Boss_A : MonoBehaviour{
         float fadeInTime = totalTransitionTime * 0.3f;//劇情淡入
 
         SceneAudioManager.Instance.FadeOutSceneMusic(fadeOutTime);
-        yield return new WaitForSeconds(fadeOutTime);
+        yield return new WaitForSeconds(fadeOutTime + 0.167f);
         SceneAudioManager.Instance.PlayStoryMusicWithFadeIn(fadeInTime);
 
-        string storyID = "BossEndFight";
-
         StoryController storyCtrl = FindObjectOfType<StoryController>();
-        storyCtrl.StartStory(storyID);
+        storyCtrl.StartStory("BossEndFight");
     }
     //Boss碰到球的判定
     void OnCollisionEnter2D(Collision2D collision){

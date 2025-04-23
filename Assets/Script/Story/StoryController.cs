@@ -195,13 +195,15 @@ public class StoryController : MonoBehaviour
         storyPanel.SetActive(false);
         isPlaying = false;
 
-        Boss_A Boss = FindObjectOfType<Boss_A>();
-        Boss.ChatEnd();
-
         if (autoNext)
         {
             string currentSceneName = SceneManager.GetActiveScene().name;
             string nextSceneName = GetNextSceneName(currentSceneName);
+
+            if (nextSceneName != "Stage4")
+            {
+                GameSaveSystem.SaveFixedStoryProgress(nextSceneName, 1, 100, 50);
+            }
 
             GameObject obj = GameObject.Find("CutscenePanel");
             CanvasGroup CutscenePanel = obj.GetComponent<CanvasGroup>();
@@ -211,15 +213,30 @@ public class StoryController : MonoBehaviour
 
             yield return new WaitForSeconds(endFadeDuration); 
 
-            if (nextSceneName != "Stage4")
-            {
-                GameSaveSystem.SaveFixedStoryProgress(nextSceneName, 1, 100, 50);
-            }
-
             SceneManager.LoadScene(nextSceneName);
         }
         else
         {
+            string sceneName = SceneManager.GetActiveScene().name;
+            switch (sceneName)
+            {
+                case "Stage1":
+                    Boss_A bossA = FindObjectOfType<Boss_A>();
+                    bossA.ChatEnd();
+                    break;
+
+                case "Boss_B":
+                    //Boss_B bossB = FindObjectOfType<Boss_B>();
+                    //bossB.ChatEnd();
+                    break;
+
+                case "Boss_C":
+                    //Boss_C bossC = FindObjectOfType<Boss_C>();
+                    //bossC.ChatEnd();
+                    break;
+                default:
+                    break;
+            }
             currentSequence = null;
             yield return StartCoroutine(SceneAudioManager.Instance.FadeToBoss());
 

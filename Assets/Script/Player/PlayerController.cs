@@ -636,7 +636,7 @@ public class PlayerController : MonoBehaviour
         return 1;//預設case=1
     }
 
-    void OnApplicationQuit()
+    /*void OnApplicationQuit()
     {
         GameSaveSystem.SaveCurrentProgress();
     }
@@ -645,5 +645,5 @@ public class PlayerController : MonoBehaviour
     {
         if (pauseStatus)
             GameSaveSystem.SaveCurrentProgress();
-    }
+    }*/
 }

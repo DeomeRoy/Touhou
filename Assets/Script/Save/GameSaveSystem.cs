@@ -24,6 +24,7 @@ public static class GameSaveSystem
         }
 
         SaveManager.Instance.SaveGame(data);
+        Debug.Log("存檔成功");
     }
 
     // 載入存檔後直接套用到場景
@@ -68,6 +69,7 @@ public static class GameSaveSystem
         };
 
         SaveManager.Instance.SaveGame(data);
+        Debug.Log("劇情儲存");
     }
 
     // 只回傳資料

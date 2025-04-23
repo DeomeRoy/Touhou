@@ -26,9 +26,17 @@ public class DeathUIController : MonoBehaviour
 
     public void OnContinueClicked()
     {
-        deathPanel.SetActive(false);
         GameSaveData data = SaveManager.Instance.LoadGame();
-        StartCoroutine(FadeOutAndLoadScene(data.sceneName));
+        if (data.sceneName == "Stage1" && data.masterCase == 1)
+        {
+            continueButton.gameObject.SetActive(false);
+        }
+        else
+        {
+            deathPanel.SetActive(false);
+            GameManager.isContinue = true;
+            StartCoroutine(FadeOutAndLoadScene(data.sceneName));
+        }
     }
 
     private IEnumerator FadeOutAndLoadScene(string sceneName)

@@ -79,13 +79,13 @@ public class SceneAudioManager : MonoBehaviour
         GlobalAudioManager.Instance.PlayButtonSound();
     }
 
-    //DeathUIController,WallMover,ContinueButtonController,StoryController
+    //DeathUIController,WallMover,ContinueButtonController,StoryController,TitlesceneController,Boss_A
     public void FadeOutSceneMusic(float sec)
     {
         GlobalAudioManager.Instance.FadeOutMusic(sec);
     }
 
-    //WallMover
+    //WallMover,Boss_A
     public void PlayStoryMusicWithFadeIn(float x)
     {
         GlobalAudioManager.Instance.PlayStoryMusicWithFadeIn(x);

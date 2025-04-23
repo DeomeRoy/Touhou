@@ -33,39 +33,30 @@ public class TitleSceneController : MonoBehaviour
         fadeTime = 150f * Time.deltaTime;
     }
 
-    void Update()
+    public void OnClickStart()
     {
-        if (Input.GetMouseButtonUp(0))
-        {
-            PointerEventData eventData = new PointerEventData(EventSystem.current);
-            eventData.position = Input.mousePosition;
-            List<RaycastResult> results = new List<RaycastResult>();
-            EventSystem.current.RaycastAll(eventData, results);
-            foreach (RaycastResult result in results)
-            {
-                switch (result.gameObject.name)
-                {
-                    case "Start":
-                        FadeOut();
-                        StartCoroutine(Cutscene());
-                        GameManager.isContinue = false;
-                        break;
-                    case "Information":
-                        SceneManager.LoadScene("Information");
-                        break;
-                    case "Continue":
-                        Continue();
-                        break;
-                    case "Setting":
-                        Setting();
-                        break;
-                    case "Exit":
-                        Debug.Log("GameExit");
-                        Application.Quit();
-                        break;
-                }
-            }
-        }
+        StartCoroutine(Cutscene());
+    }
+
+    public void OnClickInformation()
+    {
+        SceneManager.LoadScene("Information");
+    }
+
+    public void OnClickContinue()
+    {
+        Continue();
+    }
+
+    public void OnClickSetting()
+    {
+        Setting();
+    }
+
+    public void OnClickExit()
+    {
+        Debug.Log("GameExit");
+        Application.Quit();
     }
 
     public void FadeOut()
@@ -105,6 +96,7 @@ public class TitleSceneController : MonoBehaviour
 
     IEnumerator Cutscene()
     {
+        FadeOut();
         GameManager.isContinue = false;
         yield return new WaitForSeconds(fadeTime);
         Debug.Log("GameStart");
