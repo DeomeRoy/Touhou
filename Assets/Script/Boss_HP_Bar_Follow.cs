@@ -8,9 +8,10 @@ public class Boss_HP_Bar_Follow : MonoBehaviour
     public Vector3 offset = new Vector3(0, 2f, 0);
     public Camera cam;
     public RectTransform HPbar;
-    public int BossHP;
+    public float BossHP,lessHP;
     void Start(){
-        BossHP = 10;
+        BossHP = 50;
+        lessHP = 1;
     }
 
     void LateUpdate()
@@ -21,9 +22,12 @@ public class Boss_HP_Bar_Follow : MonoBehaviour
             Vector3 screenPos = cam.WorldToScreenPoint(worldPos);
             transform.position = screenPos;
         }
-    }
-    public void UpdateBossHP(int x){
-        float lessHP = x/BossHP;
         HPbar.localScale = new Vector3(lessHP,1f,1f);
+        if (lessHP == 0){
+            Destroy(gameObject);
+        }
+    }
+    public void UpdateBossHP(float x){
+        lessHP = x/BossHP;
     }
 }

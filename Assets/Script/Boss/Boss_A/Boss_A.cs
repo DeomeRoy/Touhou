@@ -13,8 +13,10 @@ class Boss_A : MonoBehaviour{
     public float GapA,GapB;
     public float SkillTime,BulletSpeed,MoveSpeed,PositionX,PositionY,BossHP;
     Vector3 SetUPosition,MovePosition,LastPosition;
+    private CircleCollider2D CircleCollider;
+    private CapsuleCollider2D CapsuleCollider;
 
-    public bool NA,NB,SA,SB,SC,SD;
+    public bool NA,NB,SA,SB,SC,SD,AHP;
     public float AttackTimes;
     public void Start(){
         //Boss初始位置設定,攻擊角度初始化,技能間隔初始化,計時歸零
@@ -28,10 +30,20 @@ class Boss_A : MonoBehaviour{
         //正在攻擊預設關
         OnAttack = false;
         //Boss血量與戰鬥是否結束(預設否
-        BossHP = 10;
+        BossHP = 50;
         End = false;
+        //初始化碰撞箱
+        CircleCollider = GetComponent<CircleCollider2D>();
+        CapsuleCollider = GetComponent<CapsuleCollider2D>();
+        CircleCollider.enabled = false;
+        CapsuleCollider.enabled = true;
     }
     public void Update(){
+        if(AHP){
+            AHP = false;
+            LoseLife(1);
+        }
+
         SkillTime += Time.deltaTime;
         //--------------------------------------------------------------自動攻擊邏輯
         if(AutoAttackTimer && !OnAttack){
@@ -104,6 +116,7 @@ class Boss_A : MonoBehaviour{
                         GameObject bulletA = Instantiate(Bullet, BossTransform.position, BossTransform.rotation);
                         bulletA.GetComponent<Rigidbody2D>().velocity = BossTransform.up * -BulletSpeed;
                     }
+                    transform.rotation = Quaternion.Euler(0, 0, 0);
                     if(SkillTime>5){
                         OnMove = false;
                         SkillEnd(ref NATK_A,0);
@@ -129,6 +142,7 @@ class Boss_A : MonoBehaviour{
                 MoveSpeed = Mathf.Abs(BOSS.transform.position.x-PositionX)/4f;
             }
         if(NATK_B == true){
+                MoveCollderChange();
                 BOSS.transform.position = Vector3.MoveTowards(BOSS.transform.position, MovePosition, MoveSpeed * Time.deltaTime);
                 if(SkillTime - GapA > 1f){
                     GapA = SkillTime;
@@ -140,6 +154,7 @@ class Boss_A : MonoBehaviour{
                         GameObject bulletA = Instantiate(Bullet, BossTransform.position, BossTransform.rotation);
                         bulletA.GetComponent<Rigidbody2D>().velocity = BossTransform.up * -BulletSpeed;
                     }
+                    MoveCollderChange();
                     if(SkillTime>4f){
                         OnMove = false;
                         SkillEnd(ref NATK_B,0);
@@ -176,13 +191,15 @@ class Boss_A : MonoBehaviour{
                 SkillStart(ref SB,ref OnMove,ref OnAttack,ref SATK_B,0f);
                 BulletSpeed = 1f;
                 MoveSpeed = Mathf.Abs(BOSS.transform.position.x-SetUPosition.x);
+                CircleCollider.enabled = true;
+                CapsuleCollider.enabled = false;
             }
         if(SATK_B == true){
                 if(BOSS.transform.position == SetUPosition){
                     OnMove = false;
                 }
-                BOSS.transform.position = Vector3.MoveTowards(BOSS.transform.position, SetUPosition, MoveSpeed * Time.deltaTime);
                 transform.Rotate(0, 0, 180 * Time.deltaTime);
+                BOSS.transform.position = Vector3.MoveTowards(BOSS.transform.position, SetUPosition, MoveSpeed * Time.deltaTime);
                 if(SkillTime - GapA > 0.05f && BOSS.transform.position == SetUPosition){
                     GameObject bulletA = Instantiate(Bullet, BossTransform.position, BossTransform.rotation);
                     bulletA.GetComponent<Rigidbody2D>().velocity = BossTransform.up * -BulletSpeed;
@@ -218,6 +235,7 @@ class Boss_A : MonoBehaviour{
                             bulletA.GetComponent<Rigidbody2D>().velocity = BossTransform.up * -BulletSpeed;
                         }
                     }
+                    transform.rotation = Quaternion.Euler(0, 0, 0);
                 }
                 if(SkillTime>10){
                     SkillEnd(ref SATK_C,0);
@@ -256,6 +274,17 @@ class Boss_A : MonoBehaviour{
             End = true;
         }
     }
+    //Boss移動時的碰撞箱轉換
+    public void MoveCollderChange(){
+        if(MovePosition.x > 0){
+            GetComponent<CapsuleCollider2D>().offset = new Vector2(0.5f,0.3f);
+            transform.rotation = Quaternion.Euler(0, 0, -12.5f);
+        }
+        else if(MovePosition.x < 0){
+            GetComponent<CapsuleCollider2D>().offset = new Vector2(-0.5f,0.3f);
+            transform.rotation = Quaternion.Euler(0, 0, 12.5f);
+        }
+    }
     //對話結束恢復計時器
     public void ChatEnd(){
         AutoAttackTimer = !AutoAttackTimer;
@@ -291,7 +320,7 @@ class Boss_A : MonoBehaviour{
                 break;
         }
         Boss_HP_Bar_Follow UpdateBossHP = FindObjectOfType<Boss_HP_Bar_Follow>();
-        UpdateBossHP.UpdateBossHP(x);
+        UpdateBossHP.UpdateBossHP(BossHP);
     }
     //技能啟動
     public void SkillStart(ref bool AutoSkill,ref bool Move,ref bool Attack,ref bool SkillName,float Time){
@@ -309,6 +338,9 @@ class Boss_A : MonoBehaviour{
         OnAttack = false;
         GapA = 0;
         GapB = 0;
+        GetComponent<CapsuleCollider2D>().offset = new Vector2(0,0.3f);
         transform.rotation = Quaternion.Euler(0, 0, 0);
+        CircleCollider.enabled = false;
+        CapsuleCollider.enabled = true;
     }
 }

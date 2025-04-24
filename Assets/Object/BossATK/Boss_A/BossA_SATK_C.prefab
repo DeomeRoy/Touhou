@@ -14,7 +14,6 @@ GameObject:
   - component: {fileID: 3517036216329798937}
   - component: {fileID: -165681760551378554}
   - component: {fileID: 5026979330961564655}
-  - component: {fileID: -6141105360845539922}
   m_Layer: 12
   m_Name: BossA_SATK_C
   m_TagString: D_Ball
@@ -78,7 +77,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 288b2f1b6a9b91e408163b0df4ae1e26, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 443ff3d5c3c3d184b8312b92406db120, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -148,9 +147,9 @@ CircleCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0.2, y: -1.3}
+  m_Offset: {x: 0, y: 0}
   serializedVersion: 2
-  m_Radius: 0.6
+  m_Radius: 4.5
 --- !u!114 &-165681760551378554
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -180,24 +179,3 @@ MonoBehaviour:
   Bullet_C: {fileID: 7494510092233598822}
   Gap: 0
   Clock: 0
---- !u!95 &-6141105360845539922
-Animator:
-  serializedVersion: 5
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7494510092233598822}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 4b07923ed31936d4588f886a411586b7, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_StabilizeFeet: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorStateOnDisable: 0
-  m_WriteDefaultValuesOnDisable: 0

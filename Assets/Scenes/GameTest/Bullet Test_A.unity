@@ -442,7 +442,7 @@ MonoBehaviour:
   SATK_D: 0
   OnMove: 0
   OnAttack: 0
-  BattleStart: 0
+  End: 0
   GapA: 0
   GapB: 0
   SkillTime: 0
@@ -450,6 +450,7 @@ MonoBehaviour:
   MoveSpeed: 0
   PositionX: 0
   PositionY: 0
+  BossHP: 0
   NA: 0
   NB: 0
   SA: 0

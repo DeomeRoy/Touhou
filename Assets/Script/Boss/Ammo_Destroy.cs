@@ -9,7 +9,7 @@ public class Ammo_Destroy : MonoBehaviour{
         Clock += Time.deltaTime;
         if(Clock - Gap > 0.05f){
             Gap += 0.05f;
-            if(transform.position.x > 10f || transform.position.x < -10f || transform.position.y > 36f || transform.position.y < 24f){
+            if(transform.position.x > 10f || transform.position.x < -10f || transform.position.y > 36f || transform.position.y < 21f){
                 Destroy(gameObject);
             }
         }
