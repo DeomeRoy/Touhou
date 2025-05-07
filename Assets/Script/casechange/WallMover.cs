@@ -43,10 +43,10 @@ public class WallMover : MonoBehaviour
     {
         Level += 1;
         FindObjectOfType<LevelImageFader>().FadeForLevel(Level);
-        if (Level == 4)//僅限case4的存檔功能，如有需要可以移除判斷讓其他case也能存檔
-        {
+        //if (Level == 4)//僅限case4的存檔功能，如有需要可以移除判斷讓其他case也能存檔
+        /*{ }*/
             GameSaveSystem.SaveCurrentProgress();
-        }
+        
         if (Level == 4)
         {
             float totalTransitionTime = Vector3.Distance(transform.position, wall1_X.position) / speed;

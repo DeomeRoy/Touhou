@@ -101,6 +101,10 @@ public class PlayerController : MonoBehaviour
         if (GameManager.isContinue)
         {
             GameSaveSystem.ApplySavedGameToScene();
+
+            level = GetCurrentCase();
+            CheakPosition = true;    
+            controlEnabled = false;
         }
         else
         {
@@ -635,15 +639,4 @@ public class PlayerController : MonoBehaviour
             return 4;
         return 1;//預設case=1
     }
-
-    /*void OnApplicationQuit()
-    {
-        GameSaveSystem.SaveCurrentProgress();
-    }
-
-    void OnApplicationPause(bool pauseStatus)
-    {
-        if (pauseStatus)
-            GameSaveSystem.SaveCurrentProgress();
-    }*/
 }

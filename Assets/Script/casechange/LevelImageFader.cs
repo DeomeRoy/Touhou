@@ -16,9 +16,14 @@ public class LevelImageFader : MonoBehaviour
     public Sprite level2Sprite;
     public Sprite level3Sprite;
     public Sprite level4Sprite;
+    bool shouldTriggerBoss = false;
+    bool hasShownLevel3 = false;
+
 
     private float fadeDuration = 0.5f;//淡入&淡出時間
     private float holdDuration = 1.5f;//顯示時間
+
+    public System.Action onFadeOutStart;
 
 
     void Start()
@@ -52,18 +57,57 @@ public class LevelImageFader : MonoBehaviour
         {
             case 2:
                 faderImage.sprite = level2Sprite;
+                StartCoroutine(FadeInOut());
                 break;
+
             case 3:
                 faderImage.sprite = level3Sprite;
+                hasShownLevel3 = true;
+                StartCoroutine(FadeInOut());
                 break;
+
             case 4:
+                if (hasShownLevel3)
+                    return;
+
                 faderImage.sprite = level4Sprite;
+                shouldTriggerBoss = true;
+                StartCoroutine(FadeInOut());
                 break;
+
             default:
                 return;
         }
-        StartCoroutine(FadeInOut());
     }
+
+
+    public IEnumerator Fadeway()
+    {
+        faderImage.sprite = level4Sprite;
+        fadeCanvasGroup.alpha = 0f;
+        fadeCanvasGroup.DOFade(1f, fadeDuration);
+        yield return new WaitForSeconds(fadeDuration + holdDuration);
+
+        string sceneName = SceneManager.GetActiveScene().name;
+        switch (sceneName)
+        {
+            case "Stage1":
+                Boss_A bossA = FindObjectOfType<Boss_A>();
+                bossA.ChatEnd();
+                break;
+            case "Boss_B":
+                //Boss_B bossB = FindObjectOfType<Boss_B>();
+                //bossB.ChatEnd();
+                break;
+        }
+
+        PlayerController player = FindObjectOfType<PlayerController>();
+        player.controlEnabled = true;
+
+        fadeCanvasGroup.DOFade(0f, fadeDuration);
+        yield return new WaitForSeconds(fadeDuration);
+    }
+
 
     private IEnumerator FadeInOut()
     {
@@ -71,6 +115,27 @@ public class LevelImageFader : MonoBehaviour
         yield return new WaitForSeconds(fadeDuration);
 
         yield return new WaitForSeconds(holdDuration);
+
+        if (shouldTriggerBoss)
+        {
+            string sceneName = SceneManager.GetActiveScene().name;
+            switch (sceneName)
+            {
+                case "Stage1":
+                    Boss_A bossA = FindObjectOfType<Boss_A>();
+                    bossA.ChatEnd();
+                    break;
+                case "Boss_B":
+                    //Boss_B bossB = FindObjectOfType<Boss_B>();
+                    //bossB.ChatEnd();
+                    break;
+            }
+
+            PlayerController player = FindObjectOfType<PlayerController>();
+            player.controlEnabled = true;
+
+            shouldTriggerBoss = false; // reset
+        }
 
         fadeCanvasGroup.DOFade(0f, fadeDuration);
         yield return new WaitForSeconds(fadeDuration);

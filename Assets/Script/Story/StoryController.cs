@@ -56,7 +56,7 @@ public class StoryController : MonoBehaviour
         currentlyVisible["Player"] = false;
         currentlyVisible["Enemy"] = false;
         storyPanel.SetActive(false);
-        
+
         //讓按鈕被點擊時觸發的函數
         chatButton.onClick.AddListener(OnChatClicked);
         skipButton.onClick.AddListener(OnSkipClicked);
@@ -154,7 +154,7 @@ public class StoryController : MonoBehaviour
             }
 
             var rtSpeaker = speakerData.characterImage.GetComponent<RectTransform>();
-            if (previousSpeakerID == null) 
+            if (previousSpeakerID == null)
             {
                 speakerData.characterImage.color = brightColor;
             }
@@ -211,37 +211,15 @@ public class StoryController : MonoBehaviour
             CutscenePanel.blocksRaycasts = true;
             CutscenePanel.DOFade(1f, endFadeDuration);
 
-            yield return new WaitForSeconds(endFadeDuration); 
+            yield return new WaitForSeconds(endFadeDuration);
 
             SceneManager.LoadScene(nextSceneName);
         }
         else
         {
-            string sceneName = SceneManager.GetActiveScene().name;
-            switch (sceneName)
-            {
-                case "Stage1":
-                    Boss_A bossA = FindObjectOfType<Boss_A>();
-                    bossA.ChatEnd();
-                    break;
+            LevelImageFader fader = FindObjectOfType<LevelImageFader>();
+            StartCoroutine(fader.Fadeway());
 
-                case "Boss_B":
-                    //Boss_B bossB = FindObjectOfType<Boss_B>();
-                    //bossB.ChatEnd();
-                    break;
-
-                case "Boss_C":
-                    //Boss_C bossC = FindObjectOfType<Boss_C>();
-                    //bossC.ChatEnd();
-                    break;
-                default:
-                    break;
-            }
-            currentSequence = null;
-            yield return StartCoroutine(SceneAudioManager.Instance.FadeToBoss());
-
-            PlayerController player = FindObjectOfType<PlayerController>();
-            player.controlEnabled = true;
         }
     }
 

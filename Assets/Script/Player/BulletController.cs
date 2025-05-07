@@ -7,9 +7,11 @@ public class BulletController : MonoBehaviour
     private Rigidbody2D rb;
     private PlayerController player;
     public float speed = 0.75f;
+    private float spawnTime;
 
     void Start()
     {
+        spawnTime = Time.time;
         player = GameObject.FindWithTag("Player").GetComponent<PlayerController>();
         rb = GetComponent<Rigidbody2D>();
         Vector2 newPosition = rb.position + new Vector2(0, speed * Time.fixedDeltaTime);
@@ -26,6 +28,12 @@ public class BulletController : MonoBehaviour
     {
         Vector2 newPosition = rb.position + new Vector2(0, speed * Time.fixedDeltaTime);
         rb.MovePosition(newPosition);
+
+        if (Time.time - spawnTime > 1f)
+        {
+            player.bullet_exists = false;
+            Destroy(gameObject);
+        }
     }
 
     private void OnCollisionEnter2D(Collision2D collision)

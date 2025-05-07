@@ -68,8 +68,8 @@ public class ContinueButtonController : MonoBehaviour, IPointerDownHandler, IPoi
         GameSaveData data = SaveManager.Instance.LoadGame();
         if (data != null) 
         {
-            if (data.masterCase == 4 || (data.sceneName != "Stage1" && data.masterCase == 1))//特殊關卡載入判斷，有需要可刪除或修改
-            //if (data.masterCase == 4 || data.masterCase == 3 ||(data.sceneName != "Stage1" && data.masterCase == 1))
+            //if (data.masterCase == 4 || (data.sceneName != "Stage1" && data.masterCase == 1))//特殊關卡載入判斷，有需要可刪除或修改
+            if (!(data.sceneName == "Stage1" && data.masterCase == 1))
             {
                 GameManager.isContinue = true;
                 StartCoroutine(ContinueSequence());
