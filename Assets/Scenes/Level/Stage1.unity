@@ -5767,11 +5767,14 @@ MonoBehaviour:
   Bullet_C: {fileID: 7494510092233598822, guid: 616f848d09a87c945810c122a9c2b87e, type: 3}
   Bullet_D: {fileID: 7494510092233598822, guid: e3b73a2ba3e10734bb68dbf34297a0e8, type: 3}
   BOSS: {fileID: 533634606}
+  B_BlockPrefab: {fileID: 484334599547172165, guid: 166f0f668a07c1b46ac6f96cc0053905, type: 3}
+  E_BlockPrefab: {fileID: 484334599547172165, guid: b734b816b385cf8498d4c8d3358300a1, type: 3}
   Target: {fileID: 1175098145}
   BossTransform: {fileID: 1040039190}
   Transform_SATK_D: {fileID: 59976684}
   Idle: {fileID: 21300000, guid: 1850c2766c6209440843de1f6bc6b690, type: 3}
   Walk: {fileID: 21300000, guid: 67f42e478d03c8a42a9bf05d7d9ecb1c, type: 3}
+  ORG_Ammo: {fileID: 21300000, guid: 67bc5152db919da4ab8b9f301de3ff46, type: 3}
   AutoAttackTimer: 0
   NATK_A: 0
   NATK_B: 0
@@ -5782,14 +5785,19 @@ MonoBehaviour:
   OnMove: 0
   OnAttack: 0
   End: 0
+  ColorChange: 0
   GapA: 0
   GapB: 0
+  GapSpeed: 0
+  AttackTimes: 0
   SkillTime: 0
   BulletSpeed: 10
   MoveSpeed: 0
   PositionX: 0
   PositionY: 0
   BossHP: 0
+  PlayerHP: 0
+  DropTimer: 0
   NA: 0
   NB: 0
   SA: 0
@@ -5797,7 +5805,6 @@ MonoBehaviour:
   SC: 0
   SD: 0
   AHP: 0
-  AttackTimes: 0
 --- !u!50 &1040039194
 Rigidbody2D:
   serializedVersion: 4

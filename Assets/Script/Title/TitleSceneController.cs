@@ -102,4 +102,9 @@ public class TitleSceneController : MonoBehaviour
         Debug.Log("GameStart");
         SceneManager.LoadScene("Stage1");
     }
+
+    public void OnClickTest()
+    {
+        SceneManager.LoadScene("Test");
+    }
 }
