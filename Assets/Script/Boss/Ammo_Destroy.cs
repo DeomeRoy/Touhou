@@ -5,6 +5,10 @@ using UnityEngine;
 public class Ammo_Destroy : MonoBehaviour{
     [HideInInspector]public float Clock = 0;
     [HideInInspector]public float Gap = 0;
+    public GameObject BossHpBar;
+    void Start(){
+        BossHpBar = GameObject.Find("BossHPbar");
+    }
     void Update(){
         Clock += Time.deltaTime;
         if(Clock - Gap > 0.05f){
@@ -12,6 +16,9 @@ public class Ammo_Destroy : MonoBehaviour{
             if(transform.position.x > 10f || transform.position.x < -10f || transform.position.y > 36f || transform.position.y < 21f){
                 Destroy(gameObject);
             }
+        }
+        if(BossHpBar == null){
+            Destroy(gameObject);
         }
     }
     void OnTriggerEnter2D(Collider2D collision){
