@@ -3,14 +3,14 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using System.Collections;
 
-
 public class SceneAudioManager : MonoBehaviour
 {
     public static SceneAudioManager Instance { get; private set; }
     public float stageFadeOutDuration = 2f;
     public float stageFadeInDuration = 2f;
 
-    private static string previousScene = "";
+    // 儲存切場景之前的場景名稱
+    public static string lastSceneName = "";
 
     void Awake()
     {
@@ -28,39 +28,60 @@ public class SceneAudioManager : MonoBehaviour
 
     void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
+        StartCoroutine(DelayedMusicPlay(scene));
+        RegisterButtonListeners();
+    }
+
+    private IEnumerator DelayedMusicPlay(Scene scene)
+    {
+        yield return null;
+
         GameSaveData data = SaveManager.Instance.LoadGame();
         int gsd = data != null ? data.masterCase : 0;
 
-        if (scene.name == "TitleScene")
+        string localSceneName = scene.name;
+
+        if (localSceneName == "TitleScene")
         {
-            if (string.IsNullOrEmpty(previousScene) ||
-                previousScene == "Stage1" || previousScene == "Stage2" || previousScene == "Stage3")
+            // 只有從 Stage0~4 回到 TitleScene 才播放主選單音樂
+            if (lastSceneName == "" || lastSceneName == "Stage0" ||
+                lastSceneName == "Stage1" ||
+                lastSceneName == "Stage2" ||
+                lastSceneName == "Stage3" ||
+                lastSceneName == "Stage4")
             {
                 GlobalAudioManager.Instance.StopAllMusic();
                 GlobalAudioManager.Instance.PlayMainMenuMusic();
             }
         }
+        else if (localSceneName == "Stage0")
+        {
+            GlobalAudioManager.Instance.PlayMusicDirectly(GlobalAudioManager.Instance.stage0Music, GlobalAudioManager.Instance.stage0Volume);
+        }
+        else if (localSceneName == "Stage4")
+        {
+            GlobalAudioManager.Instance.PlayMusicDirectly(GlobalAudioManager.Instance.stage4Music, GlobalAudioManager.Instance.stage4Volume);
+        }
         else if (GameManager.isContinue && gsd == 4 &&
-                (scene.name == "Stage1" || scene.name == "Stage2" || scene.name == "Stage3"))
+                 (localSceneName == "Stage1" || localSceneName == "Stage2" || localSceneName == "Stage3"))
         {
             GlobalAudioManager.Instance.PlayMusicDirectly(GlobalAudioManager.Instance.bossMusic, GlobalAudioManager.Instance.bossVolume);
         }
-        else if (scene.name == "Stage1")
+        else if (localSceneName == "Stage1")
         {
             GlobalAudioManager.Instance.PlayMusicDirectly(GlobalAudioManager.Instance.stage1Music, GlobalAudioManager.Instance.stage1Volume);
-            Debug.Log("播放 Stage1 音樂");
         }
-        else if (scene.name == "Stage2")
+        else if (localSceneName == "Stage2")
         {
             GlobalAudioManager.Instance.PlayMusicDirectly(GlobalAudioManager.Instance.stage2Music, GlobalAudioManager.Instance.stage2Volume);
         }
-        else if (scene.name == "Stage3")
+        else if (localSceneName == "Stage3")
         {
             GlobalAudioManager.Instance.PlayMusicDirectly(GlobalAudioManager.Instance.stage3Music, GlobalAudioManager.Instance.stage3Volume);
         }
 
-        previousScene = scene.name;
-        RegisterButtonListeners();
+        // 最後記錄這次進入的是哪個場景
+        lastSceneName = localSceneName;
     }
 
     void RegisterButtonListeners()
@@ -79,21 +100,21 @@ public class SceneAudioManager : MonoBehaviour
         GlobalAudioManager.Instance.PlayButtonSound();
     }
 
-    //DeathUIController,WallMover,ContinueButtonController,StoryController,TitlesceneController,Boss_A
+    // DeathUIController, WallMover, ContinueButtonController, StoryController, TitlesceneController, Boss_A
     public void FadeOutSceneMusic(float sec)
     {
         GlobalAudioManager.Instance.FadeOutMusic(sec);
     }
 
-    //WallMover,Boss_A
+    // WallMover, Boss_A
     public void PlayStoryMusicWithFadeIn(float x)
     {
         GlobalAudioManager.Instance.PlayStoryMusicWithFadeIn(x);
     }
 
-    //StoryController
-    public IEnumerator FadeToBoss()
+    // StoryController
+    public void FadeToBoss()
     {
-        yield return GlobalAudioManager.Instance.CrossfadeToBossMusic();
+        GlobalAudioManager.Instance.PlayBossMusicDirectly();
     }
 }

@@ -30,7 +30,7 @@ public class SaveManager : MonoBehaviour
             dbConnection.Open();
             using (IDbCommand dbCmd = dbConnection.CreateCommand())
             {
-                string sqlQuery = "CREATE TABLE IF NOT EXISTS SaveGame (id INTEGER PRIMARY KEY, sceneName TEXT, masterCase INTEGER, playerHP INTEGER, playerMP INTEGER)";
+                string sqlQuery = "CREATE TABLE IF NOT EXISTS SaveGame (id INTEGER PRIMARY KEY, sceneName TEXT, masterCase INTEGER, playerHP INTEGER, playerMP INTEGER, hasVisitedStage0 INTEGER)";
                 dbCmd.CommandText = sqlQuery;
                 dbCmd.ExecuteNonQuery();
             }
@@ -43,7 +43,7 @@ public class SaveManager : MonoBehaviour
                 {
                     using (IDbCommand insertCmd = dbConnection.CreateCommand())
                     {
-                        string insertQuery = "INSERT INTO SaveGame (id, sceneName, masterCase, playerHP, playerMP) VALUES (1, 'Stage1', 1, 100, 50)";
+                        string insertQuery = "INSERT INTO SaveGame (id, sceneName, masterCase, playerHP, playerMP, hasVisitedStage0) VALUES (1, 'Stage1', 1, 100, 50, 0)";
                         insertCmd.CommandText = insertQuery;
                         insertCmd.ExecuteNonQuery();
                     }
@@ -61,7 +61,7 @@ public class SaveManager : MonoBehaviour
             dbConnection.Open();
             using (IDbCommand dbCmd = dbConnection.CreateCommand())
             {
-                string sqlQuery = "REPLACE INTO SaveGame (id, sceneName, masterCase, playerHP, playerMP) VALUES (1, @sceneName, @masterCase, @playerHP, @playerMP)";
+                string sqlQuery = "REPLACE INTO SaveGame (id, sceneName, masterCase, playerHP, playerMP, hasVisitedStage0) " + "VALUES (1, @sceneName, @masterCase, @playerHP, @playerMP, @hasVisitedStage0)";
                 dbCmd.CommandText = sqlQuery;
 
                 var paramScene = dbCmd.CreateParameter();
@@ -84,11 +84,18 @@ public class SaveManager : MonoBehaviour
                 paramMP.Value = data.playerMP;
                 dbCmd.Parameters.Add(paramMP);
 
+                // ✅ 這段是你要新增的部分：
+                var paramVisited = dbCmd.CreateParameter();
+                paramVisited.ParameterName = "@hasVisitedStage0";
+                paramVisited.Value = data.hasVisitedStage0 ? 1 : 0;
+                dbCmd.Parameters.Add(paramVisited);
+
                 dbCmd.ExecuteNonQuery();
             }
             dbConnection.Close();
         }
-        Debug.Log("scenes=" + data.sceneName + "case=" + data.masterCase +"hp="+data.playerHP+"mp="+data.playerMP);
+
+        Debug.Log("scenes=" + data.sceneName + " case=" + data.masterCase + " hp=" + data.playerHP + " mp=" + data.playerMP + " visited0=" + data.hasVisitedStage0);
     }
 
     public GameSaveData LoadGame()
@@ -113,6 +120,7 @@ public class SaveManager : MonoBehaviour
                         //data.playerHP = 100;
                         data.playerMP = int.Parse(reader["playerMP"].ToString());
                         //data.playerMP = 100;
+                        data.hasVisitedStage0 = reader["hasVisitedStage0"].ToString() == "1";
                     }
                     reader.Close();
                 }
@@ -120,7 +128,7 @@ public class SaveManager : MonoBehaviour
             dbConnection.Close();
         }
         if (data != null)
-            Debug.Log("scenes=" + data.sceneName + "case=" + data.masterCase + "hp=" + data.playerHP + "mp=" + data.playerMP);
+            Debug.Log("scenes=" + data.sceneName + "case=" + data.masterCase + "hp=" + data.playerHP + "mp=" + data.playerMP + " visited0=" + data.hasVisitedStage0);
         return data;
     }
 }

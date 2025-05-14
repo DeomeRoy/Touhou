@@ -23,6 +23,14 @@ public class ContinueButtonController : MonoBehaviour, IPointerDownHandler, IPoi
         GameSaveData data = SaveManager.Instance.LoadGame();
         if (data != null)
         {
+            // 如果還沒去過 Stage0，隱藏並禁用按鈕
+            if (!data.hasVisitedStage0)
+            {
+                continueButtonImage.gameObject.SetActive(false); // 或設 alpha = 0
+                GetComponent<Button>().interactable = false;
+                return;
+            }
+
             Sprite normal = GetNormalButtonSprite(data.sceneName, data.masterCase);
             if (normal != null)
             {
@@ -66,10 +74,11 @@ public class ContinueButtonController : MonoBehaviour, IPointerDownHandler, IPoi
     public void OnContinueButtonClick()
     {
         GameSaveData data = SaveManager.Instance.LoadGame();
+        if (data != null && !data.hasVisitedStage0) return;
         if (data != null) 
         {
             //if (data.masterCase == 4 || (data.sceneName != "Stage1" && data.masterCase == 1))//特殊關卡載入判斷，有需要可刪除或修改
-            if (!(data.sceneName == "Stage1" && data.masterCase == 1))
+            //if (!(data.sceneName == "Stage1" && data.masterCase == 1))
             {
                 GameManager.isContinue = true;
                 StartCoroutine(ContinueSequence());
@@ -109,6 +118,7 @@ public class ContinueButtonController : MonoBehaviour, IPointerDownHandler, IPoi
     public void OnPointerDown(PointerEventData eventData)
     {
         GameSaveData data = SaveManager.Instance.LoadGame();
+        if (data != null && !data.hasVisitedStage0) return;
         if (data != null)
         {
             Sprite pressed = GetPressedButtonSprite(data.sceneName, data.masterCase);
@@ -120,6 +130,7 @@ public class ContinueButtonController : MonoBehaviour, IPointerDownHandler, IPoi
     public void OnPointerUp(PointerEventData eventData)
     {
         GameSaveData data = SaveManager.Instance.LoadGame();
+        if (data != null && !data.hasVisitedStage0) return;
         if (data != null)
         {
             Sprite normal = GetNormalButtonSprite(data.sceneName, data.masterCase);

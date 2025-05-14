@@ -23,6 +23,9 @@ public static class GameSaveSystem
             data.masterCase = wall.GetCurrentCase();
         }
 
+        // ✅ 直接保留 visited0
+        data.hasVisitedStage0 = SaveManager.Instance.LoadGame()?.hasVisitedStage0 ?? false;
+
         SaveManager.Instance.SaveGame(data);
         Debug.Log("存檔成功");
     }
@@ -65,7 +68,9 @@ public static class GameSaveSystem
             sceneName = sceneName,
             masterCase = caseNum,
             playerHP = hp,
-            playerMP = mp
+            playerMP = mp,
+            // ✅ 一樣保留 visited0
+            hasVisitedStage0 = SaveManager.Instance.LoadGame()?.hasVisitedStage0 ?? false
         };
 
         SaveManager.Instance.SaveGame(data);

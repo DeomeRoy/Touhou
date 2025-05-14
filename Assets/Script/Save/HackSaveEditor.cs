@@ -29,6 +29,35 @@ public class HackSaveEditor : MonoBehaviour
             player.GetScore();
         }
 
+        if (Input.GetKeyDown(KeyCode.S))
+        {
+            GameSaveData data = SaveManager.Instance.LoadGame();
+            if (data != null)
+            {
+                data.hasVisitedStage0 = !data.hasVisitedStage0;
+                SaveManager.Instance.SaveGame(data);
+                Debug.Log($"[Hack] visited0 狀態切換為 {(data.hasVisitedStage0 ? "✅ true" : "❌ false")}");
+            }
+            else
+            {
+                Debug.LogWarning("[Hack] 無存檔，無法切換 visited0");
+            }
+        }
+
+        if (Input.GetKeyDown(KeyCode.D))
+        {
+            Boss_A boss = FindObjectOfType<Boss_A>();
+            if (boss != null)
+            {
+                boss.BossHP = 0;
+                Debug.Log("[Hack] Boss 血量已設為 0");
+            }
+            else
+            {
+                Debug.LogWarning("[Hack] 找不到 Boss_A");
+            }
+        }
+
         // 專門偵測小鍵盤數字（Keypad0 ~ Keypad9）
         for (KeyCode key = KeyCode.Keypad0; key <= KeyCode.Keypad9; key++)
         {

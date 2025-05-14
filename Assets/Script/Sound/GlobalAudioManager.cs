@@ -28,6 +28,8 @@ public class GlobalAudioManager : MonoBehaviour
     public AudioClip stage3Music;
     public AudioClip storyMusic;
     public AudioClip bossMusic;
+    public AudioClip stage0Music;
+    public AudioClip stage4Music;
 
     public float globalVolume = 1f;
 
@@ -63,8 +65,11 @@ public class GlobalAudioManager : MonoBehaviour
     public float stage1Volume = 0.8f;
     public float stage2Volume = 0.8f;
     public float stage3Volume = 0.8f;
-    public float storyVolume = 0.8f;
+    public float storyVolume = 1f;
     public float bossVolume = 1f;
+
+    public float stage0Volume = 0.8f;
+    public float stage4Volume = 0.8f;
 
     //切換到Boss音樂
     public float crossFadeOutTime = 0.5f;//淡出時間

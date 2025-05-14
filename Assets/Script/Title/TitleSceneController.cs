@@ -99,9 +99,30 @@ public class TitleSceneController : MonoBehaviour
         FadeOut();
         GameManager.isContinue = false;
         yield return new WaitForSeconds(fadeTime);
-        Debug.Log("GameStart");
-        SceneManager.LoadScene("Stage1");
+
+        GameSaveData data = SaveManager.Instance.LoadGame();
+        if (!data.hasVisitedStage0)
+        {
+            // ✅ 標記為已去過 Stage0
+            data.hasVisitedStage0 = true;
+
+            // ✅ 同時預先設定下一次從 Stage1 Case1 開始，血量100 MP50
+            data.sceneName = "Stage1";
+            data.masterCase = 1;
+            data.playerHP = 100;
+            data.playerMP = 50;
+
+            SaveManager.Instance.SaveGame(data);
+
+            SceneManager.LoadScene("Stage0"); // 還是進入 Stage0，讓玩家看劇情
+        }
+        else
+        {
+            SceneManager.LoadScene("Stage1"); // 如果已經看過 Stage0 就直接跳過
+        }
     }
+
+
 
     public void OnClickTest()
     {

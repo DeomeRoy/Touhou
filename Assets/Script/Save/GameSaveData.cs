@@ -6,4 +6,5 @@ public class GameSaveData
     public int masterCase;
     public int playerHP;
     public int playerMP;
+    public bool hasVisitedStage0 = false;
 }
