@@ -3630,7 +3630,7 @@ Transform:
   m_GameObject: {fileID: 533634606}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 33, z: 0.8}
+  m_LocalPosition: {x: 0, y: 32.5, z: 0.8}
   m_LocalScale: {x: 0.15, y: 0.15, z: 0.15}
   m_ConstrainProportionsScale: 1
   m_Children:
@@ -3888,7 +3888,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   target: {fileID: 1040039190}
-  offset: {x: -0.6, y: -1.6, z: 0}
+  offset: {x: -0.6, y: 1.1, z: 0}
   cam: {fileID: 311043579}
   HPbar: {fileID: 318010883}
   BossHP: 0

@@ -144,7 +144,7 @@ class Boss_A : MonoBehaviour{
                         if(PositionX < -4f || PositionX > 4f)break;
                     }
                 }
-                PositionY = Random.Range(SetUPosition.y+0.5f,SetUPosition.y-2.5f);
+                PositionY = Random.Range(SetUPosition.y,SetUPosition.y-1f);
                 MovePosition = new Vector3(PositionX, PositionY, BOSS.transform.position.z);
                 MoveSpeed = Mathf.Abs(BOSS.transform.position.x-PositionX)/4f;
             }
@@ -222,7 +222,7 @@ class Boss_A : MonoBehaviour{
                 SkillStart(ref SC,ref OnMove,ref OnAttack,ref SATK_C,0f);
             }
         if(SATK_C == true){
-                BOSS.transform.DOMove(new Vector3(SetUPosition.x,SetUPosition.y), 1f).SetEase(Ease.OutQuad);
+                BOSS.transform.DOMove(new Vector3(SetUPosition.x,SetUPosition.y+0.5f), 1f).SetEase(Ease.OutQuad);
                 if(SkillTime > 1f || BOSS.transform.position.x ==0){
                     OnMove = false;
                 }
