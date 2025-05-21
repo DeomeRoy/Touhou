@@ -163,3 +163,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Clock: 0
   Gap: 0
+  BossHpBar: {fileID: 0}

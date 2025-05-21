@@ -13,10 +13,9 @@ GameObject:
   - component: {fileID: -1589041086601190586}
   - component: {fileID: 3517036216329798937}
   - component: {fileID: -4716765072570693778}
-  - component: {fileID: -7021738993174225486}
-  - component: {fileID: 2215215456338148565}
+  - component: {fileID: -4622157317565209911}
   m_Layer: 12
-  m_Name: BossB_NATK_C
+  m_Name: BossB_NATK_C 1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -78,12 +77,12 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 0af2e594746212c439a1658170397a18, type: 3}
+  m_Sprite: {fileID: 21300000, guid: b0163766e053ce6449099c045683d104, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 1, y: 1}
+  m_Size: {x: 16.4, y: 17.96}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -148,9 +147,9 @@ CircleCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0.6, y: -4.5}
+  m_Offset: {x: 0.15, y: -0.4}
   serializedVersion: 2
-  m_Radius: 1.8
+  m_Radius: 3
 --- !u!114 &-4716765072570693778
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -165,28 +164,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Clock: 0
   Gap: 0
---- !u!95 &-7021738993174225486
-Animator:
-  serializedVersion: 5
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7494510092233598822}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 947780e2e29d8b74489f52931fb4e4df, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_StabilizeFeet: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorStateOnDisable: 0
-  m_WriteDefaultValuesOnDisable: 0
---- !u!114 &2215215456338148565
+  BossHpBar: {fileID: 0}
+--- !u!114 &-4622157317565209911
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -195,8 +174,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 7494510092233598822}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1299aacbb69bac449a767435e583128a, type: 3}
+  m_Script: {fileID: 11500000, guid: d21f567f709b5c9498e6759ae798b366, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  radius: 3.5
+  radius: 3
   speed: 75

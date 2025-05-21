@@ -83,7 +83,7 @@ public class LevelImageFader : MonoBehaviour
 
     public IEnumerator Fadeway()
     {
-        Boss_A bossA = FindObjectOfType<Boss_A>();
+        
         faderImage.sprite = level4Sprite;
         fadeCanvasGroup.alpha = 0f;
         fadeCanvasGroup.DOFade(1f, fadeDuration);
@@ -93,14 +93,16 @@ public class LevelImageFader : MonoBehaviour
         switch (sceneName)
         {
             case "Stage1":
+                Boss_A bossA = FindObjectOfType<Boss_A>();
                 bossA.ChatEnd();
                 break;
             case "Stage2":
-                //Boss_B bossB = FindObjectOfType<Boss_B>();
-                //bossB.ChatEnd();
+                Boss_B bossB = FindObjectOfType<Boss_B>();
+                bossB.ChatEnd();
                 break;
             case "Stage3":
-                bossA.ChatEnd();
+                // Boss_C bossC = FindObjectOfType<Boss_B>();
+                // bossC.ChatEnd();
                 break;
         }
 
@@ -116,7 +118,7 @@ public class LevelImageFader : MonoBehaviour
 
     private IEnumerator FadeInOut()
     {
-        Boss_A bossA = FindObjectOfType<Boss_A>();
+        
         fadeCanvasGroup.DOFade(1f, fadeDuration);
         yield return new WaitForSeconds(fadeDuration);
 
@@ -128,14 +130,16 @@ public class LevelImageFader : MonoBehaviour
             switch (sceneName)
             {
                 case "Stage1":
+                    Boss_A bossA = FindObjectOfType<Boss_A>();
                     bossA.ChatEnd();
                     break;
                 case "Stage2":
-                    //Boss_B bossB = FindObjectOfType<Boss_B>();
-                    //bossB.ChatEnd();
+                    Boss_B bossB = FindObjectOfType<Boss_B>();
+                    bossB.ChatEnd();
                     break;
                 case "Stage3":
-                    bossA.ChatEnd();
+                    // Boss_C bossC = FindObjectOfType<Boss_B>();
+                    // bossC.ChatEnd();
                     break;
             }
 

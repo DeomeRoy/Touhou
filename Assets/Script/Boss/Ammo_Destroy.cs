@@ -21,13 +21,25 @@ public class Ammo_Destroy : MonoBehaviour{
             Destroy(gameObject);
         }
     }
-    void OnTriggerEnter2D(Collider2D collision){
-        if (collision.CompareTag("Player")){
+    void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.CompareTag("Player"))
+        {
             PlayerController player = collision.gameObject.GetComponent<PlayerController>();
             player.LoseLife();
             Destroy(gameObject);
         }
-        if (collision.CompareTag("Ball")){
+        if (collision.CompareTag("Ball"))
+        {
+            Destroy(gameObject);
+        }
+        if (collision.gameObject.CompareTag("boom")){
+            Destroy(gameObject);
+        }
+    }
+    void OCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.CompareTag("Player")){
             Destroy(gameObject);
         }
     }
