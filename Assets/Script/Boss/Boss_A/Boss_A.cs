@@ -14,7 +14,7 @@ class Boss_A : MonoBehaviour{
     public float GapA,GapB,GapSpeed,AttackTimes;
     public float SkillTime,BulletSpeed,MoveSpeed,PositionX,PositionY,BossHP,PlayerHP,DropTimer;
 
-    public bool NA,NB,SA,SB,SC,SD,AHP;
+    public bool NA,NB,SA,SB,SC,SD,AHP,BHP;
     //定義Boss中心點,下次移動位置,上個移動位置
     Vector3 SetUPosition,MovePosition,LastPosition;
     //Boss碰撞箱
@@ -336,14 +336,28 @@ class Boss_A : MonoBehaviour{
             LoseLife(1);
         }
     }
+    void OnTriggerEnter2D(Collider2D collision) {
+        if (collision.gameObject.CompareTag("boom") && BHP == false) {
+            BHP = true;
+            LoseLife(2);
+        }
+        if (!collision.gameObject.CompareTag("boom") && BHP == true) {
+            BHP = false;
+        }
+    }
     //Boss的扣血判定
     public void LoseLife(int x){
-        switch(x){
+        switch (x){
             case 1:
                 BossHP -= 5;
                 break;
             case 2:
-                BossHP -= 30;
+                if (BossHP >= 30){
+                    BossHP -= 30;
+                }
+                else if (BossHP < 30){
+                    BossHP = 0;
+                }
                 break;
         }
         Boss_HP_Bar_Follow UpdateBossHP = FindObjectOfType<Boss_HP_Bar_Follow>();

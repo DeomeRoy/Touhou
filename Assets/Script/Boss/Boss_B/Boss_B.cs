@@ -17,7 +17,7 @@ class Boss_B : MonoBehaviour{
     //定義Boss中心點,下次移動位置,上個移動位置
     Vector3 SetUPosition,MovePosition,LastPosition,Direction;
 
-    public bool NA,NB,NC,ND,SA,SB,SC,SD,AHP;
+    public bool NA,NB,NC,ND,SA,SB,SC,SD,AHP,BHP;
     public float AttackTimes;
     //Boss碰撞箱
     private CircleCollider2D CircleCollider;
@@ -44,332 +44,404 @@ class Boss_B : MonoBehaviour{
         CircleCollider.enabled = false;
         CapsuleCollider.enabled = true;
     }
-    public void Update(){
-        if(AHP){
+    public void Update()
+    {
+        if (AHP){
             AHP = false;
             LoseLife(1);
         }
-        if(AutoAttackTimer){
+        if (AutoAttackTimer)
+        {
             DropTimer += Time.deltaTime;
         }
         SkillTime += Time.deltaTime;
         //--------------------------------------------------------------自動攻擊邏輯
-        if(Input.GetKeyDown(KeyCode.F)){
+        if (Input.GetKeyDown(KeyCode.F))
+        {
             AutoAttackTimer = !AutoAttackTimer;
         }
-        if(AutoAttackTimer && !OnAttack){
-            if(SkillTime > 4){
-                if(AttackTimes<2){
-                    int x = Random.Range(0,4);
+        if (AutoAttackTimer && !OnAttack)
+        {
+            if (SkillTime > 4)
+            {
+                if (AttackTimes < 2)
+                {
+                    int x = Random.Range(0, 4);
                     Debug.Log("N:" + x);
-                    switch(x){
+                    switch (x)
+                    {
                         case 0:
-                        NA = true;
-                        break;
+                            NA = true;
+                            break;
                         case 1:
-                        NB = true;
-                        break;
+                            NB = true;
+                            break;
                         case 2:
-                        NC = true;
-                        break;
+                            NC = true;
+                            break;
                         case 3:
-                        ND = true;
-                        break;
+                            ND = true;
+                            break;
                     }
                     AttackTimes += 1;
                 }
-                else{
+                else
+                {
                     AttackTimes = 0;
-                    int x = Random.Range(0,4);
+                    int x = Random.Range(0, 4);
                     Debug.Log("S:" + x);
-                    switch(x){
+                    switch (x)
+                    {
                         case 0:
-                        SA = true;
-                        break;
+                            SA = true;
+                            break;
                         case 1:
-                        SB = true;
-                        break;
+                            SB = true;
+                            break;
                         case 2:
-                        SC = true;
-                        break;
+                            SC = true;
+                            break;
                         case 3:
-                        SD = true;
-                        break;
+                            SD = true;
+                            break;
                     }
                 }
             }
         }
         //--------------------------------------------------------------BOSS動畫
-        if(OnMove){
+        if (OnMove)
+        {
             BOSS.GetComponent<SpriteRenderer>().sprite = Walk;
-            if(BOSS.transform.position.x-LastPosition.x < 0){
+            if (BOSS.transform.position.x - LastPosition.x < 0)
+            {
                 BOSS.GetComponent<SpriteRenderer>().flipX = true;
                 LastPosition = BOSS.transform.position;
             }
-            else if(BOSS.transform.position.x-LastPosition.x > 0){
+            else if (BOSS.transform.position.x - LastPosition.x > 0)
+            {
                 BOSS.GetComponent<SpriteRenderer>().flipX = false;
                 LastPosition = BOSS.transform.position;
             }
         }
-        else{
+        else
+        {
             BOSS.GetComponent<SpriteRenderer>().sprite = Idle;
         }
         //--------------------------------------------------------------BOSS招式
-        if(Input.GetKeyDown(KeyCode.Q)||NA){
-            SkillStart(ref NA,ref OnMove,ref OnAttack,ref NATK_A,-1f);
+        if (Input.GetKeyDown(KeyCode.Q) || NA)
+        {
+            SkillStart(ref NA, ref OnMove, ref OnAttack, ref NATK_A, -1f);
             Move();
             CircleCollider.enabled = true;
             CapsuleCollider.enabled = false;
         }
-        if(NATK_A == true){
+        if (NATK_A == true)
+        {
             BOSS.transform.DOMove(MovePosition, 1f).SetEase(Ease.OutQuad);
-            if(SkillTime > 0f){
+            if (SkillTime > 0f)
+            {
                 OnMove = false;
             }
-            if(SkillTime > 0f && SkillTime < 0.2f){
+            if (SkillTime > 0f && SkillTime < 0.2f)
+            {
                 Aim();
             }
-            if(SkillTime - GapA > 0.1f){
+            if (SkillTime - GapA > 0.1f)
+            {
                 GapA = SkillTime;
-                for(int i=0;i<4;i++){
+                for (int i = 0; i < 4; i++)
+                {
                     BulletSpeed = 5f;
-                    float x = Random.Range(-15f,16f);
+                    float x = Random.Range(-15f, 16f);
                     transform.rotation = Quaternion.Euler(0, 0, 0 + angle + x + 90);
                     GameObject bulletA = Instantiate(Bullet, BossTransform.position, BossTransform.rotation);
                     bulletA.GetComponent<Rigidbody2D>().velocity = BossTransform.up * -BulletSpeed;
                 }
-                if(SkillTime>2f){
-                    SkillEnd(ref NATK_A,0);
+                if (SkillTime > 2f)
+                {
+                    SkillEnd(ref NATK_A, 0);
                 }
             }
         }
-        if(Input.GetKeyDown(KeyCode.E)||NB){
-            SkillStart(ref NB,ref OnMove,ref OnAttack,ref NATK_B,-1f);
+        if (Input.GetKeyDown(KeyCode.E) || NB)
+        {
+            SkillStart(ref NB, ref OnMove, ref OnAttack, ref NATK_B, -1f);
             Move();
         }
-        if(NATK_B == true){
+        if (NATK_B == true)
+        {
             BOSS.transform.DOMove(MovePosition, 1f).SetEase(Ease.OutQuad);
-            if(SkillTime > 0f){
+            if (SkillTime > 0f)
+            {
                 OnMove = false;
             }
-            if(SkillTime - GapA > 0.2f){
+            if (SkillTime - GapA > 0.2f)
+            {
                 GapA = SkillTime;
-                for(int i=0;i<2;i++){
+                for (int i = 0; i < 2; i++)
+                {
                     BulletSpeed = 5f;
                     transform.rotation = Quaternion.Euler(0, 0, 0);
-                    GameObject bulletA = Instantiate(Bullet, new Vector3(BossTransform.position.x-0.2f+0.4f*i,BossTransform.position.y), BossTransform.rotation);
+                    GameObject bulletA = Instantiate(Bullet, new Vector3(BossTransform.position.x - 0.2f + 0.4f * i, BossTransform.position.y), BossTransform.rotation);
                     bulletA.GetComponent<Rigidbody2D>().velocity = BossTransform.up * -BulletSpeed;
                 }
-                if(SkillTime>1.6f){
-                    SkillEnd(ref NATK_B,0);
+                if (SkillTime > 1.6f)
+                {
+                    SkillEnd(ref NATK_B, 0);
                 }
             }
         }
-        if(Input.GetKeyDown(KeyCode.R)||NC){
-            SkillStart(ref NC,ref OnMove,ref OnAttack,ref NATK_C,-1f);
+        if (Input.GetKeyDown(KeyCode.R) || NC)
+        {
+            SkillStart(ref NC, ref OnMove, ref OnAttack, ref NATK_C, -1f);
             Move();
             CircleCollider.enabled = true;
             CapsuleCollider.enabled = false;
         }
-        if(NATK_C == true){
+        if (NATK_C == true)
+        {
             BOSS.transform.DOMove(MovePosition, 1f).SetEase(Ease.OutQuad);
-            if(SkillTime > 0f){
+            if (SkillTime > 0f)
+            {
                 OnMove = false;
             }
-            if(SkillTime - GapA > 0.2f){
+            if (SkillTime - GapA > 0.2f)
+            {
                 GapA = SkillTime;
-                for(int i=0;i<2;i++){
+                for (int i = 0; i < 2; i++)
+                {
                     BulletSpeed = 5f;
-                    transform.rotation = Quaternion.Euler(0, 0, -25+50*i);
-                    GameObject bulletA = Instantiate(Bullet_NC, new Vector3(BossTransform.position.x-0.2f+0.4f*i,BossTransform.position.y-0.5f), BossTransform.rotation);
-                    GameObject bulletB = Instantiate(Bullet_NC1, new Vector3(BossTransform.position.x-0.2f+0.4f*i,BossTransform.position.y-0.5f), BossTransform.rotation);
+                    transform.rotation = Quaternion.Euler(0, 0, -25 + 50 * i);
+                    GameObject bulletA = Instantiate(Bullet_NC, new Vector3(BossTransform.position.x - 0.2f + 0.4f * i, BossTransform.position.y - 0.5f), BossTransform.rotation);
+                    GameObject bulletB = Instantiate(Bullet_NC1, new Vector3(BossTransform.position.x - 0.2f + 0.4f * i, BossTransform.position.y - 0.5f), BossTransform.rotation);
                 }
-                if(SkillTime>1.6f){
-                    SkillEnd(ref NATK_C,0);
+                if (SkillTime > 1.6f)
+                {
+                    SkillEnd(ref NATK_C, 0);
                 }
             }
         }
-        if(Input.GetKeyDown(KeyCode.T)||ND){
-            SkillStart(ref ND,ref OnMove,ref OnAttack,ref NATK_D,-1f);
+        if (Input.GetKeyDown(KeyCode.T) || ND)
+        {
+            SkillStart(ref ND, ref OnMove, ref OnAttack, ref NATK_D, -1f);
             CircleCollider.enabled = true;
             CapsuleCollider.enabled = false;
         }
-        if(NATK_D == true){
-            BOSS.transform.DOMove(new Vector3(SetUPosition.x,SetUPosition.y), 1f).SetEase(Ease.OutQuad);
-            if(SkillTime > 0f || BOSS.transform.position == SetUPosition){
+        if (NATK_D == true)
+        {
+            BOSS.transform.DOMove(new Vector3(SetUPosition.x, SetUPosition.y), 1f).SetEase(Ease.OutQuad);
+            if (SkillTime > 0f || BOSS.transform.position == SetUPosition)
+            {
                 OnMove = false;
             }
-            if(SkillTime - GapA > 0.25f){
+            if (SkillTime - GapA > 0.25f)
+            {
                 GapA = SkillTime;
                 float x = Random.Range(0, 2) == 0 ? -1 : 1;
-                transform.rotation = Quaternion.Euler(0, 0, 100*x);
+                transform.rotation = Quaternion.Euler(0, 0, 100 * x);
                 GameObject bulletA = Instantiate(Bullet_ND, BossTransform.position, BossTransform.rotation);
-                if(SkillTime>2f){
-                    SkillEnd(ref NATK_D,0);
+                if (SkillTime > 2f)
+                {
+                    SkillEnd(ref NATK_D, 0);
                 }
             }
 
         }
-        if(Input.GetKeyDown(KeyCode.Y)||SA){
-            SkillStart(ref SA,ref OnMove,ref OnAttack,ref SATK_A,-1f);
+        if (Input.GetKeyDown(KeyCode.Y) || SA)
+        {
+            SkillStart(ref SA, ref OnMove, ref OnAttack, ref SATK_A, -1f);
             CircleCollider.enabled = true;
             CapsuleCollider.enabled = false;
         }
-        if(SATK_A == true){
-            BOSS.transform.DOMove(new Vector3(SetUPosition.x,SetUPosition.y), 1f).SetEase(Ease.OutQuad);
-            if(SkillTime > 0f || BOSS.transform.position == SetUPosition){
+        if (SATK_A == true)
+        {
+            BOSS.transform.DOMove(new Vector3(SetUPosition.x, SetUPosition.y), 1f).SetEase(Ease.OutQuad);
+            if (SkillTime > 0f || BOSS.transform.position == SetUPosition)
+            {
                 OnMove = false;
             }
-            if(SkillTime - GapA > 1f){
+            if (SkillTime - GapA > 1f)
+            {
                 GapA = SkillTime;
-                float x = Random.Range(1,21);
-                for(int i=0;i<8;i++){
+                float x = Random.Range(1, 21);
+                for (int i = 0; i < 8; i++)
+                {
                     BulletSpeed = 3f;
-                    transform.rotation = Quaternion.Euler(0, 0, i*45+5*x);
+                    transform.rotation = Quaternion.Euler(0, 0, i * 45 + 5 * x);
                     GameObject bulletA = Instantiate(Bullet, BossTransform.position, BossTransform.rotation);
                     bulletA.GetComponent<Rigidbody2D>().velocity = BossTransform.up * -BulletSpeed;
-                    bulletA.GetComponent<Transform>().transform.localScale += new Vector3(0.2f,0.2f,0.2f);
+                    bulletA.GetComponent<Transform>().transform.localScale += new Vector3(0.2f, 0.2f, 0.2f);
                 }
-                if(SkillTime>2f){
-                    SkillEnd(ref SATK_A,0);
+                if (SkillTime > 2f)
+                {
+                    SkillEnd(ref SATK_A, 0);
                 }
             }
         }
-        if(Input.GetKeyDown(KeyCode.U)||SB){
-            SkillStart(ref SB,ref OnMove,ref OnAttack,ref SATK_B,-1f);
+        if (Input.GetKeyDown(KeyCode.U) || SB)
+        {
+            SkillStart(ref SB, ref OnMove, ref OnAttack, ref SATK_B, -1f);
             CircleCollider.enabled = true;
             CapsuleCollider.enabled = false;
         }
-        if(SATK_B == true){
-            BOSS.transform.DOMove(new Vector3(SetUPosition.x,SetUPosition.y), 1f).SetEase(Ease.OutQuad);
-            if(SkillTime > 0f || BOSS.transform.position == SetUPosition){
+        if (SATK_B == true)
+        {
+            BOSS.transform.DOMove(new Vector3(SetUPosition.x, SetUPosition.y), 1f).SetEase(Ease.OutQuad);
+            if (SkillTime > 0f || BOSS.transform.position == SetUPosition)
+            {
                 OnMove = false;
             }
-            if(SkillTime - GapA > 0.1f){
+            if (SkillTime - GapA > 0.1f)
+            {
                 GapA = SkillTime;
-                if(SkillTime<1){
-                    for(int i=0;i<3;i++){
-                    BulletSpeed = 5f;
-                    transform.rotation = Quaternion.Euler(0, 0, -10 + i*10);
-                    GameObject bulletA = Instantiate(Bullet, BossTransform.position, BossTransform.rotation);
-                    bulletA.GetComponent<Rigidbody2D>().velocity = BossTransform.up * -BulletSpeed;
+                if (SkillTime < 1)
+                {
+                    for (int i = 0; i < 3; i++)
+                    {
+                        BulletSpeed = 5f;
+                        transform.rotation = Quaternion.Euler(0, 0, -10 + i * 10);
+                        GameObject bulletA = Instantiate(Bullet, BossTransform.position, BossTransform.rotation);
+                        bulletA.GetComponent<Rigidbody2D>().velocity = BossTransform.up * -BulletSpeed;
                     }
                 }
-                else if(SkillTime>1&&SkillTime<2){
-                    for(int i=0;i<3;i++){
-                    BulletSpeed = 5f;
-                    transform.rotation = Quaternion.Euler(0, 0, -25 + i*25);
-                    GameObject bulletA = Instantiate(Bullet, BossTransform.position, BossTransform.rotation);
-                    bulletA.GetComponent<Rigidbody2D>().velocity = BossTransform.up * -BulletSpeed;
+                else if (SkillTime > 1 && SkillTime < 2)
+                {
+                    for (int i = 0; i < 3; i++)
+                    {
+                        BulletSpeed = 5f;
+                        transform.rotation = Quaternion.Euler(0, 0, -25 + i * 25);
+                        GameObject bulletA = Instantiate(Bullet, BossTransform.position, BossTransform.rotation);
+                        bulletA.GetComponent<Rigidbody2D>().velocity = BossTransform.up * -BulletSpeed;
                     }
                 }
-                else{
-                    for(int i=0;i<3;i++){
-                    BulletSpeed = 5f;
-                    transform.rotation = Quaternion.Euler(0, 0, -40 + i*40);
-                    GameObject bulletA = Instantiate(Bullet, BossTransform.position, BossTransform.rotation);
-                    bulletA.GetComponent<Rigidbody2D>().velocity = BossTransform.up * -BulletSpeed;
+                else
+                {
+                    for (int i = 0; i < 3; i++)
+                    {
+                        BulletSpeed = 5f;
+                        transform.rotation = Quaternion.Euler(0, 0, -40 + i * 40);
+                        GameObject bulletA = Instantiate(Bullet, BossTransform.position, BossTransform.rotation);
+                        bulletA.GetComponent<Rigidbody2D>().velocity = BossTransform.up * -BulletSpeed;
                     }
                 }
-                if(SkillTime>3.1f){
-                    SkillEnd(ref SATK_B,0);
+                if (SkillTime > 3.1f)
+                {
+                    SkillEnd(ref SATK_B, 0);
                 }
             }
         }
-        if(Input.GetKeyDown(KeyCode.I)||SC){
-            SkillStart(ref SC,ref OnMove,ref OnAttack,ref SATK_C,-1f);
+        if (Input.GetKeyDown(KeyCode.I) || SC)
+        {
+            SkillStart(ref SC, ref OnMove, ref OnAttack, ref SATK_C, -1f);
         }
-        if(SATK_C == true){
-            BOSS.transform.DOMove(new Vector3(SetUPosition.x,SetUPosition.y), 1f).SetEase(Ease.OutQuad);
-            if(SkillTime > 0f || BOSS.transform.position == SetUPosition){
+        if (SATK_C == true)
+        {
+            BOSS.transform.DOMove(new Vector3(SetUPosition.x, SetUPosition.y), 1f).SetEase(Ease.OutQuad);
+            if (SkillTime > 0f || BOSS.transform.position == SetUPosition)
+            {
                 OnMove = false;
             }
             BOSS.transform.position = Vector3.MoveTowards(BOSS.transform.position, SetUPosition, MoveSpeed * Time.deltaTime);
-            if(SkillTime - GapA > 0.1f){
+            if (SkillTime - GapA > 0.1f)
+            {
                 GameObject bulletA = Instantiate(Bullet, Transform_SATK_C.position, BossTransform.rotation);
                 bulletA.GetComponent<Rigidbody2D>().velocity = BossTransform.up * -BulletSpeed;
                 bulletA.GetComponent<Rigidbody2D>().gravityScale = 1f;
                 float Bullet_Position = Random.Range(-8f + SkillTime, -5f + SkillTime);
-                bulletA.GetComponent<Transform>().transform.position += new Vector3(Bullet_Position,0,0);
+                bulletA.GetComponent<Transform>().transform.position += new Vector3(Bullet_Position, 0, 0);
                 GapA = SkillTime;
             }
-            if(SkillTime>13){
-                SkillEnd(ref SATK_C,0);
+            if (SkillTime > 13)
+            {
+                SkillEnd(ref SATK_C, 0);
             }
         }
-        if(Input.GetKeyDown(KeyCode.O)||SD){
-            SkillStart(ref SD,ref OnMove,ref OnAttack,ref SATK_D,-1f);
+        if (Input.GetKeyDown(KeyCode.O) || SD)
+        {
+            SkillStart(ref SD, ref OnMove, ref OnAttack, ref SATK_D, -1f);
         }
-        if(SATK_D == true){
-            BOSS.transform.DOMove(new Vector3(SetUPosition.x,SetUPosition.y), 1f).SetEase(Ease.OutQuad);
-            if(SkillTime > 0f || BOSS.transform.position == SetUPosition){
+        if (SATK_D == true)
+        {
+            BOSS.transform.DOMove(new Vector3(SetUPosition.x, SetUPosition.y), 1f).SetEase(Ease.OutQuad);
+            if (SkillTime > 0f || BOSS.transform.position == SetUPosition)
+            {
                 OnMove = false;
             }
-            if(SkillTime - GapA > 0.5f){
-                if(SkillTime < 9.1){
+            if (SkillTime - GapA > 0.5f)
+            {
+                if (SkillTime < 9.1)
+                {
                     BulletSpeed = 1f;
                     GapA = SkillTime;
                     GameObject bulletA = Instantiate(Bullet_SD, Transform_SATK_D.position, BossTransform.rotation);
-                    float BulletA_Position = (9f - SkillTime)*-1;
-                    bulletA.GetComponent<Transform>().transform.position = new Vector3(BulletA_Position,24.36f,0);
+                    float BulletA_Position = (9f - SkillTime) * -1;
+                    bulletA.GetComponent<Transform>().transform.position = new Vector3(BulletA_Position, 24.36f, 0);
                     GameObject bulletB = Instantiate(Bullet_SD, Transform_SATK_D.position, BossTransform.rotation);
                     float BulletB_Position = 9f - SkillTime;
-                    bulletB.GetComponent<Transform>().transform.position = new Vector3(BulletB_Position,24.36f,0);
+                    bulletB.GetComponent<Transform>().transform.position = new Vector3(BulletB_Position, 24.36f, 0);
                     Debug.Log(bulletA.GetComponent<Transform>().transform.position);
                     Debug.Log(bulletB.GetComponent<Transform>().transform.position);
                     bulletA.GetComponent<Rigidbody2D>().velocity = BossTransform.up * BulletSpeed;
                     bulletB.GetComponent<Rigidbody2D>().velocity = BossTransform.up * BulletSpeed;
                 }
-                else{
+                else
+                {
                     BulletSpeed = 1f;
                     GapA = SkillTime;
                     GameObject bulletC = Instantiate(Bullet_SD, Transform_SATK_D.position, BossTransform.rotation);
-                    float BulletC_Position = (0 - SkillTime+9)*-1;
-                    bulletC.GetComponent<Transform>().transform.position = new Vector3(BulletC_Position,24.36f,0);
+                    float BulletC_Position = (0 - SkillTime + 9) * -1;
+                    bulletC.GetComponent<Transform>().transform.position = new Vector3(BulletC_Position, 24.36f, 0);
                     GameObject bulletD = Instantiate(Bullet_SD, Transform_SATK_D.position, BossTransform.rotation);
-                    float BulletD_Position = 0 - SkillTime+9;
-                    bulletD.GetComponent<Transform>().transform.position = new Vector3(BulletD_Position,24.36f,0);
+                    float BulletD_Position = 0 - SkillTime + 9;
+                    bulletD.GetComponent<Transform>().transform.position = new Vector3(BulletD_Position, 24.36f, 0);
                     Debug.Log(bulletC.GetComponent<Transform>().transform.position);
                     Debug.Log(bulletD.GetComponent<Transform>().transform.position);
                     bulletC.GetComponent<Rigidbody2D>().velocity = BossTransform.up * BulletSpeed;
                     bulletD.GetComponent<Rigidbody2D>().velocity = BossTransform.up * BulletSpeed;
                 }
             }
-            if(SkillTime>18){
-                SkillEnd(ref SATK_D,0);
+            if (SkillTime > 18)
+            {
+                SkillEnd(ref SATK_D, 0);
             }
         }
         {//Boss血量歸零的判定程式(開始對話+關閉計時器+隱藏球+玩家無敵+強制結束招式+避免重複判定
-        if(BossHP <= 0 && !End){
-            StartCoroutine(TriggerStoryByDistance(1));
-            AutoAttackTimer = false;
-            BallBehavior Ball = FindObjectOfType<BallBehavior>();
-            PlayerController Player = FindObjectOfType<PlayerController>();
-            Ball.LevelChanging();
-            Player.invincible = true;
-            SkillTime = 100;
-            End = true;
-        }
+            if (BossHP <= 0 && !End)
+            {
+                StartCoroutine(TriggerStoryByDistance(1));
+                AutoAttackTimer = false;
+                BallBehavior Ball = FindObjectOfType<BallBehavior>();
+                PlayerController Player = FindObjectOfType<PlayerController>();
+                Ball.LevelChanging();
+                Player.invincible = true;
+                SkillTime = 100;
+                End = true;
+            }
         }
         {//Boss掉落物程式
-        GameObject Player = GameObject.FindGameObjectWithTag("Player");
-        PlayerHP = Player.GetComponent<PlayerController>().life;
-        if(DropTimer > 10f){
-            if(PlayerHP < 50){
-                if(Random.value < 0.5f){
-                    Instantiate(E_BlockPrefab, new Vector3(Random.Range(-8f, 8f),Transform_SATK_C.position.y-1.8f), Quaternion.identity);
-                    DropTimer = 0;
+            GameObject Player = GameObject.FindGameObjectWithTag("Player");
+            PlayerHP = Player.GetComponent<PlayerController>().life;
+            if (DropTimer > 10f)
+            {
+                if (PlayerHP < 50)
+                {
+                    if (Random.value < 0.5f)
+                    {
+                        Instantiate(E_BlockPrefab, new Vector3(Random.Range(-8f, 8f), Transform_SATK_C.position.y - 1.8f), Quaternion.identity);
+                        DropTimer = 0;
+                    }
+                    else
+                    {
+                        Instantiate(B_BlockPrefab, new Vector3(Random.Range(-8f, 8f), Transform_SATK_C.position.y - 1.8f), Quaternion.identity);
+                        DropTimer = 0;
+                    }
                 }
-                else{
-                    Instantiate(B_BlockPrefab, new Vector3(Random.Range(-8f, 8f),Transform_SATK_C.position.y-1.8f), Quaternion.identity);
+                else
+                {
+                    Instantiate(B_BlockPrefab, new Vector3(Random.Range(-8f, 8f), Transform_SATK_C.position.y - 1.8f), Quaternion.identity);
                     DropTimer = 0;
                 }
             }
-            else{
-                    Instantiate(B_BlockPrefab, new Vector3(Random.Range(-8f, 8f),Transform_SATK_C.position.y-1.8f), Quaternion.identity);
-                    DropTimer = 0;
-            }
-        }
         }
     }
     //對話結束恢復計時器
@@ -396,14 +468,28 @@ class Boss_B : MonoBehaviour{
             LoseLife(1);
         }
     }
+    void OnTriggerEnter2D(Collider2D collision) {
+        if (collision.gameObject.CompareTag("boom") && BHP == false) {
+            BHP = true;
+            LoseLife(2);
+        }
+        if (!collision.gameObject.CompareTag("boom") && BHP == true) {
+            BHP = false;
+        }
+    }
     //Boss的扣血判定
     public void LoseLife(int x){
-        switch(x){
+        switch (x){
             case 1:
                 BossHP -= 5;
                 break;
             case 2:
-                BossHP -= 30;
+                if (BossHP >= 30){
+                    BossHP -= 30;
+                }
+                else if (BossHP < 30){
+                    BossHP = 0;
+                }
                 break;
         }
         Boss_HP_Bar_Follow UpdateBossHP = FindObjectOfType<Boss_HP_Bar_Follow>();
