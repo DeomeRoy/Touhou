@@ -48,6 +48,7 @@ public static class GameSaveSystem
         {
             player.life = data.playerHP;
             player.score = data.playerMP;
+            player.controlEnabled = true;
 
             float yPos = player.GetYPositionForCase(data.masterCase);
             player.transform.position = new Vector3(0, yPos, player.transform.position.z);
