@@ -23,8 +23,7 @@ class Boss_B : MonoBehaviour{
     private CircleCollider2D CircleCollider;
     private CapsuleCollider2D CapsuleCollider;
     
-    public void Start()
-    {
+    public void Start(){
         //Boss初始位置設定,攻擊角度初始化,技能間隔初始化,計時歸零,顏色轉換初始化
         SetUPosition = BOSS.transform.position;
         transform.rotation = Quaternion.Euler(0, 0, 0);
@@ -44,24 +43,17 @@ class Boss_B : MonoBehaviour{
         CircleCollider.enabled = false;
         CapsuleCollider.enabled = true;
     }
-    public void Update()
-    {
+    public void Update(){
         if (AHP){
             AHP = false;
             LoseLife(1);
         }
-        if (AutoAttackTimer)
-        {
+        if (AutoAttackTimer){
             DropTimer += Time.deltaTime;
         }
         SkillTime += Time.deltaTime;
         //--------------------------------------------------------------自動攻擊邏輯
-        if (Input.GetKeyDown(KeyCode.F))
-        {
-            AutoAttackTimer = !AutoAttackTimer;
-        }
-        if (AutoAttackTimer && !OnAttack)
-        {
+        if (AutoAttackTimer && !OnAttack){
             if (SkillTime > 4)
             {
                 if (AttackTimes < 2)
@@ -109,8 +101,7 @@ class Boss_B : MonoBehaviour{
             }
         }
         //--------------------------------------------------------------BOSS動畫
-        if (OnMove)
-        {
+        if (OnMove){
             BOSS.GetComponent<SpriteRenderer>().sprite = Walk;
             if (BOSS.transform.position.x - LastPosition.x < 0)
             {
@@ -123,20 +114,17 @@ class Boss_B : MonoBehaviour{
                 LastPosition = BOSS.transform.position;
             }
         }
-        else
-        {
+        else{
             BOSS.GetComponent<SpriteRenderer>().sprite = Idle;
         }
         //--------------------------------------------------------------BOSS招式
-        if (Input.GetKeyDown(KeyCode.Q) || NA)
-        {
+        if (NA){
             SkillStart(ref NA, ref OnMove, ref OnAttack, ref NATK_A, -1f);
             Move();
             CircleCollider.enabled = true;
             CapsuleCollider.enabled = false;
         }
-        if (NATK_A == true)
-        {
+        if (NATK_A == true){
             BOSS.transform.DOMove(MovePosition, 1f).SetEase(Ease.OutQuad);
             if (SkillTime > 0f)
             {
@@ -163,13 +151,11 @@ class Boss_B : MonoBehaviour{
                 }
             }
         }
-        if (Input.GetKeyDown(KeyCode.E) || NB)
-        {
+        if (NB){
             SkillStart(ref NB, ref OnMove, ref OnAttack, ref NATK_B, -1f);
             Move();
         }
-        if (NATK_B == true)
-        {
+        if (NATK_B == true){
             BOSS.transform.DOMove(MovePosition, 1f).SetEase(Ease.OutQuad);
             if (SkillTime > 0f)
             {
@@ -191,15 +177,13 @@ class Boss_B : MonoBehaviour{
                 }
             }
         }
-        if (Input.GetKeyDown(KeyCode.R) || NC)
-        {
+        if (NC){
             SkillStart(ref NC, ref OnMove, ref OnAttack, ref NATK_C, -1f);
             Move();
             CircleCollider.enabled = true;
             CapsuleCollider.enabled = false;
         }
-        if (NATK_C == true)
-        {
+        if (NATK_C == true){
             BOSS.transform.DOMove(MovePosition, 1f).SetEase(Ease.OutQuad);
             if (SkillTime > 0f)
             {
@@ -221,14 +205,12 @@ class Boss_B : MonoBehaviour{
                 }
             }
         }
-        if (Input.GetKeyDown(KeyCode.T) || ND)
-        {
+        if (ND){
             SkillStart(ref ND, ref OnMove, ref OnAttack, ref NATK_D, -1f);
             CircleCollider.enabled = true;
             CapsuleCollider.enabled = false;
         }
-        if (NATK_D == true)
-        {
+        if (NATK_D == true){
             BOSS.transform.DOMove(new Vector3(SetUPosition.x, SetUPosition.y), 1f).SetEase(Ease.OutQuad);
             if (SkillTime > 0f || BOSS.transform.position == SetUPosition)
             {
@@ -247,14 +229,12 @@ class Boss_B : MonoBehaviour{
             }
 
         }
-        if (Input.GetKeyDown(KeyCode.Y) || SA)
-        {
+        if (SA){
             SkillStart(ref SA, ref OnMove, ref OnAttack, ref SATK_A, -1f);
             CircleCollider.enabled = true;
             CapsuleCollider.enabled = false;
         }
-        if (SATK_A == true)
-        {
+        if (SATK_A == true){
             BOSS.transform.DOMove(new Vector3(SetUPosition.x, SetUPosition.y), 1f).SetEase(Ease.OutQuad);
             if (SkillTime > 0f || BOSS.transform.position == SetUPosition)
             {
@@ -278,14 +258,12 @@ class Boss_B : MonoBehaviour{
                 }
             }
         }
-        if (Input.GetKeyDown(KeyCode.U) || SB)
-        {
+        if (SB){
             SkillStart(ref SB, ref OnMove, ref OnAttack, ref SATK_B, -1f);
             CircleCollider.enabled = true;
             CapsuleCollider.enabled = false;
         }
-        if (SATK_B == true)
-        {
+        if (SATK_B == true){
             BOSS.transform.DOMove(new Vector3(SetUPosition.x, SetUPosition.y), 1f).SetEase(Ease.OutQuad);
             if (SkillTime > 0f || BOSS.transform.position == SetUPosition)
             {
@@ -330,12 +308,10 @@ class Boss_B : MonoBehaviour{
                 }
             }
         }
-        if (Input.GetKeyDown(KeyCode.I) || SC)
-        {
+        if (SC){
             SkillStart(ref SC, ref OnMove, ref OnAttack, ref SATK_C, -1f);
         }
-        if (SATK_C == true)
-        {
+        if (SATK_C == true){
             BOSS.transform.DOMove(new Vector3(SetUPosition.x, SetUPosition.y), 1f).SetEase(Ease.OutQuad);
             if (SkillTime > 0f || BOSS.transform.position == SetUPosition)
             {
@@ -356,12 +332,10 @@ class Boss_B : MonoBehaviour{
                 SkillEnd(ref SATK_C, 0);
             }
         }
-        if (Input.GetKeyDown(KeyCode.O) || SD)
-        {
+        if (SD){
             SkillStart(ref SD, ref OnMove, ref OnAttack, ref SATK_D, -1f);
         }
-        if (SATK_D == true)
-        {
+        if (SATK_D == true){
             BOSS.transform.DOMove(new Vector3(SetUPosition.x, SetUPosition.y), 1f).SetEase(Ease.OutQuad);
             if (SkillTime > 0f || BOSS.transform.position == SetUPosition)
             {
@@ -406,8 +380,7 @@ class Boss_B : MonoBehaviour{
             }
         }
         {//Boss血量歸零的判定程式(開始對話+關閉計時器+隱藏球+玩家無敵+強制結束招式+避免重複判定
-            if (BossHP <= 0 && !End)
-            {
+            if (BossHP <= 0 && !End){
                 StartCoroutine(TriggerStoryByDistance(1));
                 AutoAttackTimer = false;
                 BallBehavior Ball = FindObjectOfType<BallBehavior>();
@@ -421,23 +394,18 @@ class Boss_B : MonoBehaviour{
         {//Boss掉落物程式
             GameObject Player = GameObject.FindGameObjectWithTag("Player");
             PlayerHP = Player.GetComponent<PlayerController>().life;
-            if (DropTimer > 10f)
-            {
-                if (PlayerHP < 50)
-                {
-                    if (Random.value < 0.5f)
-                    {
+            if (DropTimer > 10f){
+                if (PlayerHP < 50){
+                    if (Random.value < 0.5f){
                         Instantiate(E_BlockPrefab, new Vector3(Random.Range(-8f, 8f), Transform_SATK_C.position.y - 1.8f), Quaternion.identity);
                         DropTimer = 0;
                     }
-                    else
-                    {
+                    else{
                         Instantiate(B_BlockPrefab, new Vector3(Random.Range(-8f, 8f), Transform_SATK_C.position.y - 1.8f), Quaternion.identity);
                         DropTimer = 0;
                     }
                 }
-                else
-                {
+                else{
                     Instantiate(B_BlockPrefab, new Vector3(Random.Range(-8f, 8f), Transform_SATK_C.position.y - 1.8f), Quaternion.identity);
                     DropTimer = 0;
                 }
@@ -468,7 +436,7 @@ class Boss_B : MonoBehaviour{
             LoseLife(1);
         }
     }
-    void OnTriggerEnter2D(Collider2D collision) {
+    void OnTriggerEnter2D(Collider2D collision){
         if (collision.gameObject.CompareTag("boom") && BHP == false) {
             BHP = true;
             LoseLife(2);

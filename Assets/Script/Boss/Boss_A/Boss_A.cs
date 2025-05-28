@@ -88,7 +88,7 @@ class Boss_A : MonoBehaviour{
                     }
                 }
             }
-            }
+        }
         {//--------------------------------------------------------------Boss動畫
         if(OnMove){
                 BOSS.GetComponent<SpriteRenderer>().sprite = Walk;

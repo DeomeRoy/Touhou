@@ -5728,7 +5728,7 @@ GameObject:
   - component: {fileID: 1040039194}
   - component: {fileID: 1040039195}
   - component: {fileID: 1040039196}
-  m_Layer: 0
+  m_Layer: 17
   m_Name: BulletSpawn
   m_TagString: Boss
   m_Icon: {fileID: 0}
@@ -5805,6 +5805,7 @@ MonoBehaviour:
   SC: 0
   SD: 0
   AHP: 0
+  BHP: 0
 --- !u!50 &1040039194
 Rigidbody2D:
   serializedVersion: 4
