@@ -13403,7 +13403,7 @@ MonoBehaviour:
   storyCanvasGroup: {fileID: 1443924782}
   chatButton: {fileID: 2093449783}
   skipButton: {fileID: 796104309}
-  dialogueText: {fileID: 0}
+  dialogueText: {fileID: 1841985426}
   nameText: {fileID: 1799933253}
   allCharacters:
   - characterID: Player

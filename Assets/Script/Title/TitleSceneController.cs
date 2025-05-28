@@ -107,52 +107,36 @@ public class TitleSceneController : MonoBehaviour
 
     IEnumerator Cutscene()
     {
-        // 1. 初次淡入黑幕（保留你原本的 FadeOut）
         FadeOut();
         GameManager.isContinue = false;
         yield return new WaitForSeconds(fadeTime);
 
-        // 2. 读取存档
         GameSaveData data = SaveManager.Instance.LoadGame();
 
         if (!data.hasVisitedStage0)
         {
-            // 4. 准备并播放视频
             if (introVideo != null)
             {
-                // 4.1 准备 (载入 metadata)
                 if (!introVideo.isPrepared)
                 {
                     introVideo.Prepare();
                     yield return new WaitUntil(() => introVideo.isPrepared);
                 }
-
-                // 4.2 播放
                 introVideo.Play();
-
-                // 4.3 等一帧确保 isPlaying 变 true
                 yield return null;
-
-                // 4.4 等视频播完或按 Enter 跳过
                 bool finished = false;
                 introVideo.loopPointReached += vp => finished = true;
                 while (introVideo.isPlaying && !finished)
                 {
                     if (Input.GetKeyDown(KeyCode.Return))
                     {
-                        // 1. 停止视频播放
                         introVideo.Stop();
-
-                        // 2. 找到 RawImage
                         var disp = GameObject.Find("IntroVideoDisplay").GetComponent<RawImage>();
 
                         disp.DOFade(0f, fadeTime)
                             .OnComplete(() =>
                             {
-                                // 淡出完之后再清空纹理，彻底移除视频
                                 disp.texture = null;
-
-                                // （可选）如果你还要释放 RT 资源
                                 var rt = introVideo.targetTexture as RenderTexture;
                                 if (rt != null)
                                 {
@@ -168,12 +152,8 @@ public class TitleSceneController : MonoBehaviour
                     yield return null;
                 }
             }
-
-            // 5. 视频结束后再一次淡入黑幕
             FadeOut();
             yield return new WaitForSeconds(fadeTime);
-
-            // 6. 标记已看过、存档、切到 Stage0
             data.hasVisitedStage0 = true;
             data.sceneName = "Stage1";
             data.masterCase = 1;
@@ -185,7 +165,6 @@ public class TitleSceneController : MonoBehaviour
         }
         else
         {
-            // 已经看过，直接跳 Stage1
             SceneManager.LoadScene("Stage1");
         }
     }
