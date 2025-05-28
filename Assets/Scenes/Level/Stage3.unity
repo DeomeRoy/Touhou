@@ -133,7 +133,7 @@ GameObject:
   - component: {fileID: 37308337}
   - component: {fileID: 37308338}
   m_Layer: 0
-  m_Name: Background (4)
+  m_Name: Stone
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -989,7 +989,7 @@ GameObject:
   - component: {fileID: 79462061}
   - component: {fileID: 79462062}
   m_Layer: 0
-  m_Name: Background (5)
+  m_Name: Sky
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -8420,7 +8420,7 @@ Transform:
   m_GameObject: {fileID: 969710091}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 2}
+  m_LocalPosition: {x: 0, y: 0, z: 1.9}
   m_LocalScale: {x: 0.9291281, y: 0.9287232, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -9091,11 +9091,12 @@ MonoBehaviour:
   SATK_C_Transform: {fileID: 1387270882}
   Idle: {fileID: 21300000, guid: 093d7977ddb028342957ddb36763f34c, type: 3}
   Walk: {fileID: 21300000, guid: ed4b2e8210faf654a9de78d0f77175bc, type: 3}
+  stone: {fileID: 21300000, guid: b187c58d38cae8548be000ab7bc5a5d9, type: 3}
+  sky: {fileID: 21300000, guid: 0e8db3b39450ee140a6e746158e5fcf2, type: 3}
   AutoAttackTimer: 0
   OnMove: 0
   OnAttack: 0
   End: 0
-  gggMove: 0
   NATK_A: 0
   NATK_B: 0
   NATK_C: 0

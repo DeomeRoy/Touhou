@@ -14,7 +14,7 @@ class Boss_C : MonoBehaviour
     public GameObject BOSS, Bullet, Fire_Ball, Follow_Fire_Ball, Laser_Bullet, B_BlockPrefab, E_BlockPrefab;
     public GameObject Laser_A,Laser_B,Laser_C,Laser_D,Laser_E;
     public Transform Target, BossTransform, SATK_C_Transform;
-    public Sprite Idle, Walk;
+    public Sprite Idle, Walk, stone, sky;
     public bool AutoAttackTimer, OnMove, OnAttack, End;
     [HideInInspector] public bool NATK_A, NATK_B, NATK_C, NATK_D, SATK_A, SATK_B, SATK_C, SATK_D;
     public float GapA, GapB, angle;
@@ -592,6 +592,25 @@ class Boss_C : MonoBehaviour
         SceneAudioManager.Instance.FadeOutSceneMusic(fadeOutTime);
         yield return new WaitForSeconds(fadeOutTime + 0.167f);
         SceneAudioManager.Instance.PlayStoryMusicWithFadeIn(fadeInTime);
+
+        GameObject Stone = GameObject.Find("Stone");
+        if (Stone != null)
+        {
+            SpriteRenderer sr = Stone.GetComponent<SpriteRenderer>();
+            if (sr != null)
+            {
+                sr.sprite = stone; // 你事先指定的 Sprite
+            }
+        }
+        GameObject Sky = GameObject.Find("Sky");
+        if (Sky != null)
+        {
+            SpriteRenderer sr = Sky.GetComponent<SpriteRenderer>();
+            if (sr != null)
+            {
+                sr.sprite = sky; // 你事先指定的 Sprite
+            }
+        }
 
         StoryController storyCtrl = FindObjectOfType<StoryController>();
         storyCtrl.StartStory("BossEndFight");
