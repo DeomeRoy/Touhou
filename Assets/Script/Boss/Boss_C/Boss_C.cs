@@ -15,7 +15,7 @@ class Boss_C : MonoBehaviour
     public GameObject Laser_A,Laser_B,Laser_C,Laser_D,Laser_E;
     public Transform Target, BossTransform, SATK_C_Transform;
     public Sprite Idle, Walk;
-    public bool AutoAttackTimer, OnMove, OnAttack, End,gggMove;
+    public bool AutoAttackTimer, OnMove, OnAttack, End;
     [HideInInspector] public bool NATK_A, NATK_B, NATK_C, NATK_D, SATK_A, SATK_B, SATK_C, SATK_D;
     public float GapA, GapB, angle;
     public float SkillTime, BulletSpeed, MoveSpeed, PositionX, BossHP, PlayerHP, DropTimer;
@@ -51,10 +51,6 @@ class Boss_C : MonoBehaviour
     }
     public void Update()
     {
-        if (gggMove){
-            gggMove = false;
-            Move();
-        }
         if (AHP)
         {
             AHP = false;
@@ -188,7 +184,7 @@ class Boss_C : MonoBehaviour
             if (SkillTime > 0f)
             {
                 OnMove = false;
-                GetComponent<CapsuleCollider2D>().offset = new Vector2(0.3f, -4.85f);
+                GetComponent<CapsuleCollider2D>().offset = new Vector2(0.3f, -1.1f);
                 Laser_A.GetComponent<Laser_Tutorial>().StartShoot = true;
                 Laser_B.GetComponent<Laser_Tutorial>().StartShoot = true;
             }
@@ -214,11 +210,14 @@ class Boss_C : MonoBehaviour
             BOSS.transform.DOMove(MovePosition, 1f).SetEase(Ease.OutQuad);
             Laser_A.GetComponent<SpriteRenderer>().enabled = true;
             Laser_A.transform.DOMove(new Vector3(-0.5f,33,0), 1f).SetEase(Ease.OutQuad);
-            Laser_A.transform.rotation = Quaternion.Euler(0f, 0f, -140f);
+            if (SkillTime < 0f)
+            {
+                Laser_A.transform.rotation = Quaternion.Euler(0f, 0f, -140f);
+            }
             if (SkillTime > 0f && SkillTime < 3f)
             {
                 OnMove = false;
-                GetComponent<CapsuleCollider2D>().offset = new Vector2(0.3f, -4.85f);
+                GetComponent<CapsuleCollider2D>().offset = new Vector2(0.3f, -1.1f);
                 Laser_A.GetComponent<Laser_Tutorial>().StartShoot = true;
                 Laser_A.transform.DORotate(new Vector3(0, 0, -55f), 3f).SetEase(Ease.Linear);
             }
@@ -283,7 +282,7 @@ class Boss_C : MonoBehaviour
             {
                 Laser_B.GetComponent<Laser_Tutorial>().StartShoot = true;
                 OnMove = false;
-                GetComponent<CapsuleCollider2D>().offset = new Vector2(0.3f, -4.85f);
+                GetComponent<CapsuleCollider2D>().offset = new Vector2(0.3f, -1.1f);
             }
             if (SkillTime > 3f){Laser_C.GetComponent<Laser_Tutorial>().StartShoot = true;}
             if (SkillTime > 4.5f){Laser_A.GetComponent<Laser_Tutorial>().StartShoot = true;}
@@ -561,18 +560,18 @@ class Boss_C : MonoBehaviour
                 {
                     if (Random.value < 0.5f)
                     {
-                        // Instantiate(E_BlockPrefab, new Vector3(Random.Range(-8f, 8f), Transform_SATK_C.position.y - 1.8f), Quaternion.identity);
+                        Instantiate(E_BlockPrefab, new Vector3(Random.Range(-8f, 8f), SATK_C_Transform.position.y - 1.8f), Quaternion.identity);
                         DropTimer = 0;
                     }
                     else
                     {
-                        // Instantiate(B_BlockPrefab, new Vector3(Random.Range(-8f, 8f), Transform_SATK_C.position.y - 1.8f), Quaternion.identity);
+                        Instantiate(B_BlockPrefab, new Vector3(Random.Range(-8f, 8f), SATK_C_Transform.position.y - 1.8f), Quaternion.identity);
                         DropTimer = 0;
                     }
                 }
                 else
                 {
-                    // Instantiate(B_BlockPrefab, new Vector3(Random.Range(-8f, 8f), Transform_SATK_C.position.y - 1.8f), Quaternion.identity);
+                    Instantiate(B_BlockPrefab, new Vector3(Random.Range(-8f, 8f), SATK_C_Transform.position.y - 1.8f), Quaternion.identity);
                     DropTimer = 0;
                 }
             }
@@ -652,12 +651,6 @@ class Boss_C : MonoBehaviour
             GetComponent<CapsuleCollider2D>().offset = new Vector2(-3.9f, -1.1f);
             transform.rotation = Quaternion.Euler(0, 0, 0f);
         }
-    }
-    //Boss招式的瞄準判定
-    void Aim()
-    {
-        Direction = Target.position - BOSS.transform.position;
-        angle = Mathf.Atan2(Direction.y, Direction.x) * Mathf.Rad2Deg;
     }
     //Boss放招式的隨機移動
     public void Move()

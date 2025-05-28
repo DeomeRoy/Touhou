@@ -217,6 +217,11 @@ public class StoryController : MonoBehaviour
         }
         else
         {
+            PlayerController player = FindObjectOfType<PlayerController>();
+            if (player != null)
+            {
+                player.controlEnabled = true;
+            }
             LevelImageFader fader = FindObjectOfType<LevelImageFader>();
             StartCoroutine(fader.Fadeway());
 
