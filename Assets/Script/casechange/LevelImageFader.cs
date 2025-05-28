@@ -101,8 +101,8 @@ public class LevelImageFader : MonoBehaviour
                 bossB.ChatEnd();
                 break;
             case "Stage3":
-                // Boss_C bossC = FindObjectOfType<Boss_B>();
-                // bossC.ChatEnd();
+                Boss_C bossC = FindObjectOfType<Boss_C>();
+                bossC.ChatEnd();
                 break;
         }
 
