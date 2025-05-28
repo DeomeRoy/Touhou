@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class HackSaveEditor : MonoBehaviour
 {
@@ -46,9 +47,21 @@ public class HackSaveEditor : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.D))
         {
-            Boss_A boss = FindObjectOfType<Boss_A>();
-            if (boss != null)
+            if (SceneManager.GetActiveScene().name == "Stage1")
             {
+                Boss_A boss = FindObjectOfType<Boss_A>();
+                boss.BossHP = 0;
+                Debug.Log("[Hack] Boss 血量已設為 0");
+            }
+            else if (SceneManager.GetActiveScene().name == "Stage2")
+            {
+                Boss_B boss = FindObjectOfType<Boss_B>();
+                boss.BossHP = 0;
+                Debug.Log("[Hack] Boss 血量已設為 0");
+            }
+            else if (SceneManager.GetActiveScene().name == "Stage3")
+            {
+                Boss_C boss = FindObjectOfType<Boss_C>();
                 boss.BossHP = 0;
                 Debug.Log("[Hack] Boss 血量已設為 0");
             }

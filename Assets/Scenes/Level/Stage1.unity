@@ -5594,7 +5594,7 @@ GameObject:
   - component: {fileID: 1040039194}
   - component: {fileID: 1040039195}
   - component: {fileID: 1040039196}
-  m_Layer: 0
+  m_Layer: 17
   m_Name: BulletSpawn
   m_TagString: Boss
   m_Icon: {fileID: 0}

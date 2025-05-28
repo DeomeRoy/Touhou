@@ -499,7 +499,7 @@ public class PlayerController : MonoBehaviour
                     }
                 }
             }
-                StartCoroutine(InvincibilityCoroutine());
+            StartCoroutine(InvincibilityCoroutine());
         }
         
         if (life <= 0)
