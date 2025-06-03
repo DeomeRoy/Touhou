@@ -28,6 +28,8 @@ public class GlobalAudioManager : MonoBehaviour
     public AudioClip stage3Music;
     public AudioClip storyMusic;
     public AudioClip bossMusic;
+    public AudioClip bossMusic2;
+    public AudioClip bossMusic3;
     public AudioClip stage0Music;
     public AudioClip stage4Music;
 
@@ -67,6 +69,8 @@ public class GlobalAudioManager : MonoBehaviour
     public float stage3Volume = 0.8f;
     public float storyVolume = 1f;
     public float bossVolume = 1f;
+    public float bossVolume2 = 1f;
+    public float bossVolume3 = 1f;
 
     public float stage0Volume = 0.8f;
     public float stage4Volume = 0.8f;
@@ -313,16 +317,6 @@ public class GlobalAudioManager : MonoBehaviour
         activeMusicSource.loop = true;
         activeMusicSource.Play();
         StartCoroutine(FadeInMusic(activeMusicSource, fadeInDuration, storyVolume));
-    }
-
-    public void PlayBossMusicDirectly()
-    {
-        StopAllMusic();
-        activeMusicSource = musicSource1;
-        activeMusicSource.clip = bossMusic;
-        activeMusicSource.volume = bossVolume;
-        activeMusicSource.loop = true;
-        activeMusicSource.Play();
     }
 
     IEnumerator FadeIn(AudioSource source, float duration, float targetVolume)

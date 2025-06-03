@@ -83,7 +83,7 @@ public class LevelImageFader : MonoBehaviour
 
     public IEnumerator Fadeway()
     {
-        
+   
         faderImage.sprite = level4Sprite;
         fadeCanvasGroup.alpha = 0f;
         fadeCanvasGroup.DOFade(1f, fadeDuration);

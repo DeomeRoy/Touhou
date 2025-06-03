@@ -62,10 +62,17 @@ public class SceneAudioManager : MonoBehaviour
         {
             GlobalAudioManager.Instance.PlayMusicDirectly(GlobalAudioManager.Instance.stage4Music, GlobalAudioManager.Instance.stage4Volume);
         }
-        else if (GameManager.isContinue && gsd == 4 &&
-                 (localSceneName == "Stage1" || localSceneName == "Stage2" || localSceneName == "Stage3"))
+        else if (GameManager.isContinue && gsd == 4 && (localSceneName == "Stage1"))
         {
             GlobalAudioManager.Instance.PlayMusicDirectly(GlobalAudioManager.Instance.bossMusic, GlobalAudioManager.Instance.bossVolume);
+        }
+        else if (GameManager.isContinue && gsd == 4 && (localSceneName == "Stage2"))
+        {
+            GlobalAudioManager.Instance.PlayMusicDirectly(GlobalAudioManager.Instance.bossMusic2, GlobalAudioManager.Instance.bossVolume2);
+        }
+        else if (GameManager.isContinue && gsd == 4 && (localSceneName == "Stage3"))
+        {
+            GlobalAudioManager.Instance.PlayMusicDirectly(GlobalAudioManager.Instance.bossMusic3, GlobalAudioManager.Instance.bossVolume3);
         }
         else if (localSceneName == "Stage1")
         {
@@ -115,6 +122,32 @@ public class SceneAudioManager : MonoBehaviour
     // StoryController
     public void FadeToBoss()
     {
-        GlobalAudioManager.Instance.PlayBossMusicDirectly();
+        string sceneName = SceneManager.GetActiveScene().name;
+
+        AudioClip clipToPlay;
+        float volumeToUse;
+
+        if (sceneName == "Stage1")
+        {
+            clipToPlay = GlobalAudioManager.Instance.bossMusic;
+            volumeToUse = GlobalAudioManager.Instance.bossVolume;
+        }
+        else if (sceneName == "Stage2")
+        {
+            clipToPlay = GlobalAudioManager.Instance.bossMusic2;
+            volumeToUse = GlobalAudioManager.Instance.bossVolume2;
+        }
+        else if (sceneName == "Stage3")
+        {
+            clipToPlay = GlobalAudioManager.Instance.bossMusic3;
+            volumeToUse = GlobalAudioManager.Instance.bossVolume3;
+        }
+        else
+        {
+            clipToPlay = GlobalAudioManager.Instance.bossMusic;
+            volumeToUse = GlobalAudioManager.Instance.bossVolume;
+        }
+
+        GlobalAudioManager.Instance.PlayMusicDirectly(clipToPlay, volumeToUse, forceChange: true);
     }
 }
