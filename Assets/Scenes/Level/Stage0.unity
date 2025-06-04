@@ -626,6 +626,7 @@ GameObject:
   - component: {fileID: 311043579}
   - component: {fileID: 311043578}
   - component: {fileID: 311043581}
+  - component: {fileID: 311043582}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -723,6 +724,50 @@ MonoBehaviour:
   Level1_3: {fileID: 0}
   Level1_X: {fileID: 0}
   speed: 2
+--- !u!114 &311043582
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 311043577}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a79441f348de89743a2939f4d699eac1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_RenderShadows: 1
+  m_RequiresDepthTextureOption: 2
+  m_RequiresOpaqueTextureOption: 2
+  m_CameraType: 0
+  m_Cameras: []
+  m_RendererIndex: -1
+  m_VolumeLayerMask:
+    serializedVersion: 2
+    m_Bits: 1
+  m_VolumeTrigger: {fileID: 0}
+  m_VolumeFrameworkUpdateModeOption: 2
+  m_RenderPostProcessing: 0
+  m_Antialiasing: 0
+  m_AntialiasingQuality: 2
+  m_StopNaN: 0
+  m_Dithering: 0
+  m_ClearDepth: 1
+  m_AllowXRRendering: 1
+  m_AllowHDROutput: 1
+  m_UseScreenCoordOverride: 0
+  m_ScreenSizeOverride: {x: 0, y: 0, z: 0, w: 0}
+  m_ScreenCoordScaleBias: {x: 0, y: 0, z: 0, w: 0}
+  m_RequiresDepthTexture: 0
+  m_RequiresColorTexture: 0
+  m_Version: 2
+  m_TaaSettings:
+    m_Quality: 3
+    m_FrameInfluence: 0.1
+    m_JitterScale: 1
+    m_MipBias: 0
+    m_VarianceClampScale: 0.9
+    m_ContrastAdaptiveSharpening: 0
 --- !u!1001 &324177074
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4944,6 +4989,13 @@ MonoBehaviour:
       showPlayer: 1
       showEnemy: 0
     - dialogue: "\u4F60\u4E5F\u53EF\u4EE5\u8A66\u8457\u6309Z\uFF0C\u767C\u5C04\u7B26\u5492\u6539\u8B8A\u9748\u7403\u7684\u5F48\u5C04\u8ECC\u8DE1!"
+      speakerName: "\u5E2B\u7236"
+      speakerID: Player
+      photoID: 001
+      keepBrightIfSameSpeaker: 1
+      showPlayer: 1
+      showEnemy: 0
+    - dialogue: "\u5DE6Shift\u6309\u4F4F\u6642\u53EF\u4EE5\u7DE9\u6162\u8D70\u8DEF"
       speakerName: "\u5E2B\u7236"
       speakerID: Player
       photoID: 001

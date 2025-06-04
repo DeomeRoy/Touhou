@@ -33,6 +33,10 @@ public class GlobalAudioManager : MonoBehaviour
     public AudioClip stage0Music;
     public AudioClip stage4Music;
 
+    public AudioClip BossAttackSound;
+    public AudioClip BossFallSound;
+    public AudioClip BossHitSound;
+
     public float globalVolume = 1f;
 
     //用於音樂與音效的聲源
@@ -71,6 +75,11 @@ public class GlobalAudioManager : MonoBehaviour
     public float bossVolume = 1f;
     public float bossVolume2 = 1f;
     public float bossVolume3 = 1f;
+
+    public float BossAttackVolume = 1f;
+    public float BossFallVolume = 1f;
+    public float BossHitVolume = 1f;
+
 
     public float stage0Volume = 0.8f;
     public float stage4Volume = 0.8f;
@@ -395,4 +404,20 @@ public class GlobalAudioManager : MonoBehaviour
         musicSource1.Stop();
         musicSource2.Stop();
     }
+
+    public void BossAttackMusic(float volumeScale = 1f)
+    {
+        sfxSource.PlayOneShot(BossAttackSound, BossAttackVolume * volumeScale);
+    }
+
+    public void BossHitMusic(float volumeScale = 1f)
+    {
+        sfxSource.PlayOneShot(BossHitSound, BossHitVolume * volumeScale);
+    }
+
+    public void BossFallMusic(float volumeScale = 1f)
+    {
+        sfxSource.PlayOneShot(BossFallSound, BossFallVolume * volumeScale);
+    }
+
 }

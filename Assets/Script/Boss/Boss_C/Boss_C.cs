@@ -11,17 +11,16 @@ using Unity.VisualScripting;
 // BOSS.transform.DOMove(MovePosition, 1f).SetEase(Ease.OutQuad);
 class Boss_C : MonoBehaviour
 {
-    public GameObject BOSS, Bullet, Fire_Ball, Follow_Fire_Ball, Laser_Bullet, B_BlockPrefab, E_BlockPrefab;
-    public GameObject Laser_A,Laser_B,Laser_C,Laser_D,Laser_E;
+    public GameObject BOSS, Bullet, Fire_Ball, Follow_Fire_Ball, Laser_Bullet, B_BlockPrefab, E_BlockPrefab, Explode;
+    public GameObject Laser_A, Laser_B, Laser_C, Laser_D, Laser_E;
     public Transform Target, BossTransform, SATK_C_Transform;
-    public Sprite Idle, Walk, stone, sky;
-    public bool AutoAttackTimer, OnMove, OnAttack, End;
+    public Sprite Idle, Walk, MouthA, MouthB, stone, sky;
+    public bool AutoAttackTimer, OnMove, OnAttack, End, OpenMouth, Shaked;
     [HideInInspector] public bool NATK_A, NATK_B, NATK_C, NATK_D, SATK_A, SATK_B, SATK_C, SATK_D;
     public float GapA, GapB, angle;
     public float SkillTime, BulletSpeed, MoveSpeed, PositionX, BossHP, PlayerHP, DropTimer;
     //定義Boss中心點,下次移動位置,上個移動位置
-    Vector3 SetUPosition, MovePosition, LastPosition, Direction;
-
+    Vector3 SetUPosition, MovePosition, LastPosition;
     public bool NA, NB, NC, ND, SA, SB, SC, SD, AHP, BHP;
     public float AttackTimes;
     //Boss碰撞箱
@@ -35,11 +34,14 @@ class Boss_C : MonoBehaviour
         transform.rotation = Quaternion.Euler(0, 0, 0);
         GapA = 0; GapB = 0;
         AttackTimes = 0;
+        Explode.gameObject.SetActive(false);
         //初始上個位置為初始位置,預設自動攻擊關(對話後會開)
         LastPosition = SetUPosition;
         AutoAttackTimer = false;
         //正在攻擊預設關
         OnAttack = false;
+        OpenMouth = false;
+        Shaked = false;
         //Boss血量與戰鬥是否結束(預設否
         BossHP = 50;
         End = false;
@@ -115,7 +117,7 @@ class Boss_C : MonoBehaviour
             }
         }
         //--------------------------------------------------------------BOSS動畫
-        if (OnMove)
+        if (OnMove && !OpenMouth)
         {
             BOSS.GetComponent<SpriteRenderer>().sprite = Walk;
             if (BOSS.transform.position.x - LastPosition.x < 0)
@@ -129,13 +131,13 @@ class Boss_C : MonoBehaviour
                 LastPosition = BOSS.transform.position;
             }
         }
-        else
+        else if(!OpenMouth)
         {
             BOSS.GetComponent<SpriteRenderer>().sprite = Idle;
             BOSS.GetComponent<SpriteRenderer>().flipX = false;
         }
         //--------------------------------------------------------------BOSS招式
-        if (Input.GetKeyDown(KeyCode.Q) || NA)
+        if (NA)
         {
             SkillStart(ref NA, ref OnMove, ref OnAttack, ref NATK_A, -1f);
             CircleCollider.enabled = true;
@@ -143,7 +145,16 @@ class Boss_C : MonoBehaviour
         }
         if (NATK_A == true)
         {
-            BOSS.transform.DOMove(SetUPosition, 1f).SetEase(Ease.OutQuad);
+            if (SkillTime < 0f)
+            {
+                BOSS.transform.DOMove(new Vector3(SetUPosition.x, SetUPosition.y, SetUPosition.z), 1f)
+                    .SetEase(Ease.Linear)
+                    .OnUpdate(() => {
+                        float offsetY = Mathf.Sin(Time.time * 15f) * 0.02f;//速度、起伏幅度
+                        Vector3 pos = BOSS.transform.position;
+                        BOSS.transform.position = new Vector3(pos.x, pos.y + offsetY, pos.z);
+                    });
+            }
             if (SkillTime > 0f)
             {
                 OnMove = false;
@@ -153,10 +164,10 @@ class Boss_C : MonoBehaviour
                 GapA = SkillTime;
                 BulletSpeed = 5f;
                 transform.rotation = Quaternion.Euler(0, 0, 110);
-                GameObject bulletA = Instantiate(Follow_Fire_Ball, new Vector3(BossTransform.position.x,BossTransform.position.y,0.5f), BossTransform.rotation);
+                GameObject bulletA = Instantiate(Follow_Fire_Ball, new Vector3(BossTransform.position.x, BossTransform.position.y, 0.5f), BossTransform.rotation);
                 bulletA.GetComponent<Rigidbody2D>().velocity = BossTransform.up * -BulletSpeed;
                 transform.rotation = Quaternion.Euler(0, 0, -110);
-                GameObject bulletB = Instantiate(Follow_Fire_Ball, new Vector3(BossTransform.position.x,BossTransform.position.y,0.5f), BossTransform.rotation);
+                GameObject bulletB = Instantiate(Follow_Fire_Ball, new Vector3(BossTransform.position.x, BossTransform.position.y, 0.5f), BossTransform.rotation);
                 bulletB.GetComponent<Rigidbody2D>().velocity = BossTransform.up * -BulletSpeed;
             }
             if (SkillTime > 7f)
@@ -164,7 +175,7 @@ class Boss_C : MonoBehaviour
                 SkillEnd(ref NATK_A, 0);
             }
         }
-        if (Input.GetKeyDown(KeyCode.E) || NB)
+        if (NB)
         {
             SkillStart(ref NB, ref OnMove, ref OnAttack, ref NATK_B, -1f);
             Move();
@@ -174,11 +185,20 @@ class Boss_C : MonoBehaviour
         }
         if (NATK_B == true)
         {
-            BOSS.transform.DOMove(MovePosition, 1f).SetEase(Ease.OutQuad);
+            if (SkillTime < 0f)
+            {
+                BOSS.transform.DOMove(MovePosition, 1f)
+                    .SetEase(Ease.Linear)
+                    .OnUpdate(() => {
+                        float offsetY = Mathf.Sin(Time.time * 15f) * 0.02f;//速度、起伏幅度
+                        Vector3 pos = BOSS.transform.position;
+                        BOSS.transform.position = new Vector3(pos.x, pos.y + offsetY, pos.z);
+                    });
+            }
             Laser_A.GetComponent<SpriteRenderer>().enabled = true;
             Laser_B.GetComponent<SpriteRenderer>().enabled = true;
-            Laser_A.transform.DOMove(new Vector3(7,32,0), 1f).SetEase(Ease.OutQuad);
-            Laser_B.transform.DOMove(new Vector3(-7,32,0), 1f).SetEase(Ease.OutQuad);
+            Laser_A.transform.DOMove(new Vector3(7, 32, 0), 1f).SetEase(Ease.OutQuad);
+            Laser_B.transform.DOMove(new Vector3(-7, 32, 0), 1f).SetEase(Ease.OutQuad);
             Laser_A.transform.rotation = Quaternion.Euler(0f, 0f, -155f);
             Laser_B.transform.rotation = Quaternion.Euler(0f, 0f, -25f);
             if (SkillTime > 0f)
@@ -197,9 +217,9 @@ class Boss_C : MonoBehaviour
                 SkillEnd(ref NATK_B, 0);
             }
         }
-        if (Input.GetKeyDown(KeyCode.R) || NC)
+        if (NC)
         {
-            SkillStart(ref NC, ref OnMove, ref OnAttack, ref NATK_C, -1f);
+            SkillStart(ref NC, ref OnMove, ref OnAttack, ref NATK_C, -2.5f);
             Move();
             MoveCollderChange();
             CircleCollider.enabled = false;
@@ -207,25 +227,41 @@ class Boss_C : MonoBehaviour
         }
         if (NATK_C == true)
         {
-            BOSS.transform.DOMove(MovePosition, 1f).SetEase(Ease.OutQuad);
-            Laser_A.GetComponent<SpriteRenderer>().enabled = true;
-            Laser_A.transform.DOMove(new Vector3(-0.5f,33,0), 1f).SetEase(Ease.OutQuad);
-            if (SkillTime < 0f)
+            Laser_A.transform.DOMove(new Vector3(0.2f, 32.6f, 0), 1f).SetEase(Ease.OutQuad);
+            Laser_B.transform.DOMove(new Vector3(0.2f, 32.6f, 0), 1f).SetEase(Ease.OutQuad);
+            if (SkillTime > -2.5 && SkillTime < -1.5f)
             {
-                Laser_A.transform.rotation = Quaternion.Euler(0f, 0f, -140f);
+                BOSS.transform.DOMove(new Vector3(SetUPosition.x, SetUPosition.y, SetUPosition.z), 1f)
+                    .SetEase(Ease.Linear)
+                    .OnUpdate(() =>
+                    {
+                        float offsetY = Mathf.Sin(Time.time * 15f) * 0.02f;//速度、起伏幅度
+                        Vector3 pos = BOSS.transform.position;
+                        BOSS.transform.position = new Vector3(pos.x, pos.y + offsetY, pos.z);
+                    });
+            }
+            if (SkillTime > -1.5f && SkillTime < -1f)
+            {
+                OpenMouth = true;
+                BOSS.GetComponent<SpriteRenderer>().flipX = false;
+                BOSS.GetComponent<SpriteRenderer>().sprite = MouthA;
+                Laser_A.transform.rotation = Quaternion.Euler(0f, 0f, -145f);
+                Laser_B.transform.rotation = Quaternion.Euler(0f, 0f, -35f);
+                GetComponent<CapsuleCollider2D>().offset = new Vector2(0.4f, -1.1f);
+            }
+            if (SkillTime > -1f && SkillTime < 0f)
+            {
+                BOSS.GetComponent<SpriteRenderer>().sprite = MouthB;
+                Laser_A.GetComponent<Laser_Tutorial>().StartShoot = true;
             }
             if (SkillTime > 0f && SkillTime < 3f)
             {
-                OnMove = false;
-                GetComponent<CapsuleCollider2D>().offset = new Vector2(0.3f, -1.1f);
                 Laser_A.GetComponent<Laser_Tutorial>().StartShoot = true;
                 Laser_A.transform.DORotate(new Vector3(0, 0, -55f), 3f).SetEase(Ease.Linear);
             }
             if (SkillTime > 3f && SkillTime < 4f)
             {
                 Laser_A.GetComponent<Laser_Tutorial>().StartShoot = false;
-                Laser_B.GetComponent<SpriteRenderer>().enabled = true;
-                Laser_B.transform.DOMove(new Vector3(0.5f,33,0), 1f).SetEase(Ease.OutQuad);
                 Laser_B.transform.rotation = Quaternion.Euler(0f, 0f, -40f);
             }
             if (SkillTime > 4f && SkillTime < 7f)
@@ -236,18 +272,20 @@ class Boss_C : MonoBehaviour
             if (SkillTime > 7f && SkillTime < 9f)
             {
                 Laser_B.GetComponent<Laser_Tutorial>().StartShoot = false;
-                Laser_A.transform.DORotate(new Vector3(0, 0, -140f), 1f).SetEase(Ease.OutQuad);
-                Laser_B.transform.DORotate(new Vector3(0, 0, -40f), 1f).SetEase(Ease.OutQuad);
+                Laser_A.transform.DORotate(new Vector3(0, 0, -145f), 1f).SetEase(Ease.OutQuad);
+                Laser_B.transform.DORotate(new Vector3(0, 0, -35f), 1f).SetEase(Ease.OutQuad);
             }
             if (SkillTime > 9f && SkillTime < 12f)
             {
                 Laser_A.GetComponent<Laser_Tutorial>().StartShoot = true;
                 Laser_B.GetComponent<Laser_Tutorial>().StartShoot = true;
-                Laser_A.transform.DORotate(new Vector3(0, 0, -100f), 3f).SetEase(Ease.Linear);
-                Laser_B.transform.DORotate(new Vector3(0, 0, -80f), 3f).SetEase(Ease.Linear);
+                Laser_A.transform.DORotate(new Vector3(0, 0, -110f), 3f).SetEase(Ease.Linear);
+                Laser_B.transform.DORotate(new Vector3(0, 0, -70f), 3f).SetEase(Ease.Linear);
             }
             if (SkillTime > 13f)
             {
+                OnMove = false;
+                OpenMouth = false;
                 Laser_A.GetComponent<Laser_Tutorial>().StartShoot = false;
                 Laser_B.GetComponent<Laser_Tutorial>().StartShoot = false;
                 Laser_A.GetComponent<Laser_Tutorial>().Back();
@@ -255,7 +293,7 @@ class Boss_C : MonoBehaviour
                 SkillEnd(ref NATK_C, 0);
             }
         }
-        if (Input.GetKeyDown(KeyCode.T) || ND)
+        if (ND)
         {
             SkillStart(ref ND, ref OnMove, ref OnAttack, ref NATK_D, -1f);
             Move();
@@ -265,15 +303,24 @@ class Boss_C : MonoBehaviour
         }
         if (NATK_D == true)
         {
-            BOSS.transform.DOMove(MovePosition, 1f).SetEase(Ease.OutQuad);
+            if (SkillTime < 0f)
+            {
+                BOSS.transform.DOMove(MovePosition, 1f)
+                    .SetEase(Ease.Linear)
+                    .OnUpdate(() => {
+                        float offsetY = Mathf.Sin(Time.time * 15f) * 0.02f;//速度、起伏幅度
+                        Vector3 pos = BOSS.transform.position;
+                        BOSS.transform.position = new Vector3(pos.x, pos.y + offsetY, pos.z);
+                    });
+            }
             Laser_A.GetComponent<SpriteRenderer>().enabled = true;
             Laser_B.GetComponent<SpriteRenderer>().enabled = true;
             Laser_C.GetComponent<SpriteRenderer>().enabled = true;
             Laser_D.GetComponent<SpriteRenderer>().enabled = true;
-            Laser_A.transform.DOMove(new Vector3(-7,32,0), 1f).SetEase(Ease.OutQuad);
-            Laser_B.transform.DOMove(new Vector3(-4,33,0), 1f).SetEase(Ease.OutQuad);
-            Laser_C.transform.DOMove(new Vector3(4,33,0), 1f).SetEase(Ease.OutQuad);
-            Laser_D.transform.DOMove(new Vector3(7,32,0), 1f).SetEase(Ease.OutQuad);
+            Laser_A.transform.DOMove(new Vector3(-7, 32, 0), 1f).SetEase(Ease.OutQuad);
+            Laser_B.transform.DOMove(new Vector3(-4, 33, 0), 1f).SetEase(Ease.OutQuad);
+            Laser_C.transform.DOMove(new Vector3(4, 33, 0), 1f).SetEase(Ease.OutQuad);
+            Laser_D.transform.DOMove(new Vector3(7, 32, 0), 1f).SetEase(Ease.OutQuad);
             Laser_A.transform.rotation = Quaternion.Euler(0f, 0f, -36f);
             Laser_B.transform.rotation = Quaternion.Euler(0f, 0f, -80f);
             Laser_C.transform.rotation = Quaternion.Euler(0f, 0f, -100f);
@@ -284,9 +331,9 @@ class Boss_C : MonoBehaviour
                 OnMove = false;
                 GetComponent<CapsuleCollider2D>().offset = new Vector2(0.3f, -1.1f);
             }
-            if (SkillTime > 3f){Laser_C.GetComponent<Laser_Tutorial>().StartShoot = true;}
-            if (SkillTime > 4.5f){Laser_A.GetComponent<Laser_Tutorial>().StartShoot = true;}
-            if (SkillTime > 6f){Laser_D.GetComponent<Laser_Tutorial>().StartShoot = true;}
+            if (SkillTime > 3f) { Laser_C.GetComponent<Laser_Tutorial>().StartShoot = true; }
+            if (SkillTime > 4.5f) { Laser_A.GetComponent<Laser_Tutorial>().StartShoot = true; }
+            if (SkillTime > 6f) { Laser_D.GetComponent<Laser_Tutorial>().StartShoot = true; }
             if (SkillTime > 8f)
             {
                 Laser_A.GetComponent<Laser_Tutorial>().StartShoot = false;
@@ -300,15 +347,30 @@ class Boss_C : MonoBehaviour
                 SkillEnd(ref NATK_D, 0);
             }
         }
-        if (Input.GetKeyDown(KeyCode.Y) || SA)
+        if (SA)
         {
             SkillStart(ref SA, ref OnMove, ref OnAttack, ref SATK_A, -1f);
             CircleCollider.enabled = true;
             CapsuleCollider.enabled = false;
+            Shaked = false;
         }
         if (SATK_A == true)
         {
-            BOSS.transform.DOMove(new Vector3(SetUPosition.x, SetUPosition.y,SetUPosition.z), 1f).SetEase(Ease.OutQuad);
+            if (SkillTime < 0f)
+            {
+                if (!Shaked)
+                {
+                    Camera.main.DOShakePosition(1f, 0.3f);
+                    Shaked = true;
+                }
+                BOSS.transform.DOMove(new Vector3(SetUPosition.x, SetUPosition.y, SetUPosition.z), 1f)
+                    .SetEase(Ease.Linear)
+                    .OnUpdate(() => {
+                        float offsetY = Mathf.Sin(Time.time * 15f) * 0.02f;//速度、起伏幅度
+                        Vector3 pos = BOSS.transform.position;
+                        BOSS.transform.position = new Vector3(pos.x, pos.y + offsetY, pos.z);
+                    });
+            }
             Laser_A.GetComponent<SpriteRenderer>().enabled = true;
             Laser_B.GetComponent<SpriteRenderer>().enabled = true;
             Laser_C.GetComponent<SpriteRenderer>().enabled = true;
@@ -334,23 +396,23 @@ class Boss_C : MonoBehaviour
                 switch (x)
                 {
                     case 0:
-                        GameObject bulletA = Instantiate(Laser_Bullet, Laser_A.transform.position, Laser_A.transform.rotation* Quaternion.Euler(0, 0, 90));
+                        GameObject bulletA = Instantiate(Laser_Bullet, Laser_A.transform.position, Laser_A.transform.rotation * Quaternion.Euler(0, 0, 90));
                         bulletA.GetComponent<Rigidbody2D>().velocity = Laser_A.transform.right * BulletSpeed;
                         break;
                     case 1:
-                        GameObject bulletB = Instantiate(Laser_Bullet, Laser_B.transform.position, Laser_B.transform.rotation* Quaternion.Euler(0, 0, 90));
+                        GameObject bulletB = Instantiate(Laser_Bullet, Laser_B.transform.position, Laser_B.transform.rotation * Quaternion.Euler(0, 0, 90));
                         bulletB.GetComponent<Rigidbody2D>().velocity = Laser_B.transform.right * BulletSpeed;
                         break;
                     case 2:
-                        GameObject bulletC = Instantiate(Laser_Bullet, Laser_C.transform.position, Laser_C.transform.rotation* Quaternion.Euler(0, 0, 90));
+                        GameObject bulletC = Instantiate(Laser_Bullet, Laser_C.transform.position, Laser_C.transform.rotation * Quaternion.Euler(0, 0, 90));
                         bulletC.GetComponent<Rigidbody2D>().velocity = Laser_C.transform.right * BulletSpeed;
                         break;
                     case 3:
-                        GameObject bulletD = Instantiate(Laser_Bullet, Laser_D.transform.position, Laser_D.transform.rotation* Quaternion.Euler(0, 0, 90));
+                        GameObject bulletD = Instantiate(Laser_Bullet, Laser_D.transform.position, Laser_D.transform.rotation * Quaternion.Euler(0, 0, 90));
                         bulletD.GetComponent<Rigidbody2D>().velocity = Laser_D.transform.right * BulletSpeed;
                         break;
                     case 4:
-                        GameObject bulletE = Instantiate(Laser_Bullet, Laser_E.transform.position, Laser_E.transform.rotation* Quaternion.Euler(0, 0, 90));
+                        GameObject bulletE = Instantiate(Laser_Bullet, Laser_E.transform.position, Laser_E.transform.rotation * Quaternion.Euler(0, 0, 90));
                         bulletE.GetComponent<Rigidbody2D>().velocity = Laser_E.transform.right * BulletSpeed;
                         break;
                 }
@@ -360,7 +422,7 @@ class Boss_C : MonoBehaviour
                 GapB = SkillTime;
                 float x = Random.Range(-8, 9);
                 BulletSpeed = 8f;
-                GameObject bulletA = Instantiate(Fire_Ball, new Vector3(x,SATK_C_Transform.position.y,SATK_C_Transform.position.z), BossTransform.rotation);
+                GameObject bulletA = Instantiate(Fire_Ball, new Vector3(x, SATK_C_Transform.position.y, SATK_C_Transform.position.z), BossTransform.rotation);
                 bulletA.GetComponent<Rigidbody2D>().velocity = SATK_C_Transform.up * -BulletSpeed;
             }
             if (SkillTime > 15f)
@@ -378,7 +440,7 @@ class Boss_C : MonoBehaviour
                 SkillEnd(ref SATK_A, 0);
             }
         }
-        if (Input.GetKeyDown(KeyCode.U) || SB)
+        if (SB)
         {
             SkillStart(ref SB, ref OnMove, ref OnAttack, ref SATK_B, -1f);
             CircleCollider.enabled = true;
@@ -386,14 +448,30 @@ class Boss_C : MonoBehaviour
         }
         if (SATK_B == true)
         {
-            BOSS.transform.DOMove(new Vector3(SetUPosition.x, SetUPosition.y,SetUPosition.z), 1f).SetEase(Ease.OutQuad);
-            Laser_A.GetComponent<SpriteRenderer>().enabled = true;
-            Laser_B.GetComponent<SpriteRenderer>().enabled = true;
-            Laser_A.transform.DOMove(new Vector3(-0.5f,33,0), 1f).SetEase(Ease.OutQuad);
-            Laser_B.transform.DOMove(new Vector3(0.5f,33,0), 1f).SetEase(Ease.OutQuad);
-            if (SkillTime > 0f)
+            if (SkillTime < 0f)
             {
-                OnMove = false;
+                BOSS.transform.DOMove(new Vector3(SetUPosition.x, SetUPosition.y, SetUPosition.z), 1f)
+                    .SetEase(Ease.Linear)
+                    .OnUpdate(() => {
+                        float offsetY = Mathf.Sin(Time.time * 15f) * 0.02f;//速度、起伏幅度
+                        Vector3 pos = BOSS.transform.position;
+                        BOSS.transform.position = new Vector3(pos.x, pos.y + offsetY, pos.z);
+                    });
+            }
+            Laser_A.transform.DOMove(new Vector3(0.18f, 32.6f, 0), 1f).SetEase(Ease.OutQuad);
+            Laser_B.transform.DOMove(new Vector3(0.22f, 32.6f, 0), 1f).SetEase(Ease.OutQuad);
+            if (SkillTime > 0f && SkillTime < 0.5f)
+            {
+                OpenMouth = true;
+                BOSS.GetComponent<SpriteRenderer>().flipX = false;
+                BOSS.GetComponent<SpriteRenderer>().sprite = MouthA;
+            }
+            if (SkillTime > 0.5f && SkillTime < 1f)
+            {
+                BOSS.GetComponent<SpriteRenderer>().sprite = MouthB;
+            }
+            if (SkillTime > 1f)
+            {
                 Vector2 dirA = Target.transform.position - Laser_A.transform.position;
                 float Aangle = Mathf.Atan2(dirA.y, dirA.x) * Mathf.Rad2Deg;
                 Vector2 dirB = Target.transform.position - Laser_B.transform.position;
@@ -411,7 +489,7 @@ class Boss_C : MonoBehaviour
                 BulletSpeed = 20f;
                 GameObject bulletA = Instantiate(Laser_Bullet, Laser_A.transform.position, Laser_A.transform.rotation * Quaternion.Euler(0, 0, 90));
                 bulletA.GetComponent<Rigidbody2D>().velocity = Laser_A.transform.right * BulletSpeed;
-                GameObject bulletB = Instantiate(Laser_Bullet, Laser_B.transform.position, Laser_B.transform.rotation* Quaternion.Euler(0, 0, 90));
+                GameObject bulletB = Instantiate(Laser_Bullet, Laser_B.transform.position, Laser_B.transform.rotation * Quaternion.Euler(0, 0, 90));
                 bulletB.GetComponent<Rigidbody2D>().velocity = Laser_B.transform.right * BulletSpeed;
             }
             if (SkillTime - GapB > 0.75f)
@@ -424,12 +502,14 @@ class Boss_C : MonoBehaviour
             }
             if (SkillTime > 16)
             {
+                OnMove = false;
+                OpenMouth = false;
                 Laser_A.GetComponent<Laser_Tutorial>().Back();
                 Laser_B.GetComponent<Laser_Tutorial>().Back();
                 SkillEnd(ref SATK_B, 0);
             }
         }
-        if (Input.GetKeyDown(KeyCode.I) || SC)
+        if (SC)
         {
             SkillStart(ref SC, ref OnMove, ref OnAttack, ref SATK_C, -1f);
             CircleCollider.enabled = true;
@@ -437,12 +517,29 @@ class Boss_C : MonoBehaviour
         }
         if (SATK_C == true)
         {
-            BOSS.transform.DOMove(new Vector3(SetUPosition.x, SetUPosition.y,SetUPosition.z), 1f).SetEase(Ease.OutQuad);
-            Laser_A.GetComponent<SpriteRenderer>().enabled = true;
-            Laser_A.transform.DOMove(new Vector3(0,33,0), 1f).SetEase(Ease.OutQuad);
-            if (SkillTime > 0f)
+            if (SkillTime < 0f)
             {
-                OnMove = false;
+                BOSS.transform.DOMove(new Vector3(SetUPosition.x, SetUPosition.y, SetUPosition.z), 1f)
+                    .SetEase(Ease.Linear)
+                    .OnUpdate(() => {
+                        float offsetY = Mathf.Sin(Time.time * 15f) * 0.02f;//速度、起伏幅度
+                        Vector3 pos = BOSS.transform.position;
+                        BOSS.transform.position = new Vector3(pos.x, pos.y + offsetY, pos.z);
+                    });
+            }
+            Laser_A.transform.DOMove(new Vector3(0.2f, 32.6f, 0), 1f).SetEase(Ease.OutQuad);
+            if (SkillTime > 0f && SkillTime < 0.5f)
+            {
+                OpenMouth = true;
+                BOSS.GetComponent<SpriteRenderer>().flipX = false;
+                BOSS.GetComponent<SpriteRenderer>().sprite = MouthA;
+            }
+            if (SkillTime > 0.5f && SkillTime < 1f)
+            {
+                BOSS.GetComponent<SpriteRenderer>().sprite = MouthB;
+            }
+            if (SkillTime > 1f)
+            {
                 Vector2 dirA = Target.transform.position - Laser_A.transform.position;
                 float Aangle = Mathf.Atan2(dirA.y, dirA.x) * Mathf.Rad2Deg;
                 Laser_A.transform
@@ -450,56 +547,71 @@ class Boss_C : MonoBehaviour
                     .SetEase(Ease.Linear);
             }
             transform.Rotate(0, 0, 180 * Time.deltaTime);
-            if(SkillTime - GapA > 0.05f && SkillTime > 1f){
-                BulletSpeed = 1f;
-                GameObject bulletA = Instantiate(Bullet, new Vector3(BossTransform.position.x,BossTransform.position.y,0.5f), BossTransform.rotation);
-                bulletA.GetComponent<Rigidbody2D>().velocity = BossTransform.up * -BulletSpeed;
-                GapA = SkillTime;
-            }
-            if (SkillTime - GapB > 5f)
+            if (SkillTime-1 - GapA > 0.05f && SkillTime-1 > 1f)
             {
-                GapB = SkillTime;
+                BulletSpeed = 1f;
+                GameObject bulletA = Instantiate(Bullet, new Vector3(BossTransform.position.x, BossTransform.position.y, 0.5f), BossTransform.rotation);
+                bulletA.GetComponent<Rigidbody2D>().velocity = BossTransform.up * -BulletSpeed;
+                GapA = SkillTime-1;
+            }
+            if (SkillTime-1 - GapB > 5f)
+            {
+                GapB = SkillTime-1;
                 BulletSpeed = 20f;
                 GameObject bulletA = Instantiate(Laser_Bullet, Laser_A.transform.position, Laser_A.transform.rotation * Quaternion.Euler(0, 0, 90));
                 bulletA.GetComponent<Rigidbody2D>().velocity = Laser_A.transform.right * BulletSpeed;
             }
             if (SkillTime > 12)
             {
+                OnMove = false;
+                OpenMouth = false;
                 Laser_A.GetComponent<Laser_Tutorial>().Back();
                 SkillEnd(ref SATK_C, 0);
             }
         }
-        if (Input.GetKeyDown(KeyCode.O) || SD)
+        if (SD)
         {
             SkillStart(ref SD, ref OnMove, ref OnAttack, ref SATK_D, -1f);
         }
         if (SATK_D == true)
         {
-            BOSS.transform.DOMove(new Vector3(SetUPosition.x, SetUPosition.y, SetUPosition.z), 1f).SetEase(Ease.OutQuad);
-            Laser_A.GetComponent<SpriteRenderer>().enabled = true;
-            Laser_B.GetComponent<SpriteRenderer>().enabled = true;
-            Laser_C.GetComponent<SpriteRenderer>().enabled = true;
-            Laser_D.GetComponent<SpriteRenderer>().enabled = true;
-            Laser_E.GetComponent<SpriteRenderer>().enabled = true;
-            Laser_A.transform.DOMove(new Vector3(0, 33, 0), 1f).SetEase(Ease.OutQuad);
-            Laser_B.transform.DOMove(new Vector3(0, 33, 0), 1f).SetEase(Ease.OutQuad);
-            Laser_C.transform.DOMove(new Vector3(0, 33, 0), 1f).SetEase(Ease.OutQuad);
-            Laser_D.transform.DOMove(new Vector3(0, 33, 0), 1f).SetEase(Ease.OutQuad);
-            Laser_E.transform.DOMove(new Vector3(0, 33, 0), 1f).SetEase(Ease.OutQuad);
+            if (SkillTime < 0f)
+            {
+                BOSS.transform.DOMove(new Vector3(SetUPosition.x, SetUPosition.y, SetUPosition.z), 1f)
+                    .SetEase(Ease.Linear)
+                    .OnUpdate(() => {
+                        float offsetY = Mathf.Sin(Time.time * 15f) * 0.02f;//速度、起伏幅度
+                        Vector3 pos = BOSS.transform.position;
+                        BOSS.transform.position = new Vector3(pos.x, pos.y + offsetY, pos.z);
+                    });
+            }
+            Laser_A.transform.DOMove(new Vector3(0.2f, 32.6f, 0), 1f).SetEase(Ease.OutQuad);
+            Laser_B.transform.DOMove(new Vector3(0.2f, 32.6f, 0), 1f).SetEase(Ease.OutQuad);
+            Laser_C.transform.DOMove(new Vector3(0.2f, 32.6f, 0), 1f).SetEase(Ease.OutQuad);
+            Laser_D.transform.DOMove(new Vector3(0.2f, 32.6f, 0), 1f).SetEase(Ease.OutQuad);
+            Laser_E.transform.DOMove(new Vector3(0.2f, 32.6f, 0), 1f).SetEase(Ease.OutQuad);
             Laser_A.transform.rotation = Quaternion.Euler(0f, 0f, -40f);
             Laser_B.transform.rotation = Quaternion.Euler(0f, 0f, -65f);
             Laser_C.transform.rotation = Quaternion.Euler(0f, 0f, -90f);
             Laser_D.transform.rotation = Quaternion.Euler(0f, 0f, -115f);
             Laser_E.transform.rotation = Quaternion.Euler(0f, 0f, -140f);
-            if (SkillTime > 0f)
-                OnMove = false;
+            if (SkillTime > 0f && SkillTime < 0.5f)
+            {
+                OpenMouth = true;
+                BOSS.GetComponent<SpriteRenderer>().flipX = false;
+                BOSS.GetComponent<SpriteRenderer>().sprite = MouthA;
+            }
+            if (SkillTime > 0.5f && SkillTime < 1f)
+            {
+                BOSS.GetComponent<SpriteRenderer>().sprite = MouthB;
+            }
             if (SkillTime - GapA > 0.15f)
             {
                 GapA = SkillTime;
                 BulletSpeed = 3f;
                 float x = Random.Range(-45, 46);
                 transform.rotation = Quaternion.Euler(0, 0, x);
-                GameObject bulletA = Instantiate(Bullet, new Vector3(BossTransform.position.x,BossTransform.position.y,0.5f), BossTransform.rotation);
+                GameObject bulletA = Instantiate(Bullet, new Vector3(BossTransform.position.x, BossTransform.position.y, 0.5f), BossTransform.rotation);
                 bulletA.GetComponent<Rigidbody2D>().velocity = BossTransform.up * -BulletSpeed;
             }
             BulletSpeed = 20f;
@@ -525,6 +637,8 @@ class Boss_C : MonoBehaviour
             }
             if (SkillTime > 11)
             {
+                OnMove = false;
+                OpenMouth = false;
                 Laser_A.GetComponent<Laser_Tutorial>().StartShoot = false;
                 Laser_B.GetComponent<Laser_Tutorial>().StartShoot = false;
                 Laser_C.GetComponent<Laser_Tutorial>().StartShoot = false;
@@ -541,6 +655,7 @@ class Boss_C : MonoBehaviour
         {//Boss血量歸零的判定程式(開始對話+關閉計時器+隱藏球+玩家無敵+強制結束招式+避免重複判定
             if (BossHP <= 0 && !End)
             {
+                GlobalAudioManager.Instance.BossFallMusic();
                 StartCoroutine(TriggerStoryByDistance(1));
                 AutoAttackTimer = false;
                 BallBehavior Ball = FindObjectOfType<BallBehavior>();
@@ -549,6 +664,7 @@ class Boss_C : MonoBehaviour
                 Player.invincible = true;
                 SkillTime = 100;
                 End = true;
+                Explode.gameObject.SetActive(true);
             }
         }
         {//Boss掉落物程式
@@ -580,7 +696,7 @@ class Boss_C : MonoBehaviour
     //對話結束恢復計時器
     public void ChatEnd()
     {
-        AutoAttackTimer = !AutoAttackTimer;
+        AutoAttackTimer = true;
     }
     //進入勝利劇情
     private IEnumerator TriggerStoryByDistance(float totalTransitionTime)
@@ -599,7 +715,7 @@ class Boss_C : MonoBehaviour
             SpriteRenderer sr = Stone.GetComponent<SpriteRenderer>();
             if (sr != null)
             {
-                sr.sprite = stone; // 你事先指定的 Sprite
+                sr.sprite = stone;
             }
         }
         GameObject Sky = GameObject.Find("Sky");
@@ -608,7 +724,7 @@ class Boss_C : MonoBehaviour
             SpriteRenderer sr = Sky.GetComponent<SpriteRenderer>();
             if (sr != null)
             {
-                sr.sprite = sky; // 你事先指定的 Sprite
+                sr.sprite = sky;
             }
         }
 
@@ -656,6 +772,11 @@ class Boss_C : MonoBehaviour
         }
         Boss_HP_Bar_Follow UpdateBossHP = FindObjectOfType<Boss_HP_Bar_Follow>();
         UpdateBossHP.UpdateBossHP(BossHP);
+        GlobalAudioManager.Instance.BossHitMusic();
+        if (BOSS.GetComponent<SpriteRenderer>().color != Color.red)
+        {
+            StartCoroutine(HurtFlash());
+        }
     }
     //Boss移動時的碰撞箱轉換
     public void MoveCollderChange()
@@ -708,12 +829,23 @@ class Boss_C : MonoBehaviour
         SkillTime = Time;
 
         OnAttack = false;
+        Shaked = false;
         GapA = 0;
         GapB = 0;
         GetComponent<CapsuleCollider2D>().offset = new Vector2(0.3f, -1.1f);
         transform.rotation = Quaternion.Euler(0, 0, 0);
         CircleCollider.enabled = false;
         CapsuleCollider.enabled = true;
+    }
+    //受傷閃紅反饋
+    IEnumerator HurtFlash()
+    {
+        SpriteRenderer sr = BOSS.GetComponent<SpriteRenderer>();
+        Color originalColor = sr.color;
+
+        sr.color = Color.red; // 換成紅色
+        yield return new WaitForSeconds(0.1f); // 持續 0.1 秒
+        sr.color = originalColor; // 回復原本顏色
     }
 }
 

@@ -609,6 +609,9 @@ MonoBehaviour:
   bossMusic3: {fileID: 8300000, guid: bd75ef919d308d44c929ec5e7f9f8830, type: 3}
   stage0Music: {fileID: 8300000, guid: 696dc3ea2a200774c99aa7eff886391e, type: 3}
   stage4Music: {fileID: 8300000, guid: bd2b2784737b54141a2e5ff7a084d7f7, type: 3}
+  BossAttackSound: {fileID: 8300000, guid: 2fb6cdec1e7119044824fd3aaa295629, type: 3}
+  BossFallSound: {fileID: 8300000, guid: a76520a5af8b5dc47a0bcd83c647ee68, type: 3}
+  BossHitSound: {fileID: 8300000, guid: d8733dafd6babaa4d9256cba01c6164a, type: 3}
   globalVolume: 1
   musicSource1: {fileID: 0}
   musicSource2: {fileID: 0}
@@ -636,6 +639,9 @@ MonoBehaviour:
   bossVolume: 0.007
   bossVolume2: 0.007
   bossVolume3: 0.007
+  BossAttackVolume: 0.01
+  BossFallVolume: 0.01
+  BossHitVolume: 0.01
   stage0Volume: 0.01
   stage4Volume: 0.01
   crossFadeOutTime: 0.5

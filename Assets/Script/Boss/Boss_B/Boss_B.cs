@@ -7,7 +7,7 @@ using DG.Tweening;
 // [HideInInspector]
 
 class Boss_B : MonoBehaviour{
-    public GameObject BOSS,Bullet,Bullet_NC,Bullet_NC1,Bullet_ND,Bullet_SD,B_BlockPrefab,E_BlockPrefab;
+    public GameObject BOSS,Bullet,Bullet_NC,Bullet_NC1,Bullet_ND,Bullet_SD,B_BlockPrefab,E_BlockPrefab,Explode;
     public Transform Target,BossTransform,Transform_SATK_C,Transform_SATK_D;
     public Sprite Idle,Walk;
     public bool AutoAttackTimer,OnMove,OnAttack,End;
@@ -29,6 +29,7 @@ class Boss_B : MonoBehaviour{
         transform.rotation = Quaternion.Euler(0, 0, 0);
         GapA = 0; GapB = 0;
         AttackTimes = 0;
+        Explode.gameObject.SetActive(false);
         //初始上個位置為初始位置,預設自動攻擊關(對話後會開)
         LastPosition = SetUPosition;
         AutoAttackTimer = false;
@@ -221,7 +222,7 @@ class Boss_B : MonoBehaviour{
                 GapA = SkillTime;
                 float x = Random.Range(0, 2) == 0 ? -1 : 1;
                 transform.rotation = Quaternion.Euler(0, 0, 100 * x);
-                GameObject bulletA = Instantiate(Bullet_ND, BossTransform.position, BossTransform.rotation);
+                GameObject bulletA = Instantiate(Bullet_ND, new Vector3(BossTransform.position.x,BossTransform.position.y,0f), BossTransform.rotation);
                 if (SkillTime > 2f)
                 {
                     SkillEnd(ref NATK_D, 0);
@@ -320,7 +321,7 @@ class Boss_B : MonoBehaviour{
             BOSS.transform.position = Vector3.MoveTowards(BOSS.transform.position, SetUPosition, MoveSpeed * Time.deltaTime);
             if (SkillTime - GapA > 0.1f)
             {
-                GameObject bulletA = Instantiate(Bullet, Transform_SATK_C.position, BossTransform.rotation);
+                GameObject bulletA = Instantiate(Bullet, new Vector3(Transform_SATK_C.position.x,Transform_SATK_C.position.y,0), BossTransform.rotation);
                 bulletA.GetComponent<Rigidbody2D>().velocity = BossTransform.up * -BulletSpeed;
                 bulletA.GetComponent<Rigidbody2D>().gravityScale = 1f;
                 float Bullet_Position = Random.Range(-8f + SkillTime, -5f + SkillTime);
@@ -347,7 +348,7 @@ class Boss_B : MonoBehaviour{
                 {
                     BulletSpeed = 1f;
                     GapA = SkillTime;
-                    GameObject bulletA = Instantiate(Bullet_SD, Transform_SATK_D.position, BossTransform.rotation);
+                    GameObject bulletA = Instantiate(Bullet_SD, new Vector3(Transform_SATK_D.position.x,Transform_SATK_D.position.y,0), BossTransform.rotation);
                     float BulletA_Position = (9f - SkillTime) * -1;
                     bulletA.GetComponent<Transform>().transform.position = new Vector3(BulletA_Position, 24.36f, 0);
                     GameObject bulletB = Instantiate(Bullet_SD, Transform_SATK_D.position, BossTransform.rotation);
@@ -380,7 +381,9 @@ class Boss_B : MonoBehaviour{
             }
         }
         {//Boss血量歸零的判定程式(開始對話+關閉計時器+隱藏球+玩家無敵+強制結束招式+避免重複判定
-            if (BossHP <= 0 && !End){
+            if (BossHP <= 0 && !End)
+            {
+                GlobalAudioManager.Instance.BossFallMusic();
                 StartCoroutine(TriggerStoryByDistance(1));
                 AutoAttackTimer = false;
                 BallBehavior Ball = FindObjectOfType<BallBehavior>();
@@ -389,6 +392,7 @@ class Boss_B : MonoBehaviour{
                 Player.invincible = true;
                 SkillTime = 100;
                 End = true;
+                Explode.gameObject.SetActive(true);
             }
         }
         {//Boss掉落物程式
@@ -414,7 +418,7 @@ class Boss_B : MonoBehaviour{
     }
     //對話結束恢復計時器
     public void ChatEnd(){
-        AutoAttackTimer = !AutoAttackTimer;
+        AutoAttackTimer = true;
     }
     //進入勝利劇情
     private IEnumerator TriggerStoryByDistance(float totalTransitionTime)
@@ -462,6 +466,11 @@ class Boss_B : MonoBehaviour{
         }
         Boss_HP_Bar_Follow UpdateBossHP = FindObjectOfType<Boss_HP_Bar_Follow>();
         UpdateBossHP.UpdateBossHP(BossHP);
+        GlobalAudioManager.Instance.BossHitMusic();
+        if (BOSS.GetComponent<SpriteRenderer>().color != Color.red)
+        {
+            StartCoroutine(HurtFlash());
+        }
     }
     //Boss移動時的碰撞箱轉換
     public void MoveCollderChange(){
@@ -494,7 +503,7 @@ class Boss_B : MonoBehaviour{
                 }
             }
             PositionY = Random.Range(SetUPosition.y,SetUPosition.y-1f);
-            MovePosition = new Vector3(PositionX, PositionY, BOSS.transform.position.z);
+            MovePosition = new Vector3(PositionX, PositionY, SetUPosition.z);
     }
     //技能啟動
     public void SkillStart(ref bool AutoSkill,ref bool Move,ref bool Attack,ref bool SkillName,float Time){
@@ -516,6 +525,16 @@ class Boss_B : MonoBehaviour{
         transform.rotation = Quaternion.Euler(0, 0, 0);
         CircleCollider.enabled = false;
         CapsuleCollider.enabled = true;
+    }
+    //受傷閃紅反饋
+    IEnumerator HurtFlash()
+    {
+        SpriteRenderer sr = BOSS.GetComponent<SpriteRenderer>();
+        Color originalColor = sr.color;
+
+        sr.color = Color.red; // 換成紅色
+        yield return new WaitForSeconds(0.1f); // 持續 0.1 秒
+        sr.color = originalColor; // 回復原本顏色
     }
 }
 

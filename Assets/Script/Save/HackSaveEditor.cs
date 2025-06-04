@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using System.Linq;
 
 public class HackSaveEditor : MonoBehaviour
 {
@@ -8,7 +9,12 @@ public class HackSaveEditor : MonoBehaviour
 
     void Start()
     {
-        DontDestroyOnLoad(this.gameObject); // 保留物件跨場景存在
+        if (FindObjectsOfType<GameObject>().Count(o => o.name == gameObject.name) > 1)
+        {
+            Destroy(gameObject);
+            return;
+        }
+        DontDestroyOnLoad(gameObject); // 保留物件跨場景存在
     }
 
     void Update()

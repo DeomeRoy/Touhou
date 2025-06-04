@@ -20,7 +20,7 @@ public class PlayerController : MonoBehaviour
     float attack_time = 0.3f;
     float slide_attack_time = 0.3f;
     float bullet_attack_time = 0.3f;
-    float boom_attack_time = 0.3f;
+    float boom_attack_time = 0.4f;
     float boom_attack_cool = 5.0f;
     float attack_cnt = 0.0f;
     float slide_attack_cnt = 0.0f;
@@ -128,6 +128,13 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
+        if (Input.GetKey(KeyCode.LeftShift))
+        {
+            playermove = 5.0f;
+        }
+        else
+        playermove = 9.0f;
+        
         if (Time.timeScale == 1)
         {
             attack_cnt += Time.deltaTime;
@@ -282,7 +289,7 @@ public class PlayerController : MonoBehaviour
                 {
                     int frame = Mathf.FloorToInt((bullet_attack_cnt / bullet_attack_time) * bulletSprites.Length);
                     if (frame >= bulletSprites.Length) frame = bulletSprites.Length - 1;
-                    GlobalAudioManager.Instance.StopRunSound();                  
+                    GlobalAudioManager.Instance.StopRunSound();
                     SetSprite(bulletSprites[frame], bulletSize, bulletOffset);
                 }
                 else if (slide_attack_flag)
@@ -455,7 +462,7 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    void SetSprite(Sprite newSprite, Vector2 size, Vector2 offset)
+    public void SetSprite(Sprite newSprite, Vector2 size, Vector2 offset)
     {
         spriteRenderer.sprite = newSprite;
         spriteRenderer.transform.localScale = size;

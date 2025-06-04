@@ -7,7 +7,7 @@ using DG.Tweening;
 // [HideInInspector]
 
 class Boss_A : MonoBehaviour{
-    public GameObject Bullet,Bullet_A,Bullet_C,Bullet_D,BOSS,B_BlockPrefab,E_BlockPrefab;
+    public GameObject Bullet,Bullet_A,Bullet_C,Bullet_D,BOSS,B_BlockPrefab,E_BlockPrefab,Explode;
     public Transform Target,BossTransform,Transform_SATK_D;
     public Sprite Idle,Walk,ORG_Ammo;
     public bool AutoAttackTimer,NATK_A,NATK_B,SATK_A,SATK_B,SATK_C,SATK_D,OnMove,OnAttack,End,ColorChange;
@@ -28,6 +28,7 @@ class Boss_A : MonoBehaviour{
         GapA = 0;GapB = 0;
         AttackTimes = 0;
         ColorChange = false;
+        Explode.gameObject.SetActive(false);
         //初始上個位置為初始位置,預設自動攻擊關(對話後會開)
         LastPosition = SetUPosition;
         AutoAttackTimer = false;
@@ -124,9 +125,11 @@ class Boss_A : MonoBehaviour{
                         bulletA.GetComponent<Rigidbody2D>().velocity = BossTransform.up * -BulletSpeed;
                     }
                     transform.rotation = Quaternion.Euler(0, 0, 0);
-                    if(SkillTime>5){
+                    GlobalAudioManager.Instance.BossAttackMusic();
+                    if (SkillTime > 5)
+                    {
                         OnMove = false;
-                        SkillEnd(ref NATK_A,0);
+                        SkillEnd(ref NATK_A, 0);
                     }
                 }
             }
@@ -161,6 +164,7 @@ class Boss_A : MonoBehaviour{
                         GameObject bulletA = Instantiate(Bullet, BossTransform.position, BossTransform.rotation);
                         bulletA.GetComponent<Rigidbody2D>().velocity = BossTransform.up * -BulletSpeed;
                     }
+                    GlobalAudioManager.Instance.BossAttackMusic();
                     MoveCollderChange();
                     if(SkillTime>4f){
                         OnMove = false;
@@ -184,10 +188,12 @@ class Boss_A : MonoBehaviour{
                 else{
                     OnMove = true;
                 }
-                if(SkillTime - GapA > 1f && ((5f > SkillTime && SkillTime > 1f) || (11f > SkillTime && SkillTime > 6f))){
+                if (SkillTime - GapA > 1f && ((5f > SkillTime && SkillTime > 1f) || (11f > SkillTime && SkillTime > 6f)))
+                {
                     GapA = SkillTime;
                     transform.rotation = Quaternion.Euler(0, 0, 0);
                     Instantiate(Bullet_A, BossTransform.position, BossTransform.rotation);
+                    GlobalAudioManager.Instance.BossAttackMusic();
                 }
                 if(SkillTime>10){
                     SkillEnd(ref SATK_A,0);
@@ -214,8 +220,14 @@ class Boss_A : MonoBehaviour{
                     }
                     GapA = SkillTime;
                 }
-                if(SkillTime>12){
-                    SkillEnd(ref SATK_B,-4);
+                if (SkillTime - GapB > 0.2f && SkillTime > 1f)
+                {
+                    GlobalAudioManager.Instance.BossAttackMusic();
+                    GapB = SkillTime;
+                }
+                if (SkillTime > 12)
+                {
+                    SkillEnd(ref SATK_B, -4);
                 }
             }
         if(SC){
@@ -242,6 +254,7 @@ class Boss_A : MonoBehaviour{
                             GameObject bulletA = Instantiate(Bullet_C, BossTransform.position, BossTransform.rotation);
                             bulletA.GetComponent<Rigidbody2D>().velocity = BossTransform.up * -BulletSpeed;
                         }
+                        GlobalAudioManager.Instance.BossAttackMusic();
                     }
                     transform.rotation = Quaternion.Euler(0, 0, 0);
                 }
@@ -262,6 +275,7 @@ class Boss_A : MonoBehaviour{
                     GameObject bulletA = Instantiate(Bullet_D, Transform_SATK_D.position, BossTransform.rotation);
                     bulletA.GetComponent<Rigidbody2D>().velocity = BossTransform.up * -BulletSpeed;
                     GapA = SkillTime;
+                    GlobalAudioManager.Instance.BossAttackMusic();
                 }
                 if(SkillTime>15){
                     SkillEnd(ref SATK_D,0);
@@ -269,16 +283,19 @@ class Boss_A : MonoBehaviour{
             }
         }
         {//Boss血量歸零的判定程式(開始對話+關閉計時器+隱藏球+玩家無敵+強制結束招式+避免重複判定
-        if(BossHP <= 0 && !End){
-            StartCoroutine(TriggerStoryByDistance(1));
-            AutoAttackTimer = false;
-            BallBehavior Ball = FindObjectOfType<BallBehavior>();
-            PlayerController Player = FindObjectOfType<PlayerController>();
-            Ball.LevelChanging();
-            Player.invincible = true;
-            SkillTime = 100;
-            End = true;
-        }
+            if (BossHP <= 0 && !End)
+            {
+                GlobalAudioManager.Instance.BossFallMusic();
+                StartCoroutine(TriggerStoryByDistance(1));
+                AutoAttackTimer = false;
+                BallBehavior Ball = FindObjectOfType<BallBehavior>();
+                PlayerController Player = FindObjectOfType<PlayerController>();
+                Ball.LevelChanging();
+                Player.invincible = true;
+                SkillTime = 100;
+                End = true;
+                Explode.gameObject.SetActive(true);
+            }
         }
         {//Boss掉落物程式
         GameObject Player = GameObject.FindGameObjectWithTag("Player");
@@ -314,7 +331,7 @@ class Boss_A : MonoBehaviour{
     }
     //對話結束恢復計時器
     public void ChatEnd(){
-        AutoAttackTimer = !AutoAttackTimer;
+        AutoAttackTimer = true;
     }
     //進入勝利劇情
     private IEnumerator TriggerStoryByDistance(float totalTransitionTime)
@@ -346,22 +363,31 @@ class Boss_A : MonoBehaviour{
         }
     }
     //Boss的扣血判定
-    public void LoseLife(int x){
-        switch (x){
+    public void LoseLife(int x)
+    {
+        switch (x)
+        {
             case 1:
                 BossHP -= 5;
                 break;
             case 2:
-                if (BossHP >= 30){
+                if (BossHP >= 30)
+                {
                     BossHP -= 30;
                 }
-                else if (BossHP < 30){
+                else if (BossHP < 30)
+                {
                     BossHP = 0;
                 }
                 break;
         }
         Boss_HP_Bar_Follow UpdateBossHP = FindObjectOfType<Boss_HP_Bar_Follow>();
         UpdateBossHP.UpdateBossHP(BossHP);
+        GlobalAudioManager.Instance.BossHitMusic();
+        if (BOSS.GetComponent<SpriteRenderer>().color != Color.red)
+        {
+            StartCoroutine(HurtFlash());
+        }
     }
     //技能啟動
     public void SkillStart(ref bool AutoSkill,ref bool Move,ref bool Attack,ref bool SkillName,float Time){
@@ -383,5 +409,15 @@ class Boss_A : MonoBehaviour{
         transform.rotation = Quaternion.Euler(0, 0, 0);
         CircleCollider.enabled = false;
         CapsuleCollider.enabled = true;
+    }
+    //受傷閃紅反饋
+    IEnumerator HurtFlash()
+    {
+        SpriteRenderer sr = BOSS.GetComponent<SpriteRenderer>();
+        Color originalColor = sr.color;
+
+        sr.color = Color.red; // 換成紅色
+        yield return new WaitForSeconds(0.1f); // 持續 0.1 秒
+        sr.color = originalColor; // 回復原本顏色
     }
 }

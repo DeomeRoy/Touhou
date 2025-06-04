@@ -71,7 +71,11 @@ public class StoryController : MonoBehaviour
         //開始劇情時禁用玩家行動
         PlayerController player = FindObjectOfType<PlayerController>();
         if (player != null)
+        {
             player.controlEnabled = false;
+            GlobalAudioManager.Instance.StopRunSound();
+            player.SetSprite(player.idleSprite, player.idleSize, player.idleOffset);
+        }
 
         // 初始化
         previousSpeakerID = null;
