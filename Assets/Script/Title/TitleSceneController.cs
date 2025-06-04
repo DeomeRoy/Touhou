@@ -124,9 +124,11 @@ public class TitleSceneController : MonoBehaviour
                 }
                 introVideo.Play();
                 yield return null;
+
+                GameObject.Find("System").GetComponent<TitleMenuController>().ShowMenu();
                 bool finished = false;
                 introVideo.loopPointReached += vp => finished = true;
-                while (introVideo.isPlaying && !finished)
+                while (!finished)
                 {
                     if (Input.GetKeyDown(KeyCode.Return))
                     {
@@ -146,7 +148,7 @@ public class TitleSceneController : MonoBehaviour
                                     rt.Release();
                                 }
                             });
-
+                        finished = true;
                         break;
                     }
                     yield return null;

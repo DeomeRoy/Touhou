@@ -47,5 +47,8 @@ public class DeathUIController : MonoBehaviour
         SceneAudioManager.Instance.FadeOutSceneMusic(fD);
         yield return new WaitForSeconds(fD);
         SceneManager.LoadScene(sceneName);
+
+        GlobalAudioManager.Instance.StopAllMusic();
+        GlobalAudioManager.Instance.PlayMainMenuMusic();
     }
 }

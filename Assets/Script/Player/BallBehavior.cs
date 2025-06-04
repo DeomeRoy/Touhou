@@ -8,12 +8,14 @@ public class BallBehavior : MonoBehaviour
     public bool hasLaunched = false;
     public float launchForce = 10f;    
     public float launchYPosition = 2f; 
-    private GameObject player;  
+    private GameObject player;
+    private PlayerController playerCtrl;
 
     public void Start()
     {
         rb = GetComponent<Rigidbody2D>();
         player = GameObject.FindGameObjectWithTag("Player");
+        playerCtrl = player.GetComponent<PlayerController>();
         GetComponent<SpriteRenderer>().enabled = false;
     }
 
@@ -48,6 +50,11 @@ public class BallBehavior : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Wall")) 
         {
+            if (playerCtrl.die)
+            {
+                return;
+            }
+
             GlobalAudioManager.Instance.PlayBallToWallSound();
             if (collision.gameObject.name != "BWall")
             {
