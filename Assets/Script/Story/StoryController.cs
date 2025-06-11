@@ -6,9 +6,15 @@ using System.Linq;
 using System.Collections.Generic;
 using UnityEngine.SceneManagement;
 using DG.Tweening;
+public class Stage0Step
+{
+    public List<GameObject> objectsToShow;
+}
 
 public class StoryController : MonoBehaviour
 {
+    public List<Stage0Step> stage0Steps = new List<Stage0Step>();
+    private List<GameObject> previousStage0Objects = new List<GameObject>();
     //連結ui的變數
     public GameObject storyPanel;
     public CanvasGroup storyCanvasGroup;
@@ -81,6 +87,20 @@ public class StoryController : MonoBehaviour
         previousSpeakerID = null;
         currentStepIndex = 0;
         isPlaying = true;
+        if (SceneManager.GetActiveScene().name == "stage0")
+        {
+            previousStage0Objects.Clear();
+            foreach (var step in stage0Steps)
+            {
+                if (step.objectsToShow != null)
+                {
+                    foreach (var obj in step.objectsToShow)
+                    {
+                        if (obj != null) obj.SetActive(false);
+                    }
+                }
+            }
+        }
 
         StartCoroutine(WaitAndStartStory());
     }
@@ -123,6 +143,11 @@ public class StoryController : MonoBehaviour
 
     void UpdateStoryStep()
     {
+        if (SceneManager.GetActiveScene().name == "stage0")
+        {
+            HandleStage0Step();
+        }
+
         if (currentSequence == null || currentSequence.steps.Length == 0) return;
 
         StoryStep step = currentSequence.steps[currentStepIndex];
@@ -231,6 +256,27 @@ public class StoryController : MonoBehaviour
 
         }
     }
+
+    private void HandleStage0Step()
+    {
+        if (stage0Steps == null || stage0Steps.Count == 0) return;
+        if (currentStepIndex < 0 || currentStepIndex >= stage0Steps.Count) return;
+
+        var currentObjects = stage0Steps[currentStepIndex].objectsToShow ?? new List<GameObject>();
+
+        foreach (var obj in previousStage0Objects)
+        {
+            if (obj != null && !currentObjects.Contains(obj))
+                obj.SetActive(false);
+        }
+        foreach (var obj in currentObjects)
+        {
+            if (obj != null && !previousStage0Objects.Contains(obj))
+                obj.SetActive(true);
+        }
+        previousStage0Objects = new List<GameObject>(currentObjects);
+    }
+
 
     private string GetNextSceneName(string currentName)
     {

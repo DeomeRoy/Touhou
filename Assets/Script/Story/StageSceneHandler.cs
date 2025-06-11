@@ -21,6 +21,17 @@ public class StageSceneHandler : MonoBehaviour
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
+        if (scene.name == "Stage0" && !hasTriggeredStart)
+        {
+            StoryController story = FindObjectOfType<StoryController>();
+            if (story != null)
+            {
+                hasTriggeredStart = true;
+                story.StartStory("start");
+                Debug.Log("start (from OnSceneLoaded)");
+            }
+        }
+
         if (scene.name == "Stage4")
         {
             GameObject btnObj = GameObject.Find("ReturnButton");
@@ -32,9 +43,7 @@ public class StageSceneHandler : MonoBehaviour
                     btn.onClick.RemoveListener(OnReturnButtonClicked);
                     btn.onClick.AddListener(OnReturnButtonClicked);
                 }
-                else Debug.LogWarning("ReturnButton 上没找到 Button 组件");
             }
-            else Debug.LogWarning("场景里找不到名为 ReturnButton 的物件");
         }
     }
 

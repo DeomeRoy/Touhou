@@ -3497,9 +3497,9 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 6eb428b4417e19b439190719e22ceb09, type: 3}
   - {fileID: 21300000, guid: 30102367b9b69e245adc3b5597e1c7bd, type: 3}
   transitionRunSprites:
-  - {fileID: 21300000, guid: 8fb9994fa709f4c498f9251e6ecd3259, type: 3}
-  - {fileID: 21300000, guid: 1951addc9d91c4d4a9834e6e0b9a4c45, type: 3}
-  - {fileID: 21300000, guid: 76e5b8a593089284ba7697ba28613308, type: 3}
+  - {fileID: 21300000, guid: e6132f012cb693945a6485c51262dafd, type: 3}
+  - {fileID: 21300000, guid: 973512e60bc91a14788dbe5b62503a51, type: 3}
+  - {fileID: 21300000, guid: 5dcfe3a18426bbb40bca8ee87ab412fc, type: 3}
   idleSize: {x: 1.32, y: 1.23}
   deadSize: {x: 1.32, y: 1.23}
   walkSize: {x: 1.32, y: 1.23}
