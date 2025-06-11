@@ -112,7 +112,16 @@ public class GlobalAudioManager : MonoBehaviour
         slideAudioSource.loop = false;
 
         if (PlayerPrefs.HasKey("GlobalVolume"))
+        {
             globalVolume = PlayerPrefs.GetFloat("GlobalVolume");
+        }
+        else
+        {
+            globalVolume = 0.5f;
+            PlayerPrefs.SetFloat("GlobalVolume", globalVolume);
+            PlayerPrefs.Save();
+            globalVolume = 0.5f;
+        }
         AudioListener.volume = globalVolume;
 
         sfxSource = gameObject.AddComponent<AudioSource>();
@@ -401,6 +410,9 @@ public class GlobalAudioManager : MonoBehaviour
 
     public void StopAllMusic()
     {
+        sfxSource.Stop();
+        runAudioSource.Stop();
+        slideAudioSource.Stop();
         musicSource1.Stop();
         musicSource2.Stop();
     }

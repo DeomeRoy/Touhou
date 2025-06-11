@@ -6103,7 +6103,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\u4F60\u597D!"
+  m_text: "\u7D93\u6B77\u5343\u8F9B\u842C\u82E6\uFF0C\u7D42\u65BC\u5230\u4E86!"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 3ec45fbe07ee10d4c9f06d7919b09353, type: 2}
   m_sharedMaterial: {fileID: 6105520199779406489, guid: 3ec45fbe07ee10d4c9f06d7919b09353, type: 2}
@@ -17057,7 +17057,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Player
+  m_text: "\u51CC\u6734\u7FBD"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 3ec45fbe07ee10d4c9f06d7919b09353, type: 2}
   m_sharedMaterial: {fileID: 6105520199779406489, guid: 3ec45fbe07ee10d4c9f06d7919b09353, type: 2}
@@ -17219,6 +17219,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cf3169d66ebdd1e4082b57a7ff8b916f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  stage0Steps: []
   storyPanel: {fileID: 1443924780}
   storyCanvasGroup: {fileID: 1443924782}
   chatButton: {fileID: 2093449783}

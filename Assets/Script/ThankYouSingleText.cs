@@ -108,16 +108,12 @@ public class ThankYouSingleText : MonoBehaviour
         if (imageToFade == null)
             yield break;
 
-        // 1. 一開始把它變透明
         Color c = imageToFade.color;
         c.a = 0f;
         imageToFade.color = c;
         imageToFade.gameObject.SetActive(true);
 
-        // 2. 用 DOTween 幫忙淡入 alpha
         imageToFade.DOFade(1f, fadeOutDuration);
-
-        // 3. 等待淡入完成
         yield return new WaitForSeconds(fadeOutDuration);
     }
 

@@ -9,7 +9,12 @@ public class VolumeController : MonoBehaviour
     {
         if (GlobalAudioManager.Instance != null)
         {
-            volumeSlider.value = GlobalAudioManager.Instance.globalVolume;
+            volumeSlider.SetValueWithoutNotify(GlobalAudioManager.Instance.globalVolume);
+            volumeSlider.onValueChanged.AddListener(OnVolumeChanged);
+        }
+        else
+        {
+            volumeSlider.SetValueWithoutNotify(0.5f);
             volumeSlider.onValueChanged.AddListener(OnVolumeChanged);
         }
     }
