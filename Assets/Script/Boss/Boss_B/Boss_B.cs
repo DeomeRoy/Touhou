@@ -44,17 +44,21 @@ class Boss_B : MonoBehaviour{
         CircleCollider.enabled = false;
         CapsuleCollider.enabled = true;
     }
-    public void Update(){
-        if (AHP){
+    public void Update()
+    {
+        if (AHP)
+        {
             AHP = false;
             LoseLife(1);
         }
-        if (AutoAttackTimer){
+        if (AutoAttackTimer)
+        {
             DropTimer += Time.deltaTime;
         }
         SkillTime += Time.deltaTime;
         //--------------------------------------------------------------自動攻擊邏輯
-        if (AutoAttackTimer && !OnAttack){
+        if (AutoAttackTimer && !OnAttack)
+        {
             if (SkillTime > 4)
             {
                 if (AttackTimes < 2)
@@ -102,7 +106,8 @@ class Boss_B : MonoBehaviour{
             }
         }
         //--------------------------------------------------------------BOSS動畫
-        if (OnMove){
+        if (OnMove)
+        {
             BOSS.GetComponent<SpriteRenderer>().sprite = Walk;
             if (BOSS.transform.position.x - LastPosition.x < 0)
             {
@@ -115,17 +120,20 @@ class Boss_B : MonoBehaviour{
                 LastPosition = BOSS.transform.position;
             }
         }
-        else{
+        else
+        {
             BOSS.GetComponent<SpriteRenderer>().sprite = Idle;
         }
         //--------------------------------------------------------------BOSS招式
-        if (NA){
+        if (NA)
+        {
             SkillStart(ref NA, ref OnMove, ref OnAttack, ref NATK_A, -1f);
             Move();
             CircleCollider.enabled = true;
             CapsuleCollider.enabled = false;
         }
-        if (NATK_A == true){
+        if (NATK_A == true)
+        {
             BOSS.transform.DOMove(MovePosition, 1f).SetEase(Ease.OutQuad);
             if (SkillTime > 0f)
             {
@@ -137,6 +145,7 @@ class Boss_B : MonoBehaviour{
             }
             if (SkillTime - GapA > 0.1f)
             {
+                GlobalAudioManager.Instance.BossAttackMusic();
                 GapA = SkillTime;
                 for (int i = 0; i < 4; i++)
                 {
@@ -152,11 +161,13 @@ class Boss_B : MonoBehaviour{
                 }
             }
         }
-        if (NB){
+        if (NB)
+        {
             SkillStart(ref NB, ref OnMove, ref OnAttack, ref NATK_B, -1f);
             Move();
         }
-        if (NATK_B == true){
+        if (NATK_B == true)
+        {
             BOSS.transform.DOMove(MovePosition, 1f).SetEase(Ease.OutQuad);
             if (SkillTime > 0f)
             {
@@ -164,6 +175,7 @@ class Boss_B : MonoBehaviour{
             }
             if (SkillTime - GapA > 0.2f)
             {
+                GlobalAudioManager.Instance.BossAttackMusic();
                 GapA = SkillTime;
                 for (int i = 0; i < 2; i++)
                 {
@@ -178,13 +190,15 @@ class Boss_B : MonoBehaviour{
                 }
             }
         }
-        if (NC){
+        if (NC)
+        {
             SkillStart(ref NC, ref OnMove, ref OnAttack, ref NATK_C, -1f);
             Move();
             CircleCollider.enabled = true;
             CapsuleCollider.enabled = false;
         }
-        if (NATK_C == true){
+        if (NATK_C == true)
+        {
             BOSS.transform.DOMove(MovePosition, 1f).SetEase(Ease.OutQuad);
             if (SkillTime > 0f)
             {
@@ -193,6 +207,7 @@ class Boss_B : MonoBehaviour{
             if (SkillTime - GapA > 0.2f)
             {
                 GapA = SkillTime;
+                GlobalAudioManager.Instance.BossAttackMusic();
                 for (int i = 0; i < 2; i++)
                 {
                     BulletSpeed = 5f;
@@ -206,12 +221,14 @@ class Boss_B : MonoBehaviour{
                 }
             }
         }
-        if (ND){
+        if (ND)
+        {
             SkillStart(ref ND, ref OnMove, ref OnAttack, ref NATK_D, -1f);
             CircleCollider.enabled = true;
             CapsuleCollider.enabled = false;
         }
-        if (NATK_D == true){
+        if (NATK_D == true)
+        {
             BOSS.transform.DOMove(new Vector3(SetUPosition.x, SetUPosition.y), 1f).SetEase(Ease.OutQuad);
             if (SkillTime > 0f || BOSS.transform.position == SetUPosition)
             {
@@ -220,9 +237,10 @@ class Boss_B : MonoBehaviour{
             if (SkillTime - GapA > 0.25f)
             {
                 GapA = SkillTime;
+                GlobalAudioManager.Instance.BossAttackMusic();
                 float x = Random.Range(0, 2) == 0 ? -1 : 1;
                 transform.rotation = Quaternion.Euler(0, 0, 100 * x);
-                GameObject bulletA = Instantiate(Bullet_ND, new Vector3(BossTransform.position.x,BossTransform.position.y,0f), BossTransform.rotation);
+                GameObject bulletA = Instantiate(Bullet_ND, new Vector3(BossTransform.position.x, BossTransform.position.y, 0f), BossTransform.rotation);
                 if (SkillTime > 2f)
                 {
                     SkillEnd(ref NATK_D, 0);
@@ -230,12 +248,14 @@ class Boss_B : MonoBehaviour{
             }
 
         }
-        if (SA){
+        if (SA)
+        {
             SkillStart(ref SA, ref OnMove, ref OnAttack, ref SATK_A, -1f);
             CircleCollider.enabled = true;
             CapsuleCollider.enabled = false;
         }
-        if (SATK_A == true){
+        if (SATK_A == true)
+        {
             BOSS.transform.DOMove(new Vector3(SetUPosition.x, SetUPosition.y), 1f).SetEase(Ease.OutQuad);
             if (SkillTime > 0f || BOSS.transform.position == SetUPosition)
             {
@@ -244,6 +264,7 @@ class Boss_B : MonoBehaviour{
             if (SkillTime - GapA > 1f)
             {
                 GapA = SkillTime;
+                GlobalAudioManager.Instance.BossAttackMusic();
                 float x = Random.Range(1, 21);
                 for (int i = 0; i < 8; i++)
                 {
@@ -259,12 +280,14 @@ class Boss_B : MonoBehaviour{
                 }
             }
         }
-        if (SB){
+        if (SB)
+        {
             SkillStart(ref SB, ref OnMove, ref OnAttack, ref SATK_B, -1f);
             CircleCollider.enabled = true;
             CapsuleCollider.enabled = false;
         }
-        if (SATK_B == true){
+        if (SATK_B == true)
+        {
             BOSS.transform.DOMove(new Vector3(SetUPosition.x, SetUPosition.y), 1f).SetEase(Ease.OutQuad);
             if (SkillTime > 0f || BOSS.transform.position == SetUPosition)
             {
@@ -272,6 +295,7 @@ class Boss_B : MonoBehaviour{
             }
             if (SkillTime - GapA > 0.1f)
             {
+                GlobalAudioManager.Instance.BossAttackMusic();
                 GapA = SkillTime;
                 if (SkillTime < 1)
                 {
@@ -309,10 +333,12 @@ class Boss_B : MonoBehaviour{
                 }
             }
         }
-        if (SC){
+        if (SC)
+        {
             SkillStart(ref SC, ref OnMove, ref OnAttack, ref SATK_C, -1f);
         }
-        if (SATK_C == true){
+        if (SATK_C == true)
+        {
             BOSS.transform.DOMove(new Vector3(SetUPosition.x, SetUPosition.y), 1f).SetEase(Ease.OutQuad);
             if (SkillTime > 0f || BOSS.transform.position == SetUPosition)
             {
@@ -321,22 +347,29 @@ class Boss_B : MonoBehaviour{
             BOSS.transform.position = Vector3.MoveTowards(BOSS.transform.position, SetUPosition, MoveSpeed * Time.deltaTime);
             if (SkillTime - GapA > 0.1f)
             {
-                GameObject bulletA = Instantiate(Bullet, new Vector3(Transform_SATK_C.position.x,Transform_SATK_C.position.y,0), BossTransform.rotation);
+                GameObject bulletA = Instantiate(Bullet, new Vector3(Transform_SATK_C.position.x, Transform_SATK_C.position.y, 0), BossTransform.rotation);
                 bulletA.GetComponent<Rigidbody2D>().velocity = BossTransform.up * -BulletSpeed;
                 bulletA.GetComponent<Rigidbody2D>().gravityScale = 1f;
                 float Bullet_Position = Random.Range(-8f + SkillTime, -5f + SkillTime);
                 bulletA.GetComponent<Transform>().transform.position += new Vector3(Bullet_Position, 0, 0);
                 GapA = SkillTime;
             }
+            if (SkillTime - GapB > 0.2f)
+            {
+                GlobalAudioManager.Instance.BossAttackMusic();
+                GapB = SkillTime;
+            }
             if (SkillTime > 13)
             {
                 SkillEnd(ref SATK_C, 0);
             }
         }
-        if (SD){
+        if (SD)
+        {
             SkillStart(ref SD, ref OnMove, ref OnAttack, ref SATK_D, -1f);
         }
-        if (SATK_D == true){
+        if (SATK_D == true)
+        {
             BOSS.transform.DOMove(new Vector3(SetUPosition.x, SetUPosition.y), 1f).SetEase(Ease.OutQuad);
             if (SkillTime > 0f || BOSS.transform.position == SetUPosition)
             {
@@ -344,11 +377,12 @@ class Boss_B : MonoBehaviour{
             }
             if (SkillTime - GapA > 0.5f)
             {
+                GlobalAudioManager.Instance.BossAttackMusic();
                 if (SkillTime < 9.1)
                 {
                     BulletSpeed = 1f;
                     GapA = SkillTime;
-                    GameObject bulletA = Instantiate(Bullet_SD, new Vector3(Transform_SATK_D.position.x,Transform_SATK_D.position.y,0), BossTransform.rotation);
+                    GameObject bulletA = Instantiate(Bullet_SD, new Vector3(Transform_SATK_D.position.x, Transform_SATK_D.position.y, 0), BossTransform.rotation);
                     float BulletA_Position = (9f - SkillTime) * -1;
                     bulletA.GetComponent<Transform>().transform.position = new Vector3(BulletA_Position, 24.36f, 0);
                     GameObject bulletB = Instantiate(Bullet_SD, Transform_SATK_D.position, BossTransform.rotation);
@@ -398,22 +432,30 @@ class Boss_B : MonoBehaviour{
         {//Boss掉落物程式
             GameObject Player = GameObject.FindGameObjectWithTag("Player");
             PlayerHP = Player.GetComponent<PlayerController>().life;
-            if (DropTimer > 10f){
-                if (PlayerHP < 50){
-                    if (Random.value < 0.5f){
+            if (DropTimer > 10f)
+            {
+                if (PlayerHP < 50)
+                {
+                    if (Random.value < 0.5f)
+                    {
                         Instantiate(E_BlockPrefab, new Vector3(Random.Range(-8f, 8f), Transform_SATK_C.position.y - 1.8f), Quaternion.identity);
                         DropTimer = 0;
                     }
-                    else{
+                    else
+                    {
                         Instantiate(B_BlockPrefab, new Vector3(Random.Range(-8f, 8f), Transform_SATK_C.position.y - 1.8f), Quaternion.identity);
                         DropTimer = 0;
                     }
                 }
-                else{
+                else
+                {
                     Instantiate(B_BlockPrefab, new Vector3(Random.Range(-8f, 8f), Transform_SATK_C.position.y - 1.8f), Quaternion.identity);
                     DropTimer = 0;
                 }
             }
+        }
+        if(Explode.gameObject.GetComponent<SpriteRenderer>().sprite.name == "[MConverter.eu] BADGUYDIE2-97"){
+            BOSS.GetComponent<SpriteRenderer>().enabled = false;
         }
     }
     //對話結束恢復計時器
@@ -423,7 +465,7 @@ class Boss_B : MonoBehaviour{
     //進入勝利劇情
     private IEnumerator TriggerStoryByDistance(float totalTransitionTime)
     {
-        BOSS.GetComponent<SpriteRenderer>().enabled = false;
+        yield return new WaitForSeconds(3f);
         float fadeOutTime = totalTransitionTime * 0.7f;//關卡淡出
         float fadeInTime = totalTransitionTime * 0.3f;//劇情淡入
 
