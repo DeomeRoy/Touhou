@@ -133,7 +133,7 @@ class Boss_C : MonoBehaviour
                 LastPosition = BOSS.transform.position;
             }
         }
-        else if(!OpenMouth)
+        else if (!OpenMouth)
         {
             BOSS.GetComponent<SpriteRenderer>().sprite = Idle;
             BOSS.GetComponent<SpriteRenderer>().flipX = false;
@@ -151,7 +151,8 @@ class Boss_C : MonoBehaviour
             {
                 BOSS.transform.DOMove(new Vector3(SetUPosition.x, SetUPosition.y, SetUPosition.z), 1f)
                     .SetEase(Ease.Linear)
-                    .OnUpdate(() => {
+                    .OnUpdate(() =>
+                    {
                         float offsetY = Mathf.Sin(Time.time * 15f) * 0.02f;//速度、起伏幅度
                         Vector3 pos = BOSS.transform.position;
                         BOSS.transform.position = new Vector3(pos.x, pos.y + offsetY, pos.z);
@@ -163,6 +164,7 @@ class Boss_C : MonoBehaviour
             }
             if (SkillTime - GapA > 2f)
             {
+                GlobalAudioManager.Instance.BossFallMusic();
                 GapA = SkillTime;
                 BulletSpeed = 5f;
                 transform.rotation = Quaternion.Euler(0, 0, 110);
@@ -191,7 +193,8 @@ class Boss_C : MonoBehaviour
             {
                 BOSS.transform.DOMove(MovePosition, 1f)
                     .SetEase(Ease.Linear)
-                    .OnUpdate(() => {
+                    .OnUpdate(() =>
+                    {
                         float offsetY = Mathf.Sin(Time.time * 15f) * 0.02f;//速度、起伏幅度
                         Vector3 pos = BOSS.transform.position;
                         BOSS.transform.position = new Vector3(pos.x, pos.y + offsetY, pos.z);
@@ -205,10 +208,14 @@ class Boss_C : MonoBehaviour
             Laser_B.transform.rotation = Quaternion.Euler(0f, 0f, -25f);
             if (SkillTime > 0f)
             {
+                if (Laser_A.GetComponent<Laser_Tutorial>().StartShoot == false && Laser_B.GetComponent<Laser_Tutorial>().StartShoot == false)
+                {
+                    GlobalAudioManager.Instance.BossFallMusic();
+                    Laser_A.GetComponent<Laser_Tutorial>().StartShoot = true;
+                    Laser_B.GetComponent<Laser_Tutorial>().StartShoot = true;
+                }
                 OnMove = false;
                 GetComponent<CapsuleCollider2D>().offset = new Vector2(0.3f, -1.1f);
-                Laser_A.GetComponent<Laser_Tutorial>().StartShoot = true;
-                Laser_B.GetComponent<Laser_Tutorial>().StartShoot = true;
             }
             if (SkillTime > 1.6f)
             {
@@ -254,11 +261,14 @@ class Boss_C : MonoBehaviour
             if (SkillTime > -1f && SkillTime < 0f)
             {
                 BOSS.GetComponent<SpriteRenderer>().sprite = MouthB;
-                Laser_A.GetComponent<Laser_Tutorial>().StartShoot = true;
+                if (Laser_A.GetComponent<Laser_Tutorial>().StartShoot == false)
+                {
+                    GlobalAudioManager.Instance.BossFallMusic();
+                    Laser_A.GetComponent<Laser_Tutorial>().StartShoot = true;
+                }
             }
             if (SkillTime > 0f && SkillTime < 3f)
             {
-                Laser_A.GetComponent<Laser_Tutorial>().StartShoot = true;
                 Laser_A.transform.DORotate(new Vector3(0, 0, -55f), 3f).SetEase(Ease.Linear);
             }
             if (SkillTime > 3f && SkillTime < 4f)
@@ -268,7 +278,11 @@ class Boss_C : MonoBehaviour
             }
             if (SkillTime > 4f && SkillTime < 7f)
             {
-                Laser_B.GetComponent<Laser_Tutorial>().StartShoot = true;
+                if (Laser_B.GetComponent<Laser_Tutorial>().StartShoot == false)
+                {
+                    GlobalAudioManager.Instance.BossFallMusic();
+                    Laser_B.GetComponent<Laser_Tutorial>().StartShoot = true;
+                }
                 Laser_B.transform.DORotate(new Vector3(0, 0, -125), 3f).SetEase(Ease.Linear);
             }
             if (SkillTime > 7f && SkillTime < 9f)
@@ -279,8 +293,12 @@ class Boss_C : MonoBehaviour
             }
             if (SkillTime > 9f && SkillTime < 12f)
             {
-                Laser_A.GetComponent<Laser_Tutorial>().StartShoot = true;
-                Laser_B.GetComponent<Laser_Tutorial>().StartShoot = true;
+                if (Laser_A.GetComponent<Laser_Tutorial>().StartShoot == false && Laser_B.GetComponent<Laser_Tutorial>().StartShoot == false)
+                {
+                    GlobalAudioManager.Instance.BossFallMusic();
+                    Laser_A.GetComponent<Laser_Tutorial>().StartShoot = true;
+                    Laser_B.GetComponent<Laser_Tutorial>().StartShoot = true;
+                }
                 Laser_A.transform.DORotate(new Vector3(0, 0, -110f), 3f).SetEase(Ease.Linear);
                 Laser_B.transform.DORotate(new Vector3(0, 0, -70f), 3f).SetEase(Ease.Linear);
             }
@@ -309,7 +327,8 @@ class Boss_C : MonoBehaviour
             {
                 BOSS.transform.DOMove(MovePosition, 1f)
                     .SetEase(Ease.Linear)
-                    .OnUpdate(() => {
+                    .OnUpdate(() =>
+                    {
                         float offsetY = Mathf.Sin(Time.time * 15f) * 0.02f;//速度、起伏幅度
                         Vector3 pos = BOSS.transform.position;
                         BOSS.transform.position = new Vector3(pos.x, pos.y + offsetY, pos.z);
@@ -329,13 +348,38 @@ class Boss_C : MonoBehaviour
             Laser_D.transform.rotation = Quaternion.Euler(0f, 0f, -144f);
             if (SkillTime > 1.5f)
             {
-                Laser_B.GetComponent<Laser_Tutorial>().StartShoot = true;
+                if (Laser_B.GetComponent<Laser_Tutorial>().StartShoot == false)
+                {
+                    GlobalAudioManager.Instance.BossFallMusic();
+                    Laser_B.GetComponent<Laser_Tutorial>().StartShoot = true;
+                }
                 OnMove = false;
                 GetComponent<CapsuleCollider2D>().offset = new Vector2(0.3f, -1.1f);
             }
-            if (SkillTime > 3f) { Laser_C.GetComponent<Laser_Tutorial>().StartShoot = true; }
-            if (SkillTime > 4.5f) { Laser_A.GetComponent<Laser_Tutorial>().StartShoot = true; }
-            if (SkillTime > 6f) { Laser_D.GetComponent<Laser_Tutorial>().StartShoot = true; }
+            if (SkillTime > 3f)
+            {
+                if (Laser_C.GetComponent<Laser_Tutorial>().StartShoot == false)
+                {
+                    GlobalAudioManager.Instance.BossFallMusic();
+                    Laser_C.GetComponent<Laser_Tutorial>().StartShoot = true;
+                }
+            }
+            if (SkillTime > 4.5f)
+            {
+                if (Laser_A.GetComponent<Laser_Tutorial>().StartShoot == false)
+                {
+                    GlobalAudioManager.Instance.BossFallMusic();
+                    Laser_A.GetComponent<Laser_Tutorial>().StartShoot = true;
+                }
+            }
+            if (SkillTime > 6f)
+            {
+                if (Laser_D.GetComponent<Laser_Tutorial>().StartShoot == false)
+                {
+                    GlobalAudioManager.Instance.BossFallMusic();
+                    Laser_D.GetComponent<Laser_Tutorial>().StartShoot = true;
+                }
+            }
             if (SkillTime > 8f)
             {
                 Laser_A.GetComponent<Laser_Tutorial>().StartShoot = false;
@@ -367,7 +411,8 @@ class Boss_C : MonoBehaviour
                 }
                 BOSS.transform.DOMove(new Vector3(SetUPosition.x, SetUPosition.y, SetUPosition.z), 1f)
                     .SetEase(Ease.Linear)
-                    .OnUpdate(() => {
+                    .OnUpdate(() =>
+                    {
                         float offsetY = Mathf.Sin(Time.time * 15f) * 0.02f;//速度、起伏幅度
                         Vector3 pos = BOSS.transform.position;
                         BOSS.transform.position = new Vector3(pos.x, pos.y + offsetY, pos.z);
@@ -400,27 +445,33 @@ class Boss_C : MonoBehaviour
                     case 0:
                         GameObject bulletA = Instantiate(Laser_Bullet, Laser_A.transform.position, Laser_A.transform.rotation * Quaternion.Euler(0, 0, 90));
                         bulletA.GetComponent<Rigidbody2D>().velocity = Laser_A.transform.right * BulletSpeed;
+                        GlobalAudioManager.Instance.BossFallMusic();
                         break;
                     case 1:
                         GameObject bulletB = Instantiate(Laser_Bullet, Laser_B.transform.position, Laser_B.transform.rotation * Quaternion.Euler(0, 0, 90));
                         bulletB.GetComponent<Rigidbody2D>().velocity = Laser_B.transform.right * BulletSpeed;
+                        GlobalAudioManager.Instance.BossFallMusic();
                         break;
                     case 2:
                         GameObject bulletC = Instantiate(Laser_Bullet, Laser_C.transform.position, Laser_C.transform.rotation * Quaternion.Euler(0, 0, 90));
                         bulletC.GetComponent<Rigidbody2D>().velocity = Laser_C.transform.right * BulletSpeed;
+                        GlobalAudioManager.Instance.BossFallMusic();
                         break;
                     case 3:
                         GameObject bulletD = Instantiate(Laser_Bullet, Laser_D.transform.position, Laser_D.transform.rotation * Quaternion.Euler(0, 0, 90));
                         bulletD.GetComponent<Rigidbody2D>().velocity = Laser_D.transform.right * BulletSpeed;
+                        GlobalAudioManager.Instance.BossFallMusic();
                         break;
                     case 4:
                         GameObject bulletE = Instantiate(Laser_Bullet, Laser_E.transform.position, Laser_E.transform.rotation * Quaternion.Euler(0, 0, 90));
                         bulletE.GetComponent<Rigidbody2D>().velocity = Laser_E.transform.right * BulletSpeed;
+                        GlobalAudioManager.Instance.BossFallMusic();
                         break;
                 }
             }
             if (SkillTime - GapB > 0.35f)
             {
+                GlobalAudioManager.Instance.BossFallMusic();
                 GapB = SkillTime;
                 float x = Random.Range(-8, 9);
                 BulletSpeed = 8f;
@@ -454,7 +505,8 @@ class Boss_C : MonoBehaviour
             {
                 BOSS.transform.DOMove(new Vector3(SetUPosition.x, SetUPosition.y, SetUPosition.z), 1f)
                     .SetEase(Ease.Linear)
-                    .OnUpdate(() => {
+                    .OnUpdate(() =>
+                    {
                         float offsetY = Mathf.Sin(Time.time * 15f) * 0.02f;//速度、起伏幅度
                         Vector3 pos = BOSS.transform.position;
                         BOSS.transform.position = new Vector3(pos.x, pos.y + offsetY, pos.z);
@@ -487,6 +539,7 @@ class Boss_C : MonoBehaviour
             }
             if (SkillTime - GapA > 4f)
             {
+                GlobalAudioManager.Instance.BossFallMusic();
                 GapA = SkillTime;
                 BulletSpeed = 20f;
                 GameObject bulletA = Instantiate(Laser_Bullet, Laser_A.transform.position, Laser_A.transform.rotation * Quaternion.Euler(0, 0, 90));
@@ -496,6 +549,7 @@ class Boss_C : MonoBehaviour
             }
             if (SkillTime - GapB > 0.75f)
             {
+                GlobalAudioManager.Instance.BossFallMusic();
                 GapB = SkillTime;
                 float x = Random.Range(-9, -7);
                 BulletSpeed = 8f;
@@ -523,7 +577,8 @@ class Boss_C : MonoBehaviour
             {
                 BOSS.transform.DOMove(new Vector3(SetUPosition.x, SetUPosition.y, SetUPosition.z), 1f)
                     .SetEase(Ease.Linear)
-                    .OnUpdate(() => {
+                    .OnUpdate(() =>
+                    {
                         float offsetY = Mathf.Sin(Time.time * 15f) * 0.02f;//速度、起伏幅度
                         Vector3 pos = BOSS.transform.position;
                         BOSS.transform.position = new Vector3(pos.x, pos.y + offsetY, pos.z);
@@ -549,16 +604,18 @@ class Boss_C : MonoBehaviour
                     .SetEase(Ease.Linear);
             }
             transform.Rotate(0, 0, 180 * Time.deltaTime);
-            if (SkillTime-1 - GapA > 0.05f && SkillTime-1 > 1f)
+            if (SkillTime - 1 - GapA > 0.05f && SkillTime - 1 > 1f)
             {
+                GlobalAudioManager.Instance.BossFallMusic();
                 BulletSpeed = 1f;
                 GameObject bulletA = Instantiate(Bullet, new Vector3(BossTransform.position.x, BossTransform.position.y, 0.5f), BossTransform.rotation);
                 bulletA.GetComponent<Rigidbody2D>().velocity = BossTransform.up * -BulletSpeed;
-                GapA = SkillTime-1;
+                GapA = SkillTime - 1;
             }
-            if (SkillTime-1 - GapB > 5f)
+            if (SkillTime - 1 - GapB > 5f)
             {
-                GapB = SkillTime-1;
+                GlobalAudioManager.Instance.BossFallMusic();
+                GapB = SkillTime - 1;
                 BulletSpeed = 20f;
                 GameObject bulletA = Instantiate(Laser_Bullet, Laser_A.transform.position, Laser_A.transform.rotation * Quaternion.Euler(0, 0, 90));
                 bulletA.GetComponent<Rigidbody2D>().velocity = Laser_A.transform.right * BulletSpeed;
@@ -581,7 +638,8 @@ class Boss_C : MonoBehaviour
             {
                 BOSS.transform.DOMove(new Vector3(SetUPosition.x, SetUPosition.y, SetUPosition.z), 1f)
                     .SetEase(Ease.Linear)
-                    .OnUpdate(() => {
+                    .OnUpdate(() =>
+                    {
                         float offsetY = Mathf.Sin(Time.time * 15f) * 0.02f;//速度、起伏幅度
                         Vector3 pos = BOSS.transform.position;
                         BOSS.transform.position = new Vector3(pos.x, pos.y + offsetY, pos.z);
@@ -609,6 +667,7 @@ class Boss_C : MonoBehaviour
             }
             if (SkillTime - GapA > 0.15f)
             {
+                GlobalAudioManager.Instance.BossFallMusic();
                 GapA = SkillTime;
                 BulletSpeed = 3f;
                 float x = Random.Range(-45, 46);
@@ -617,24 +676,29 @@ class Boss_C : MonoBehaviour
                 bulletA.GetComponent<Rigidbody2D>().velocity = BossTransform.up * -BulletSpeed;
             }
             BulletSpeed = 20f;
-            if (SkillTime > 2f)
+            if (SkillTime > 2f && Laser_A.GetComponent<Laser_Tutorial>().StartShoot == false)
             {
+                GlobalAudioManager.Instance.BossFallMusic();
                 Laser_A.GetComponent<Laser_Tutorial>().StartShoot = true;
             }
-            if (SkillTime > 4f)
+            if (SkillTime > 4f && Laser_B.GetComponent<Laser_Tutorial>().StartShoot == false)
             {
+                GlobalAudioManager.Instance.BossFallMusic();
                 Laser_B.GetComponent<Laser_Tutorial>().StartShoot = true;
             }
-            if (SkillTime > 6f)
+            if (SkillTime > 6f && Laser_C.GetComponent<Laser_Tutorial>().StartShoot == false)
             {
+                GlobalAudioManager.Instance.BossFallMusic();
                 Laser_C.GetComponent<Laser_Tutorial>().StartShoot = true;
             }
-            if (SkillTime > 8f)
+            if (SkillTime > 8f && Laser_D.GetComponent<Laser_Tutorial>().StartShoot == false)
             {
+                GlobalAudioManager.Instance.BossFallMusic();
                 Laser_D.GetComponent<Laser_Tutorial>().StartShoot = true;
             }
-            if (SkillTime > 10f)
+            if (SkillTime > 10f && Laser_E.GetComponent<Laser_Tutorial>().StartShoot == false)
             {
+                GlobalAudioManager.Instance.BossFallMusic();
                 Laser_E.GetComponent<Laser_Tutorial>().StartShoot = true;
             }
             if (SkillTime > 11)
@@ -694,6 +758,9 @@ class Boss_C : MonoBehaviour
                 }
             }
         }
+        if(Explode.gameObject.GetComponent<SpriteRenderer>().sprite.name == "[MConverter.eu] BADGUYDIE3-97"){
+            BOSS.GetComponent<SpriteRenderer>().enabled = false;
+        }
     }
     //對話結束恢復計時器
     public void ChatEnd()
@@ -703,7 +770,7 @@ class Boss_C : MonoBehaviour
     //進入勝利劇情
     private IEnumerator TriggerStoryByDistance(float totalTransitionTime)
     {
-        BOSS.GetComponent<SpriteRenderer>().enabled = false;
+        yield return new WaitForSeconds(3f);
         float fadeOutTime = totalTransitionTime * 0.7f;//關卡淡出
         float fadeInTime = totalTransitionTime * 0.3f;//劇情淡入
 

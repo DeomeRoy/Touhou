@@ -43,84 +43,102 @@ class Boss_A : MonoBehaviour{
         CircleCollider.enabled = false;
         CapsuleCollider.enabled = true;
     }
-    public void Update(){
-        if(AHP){
+    public void Update()
+    {
+        if (AHP)
+        {
             AHP = false;
             LoseLife(1);
         }
-        if(AutoAttackTimer){
+        if (AutoAttackTimer)
+        {
             DropTimer += Time.deltaTime;
         }
         SkillTime += Time.deltaTime;
         {//--------------------------------------------------------------自動攻擊邏輯
-        if(AutoAttackTimer && !OnAttack){
-                if(SkillTime > 4){
-                    if(AttackTimes<2){
-                        int x = Random.Range(0,2);
+            if (AutoAttackTimer && !OnAttack)
+            {
+                if (SkillTime > 4)
+                {
+                    if (AttackTimes < 2)
+                    {
+                        int x = Random.Range(0, 2);
                         Debug.Log("N:" + x);
-                        switch(x){
+                        switch (x)
+                        {
                             case 0:
-                            NA = true;
-                            break;
+                                NA = true;
+                                break;
                             case 1:
-                            NB = true;
-                            break;
+                                NB = true;
+                                break;
                         }
                         AttackTimes += 1;
                     }
-                    else{
+                    else
+                    {
                         AttackTimes = 0;
-                        int x = Random.Range(0,4);
+                        int x = Random.Range(0, 4);
                         Debug.Log("S:" + x);
-                        switch(x){
+                        switch (x)
+                        {
                             case 0:
-                            SA = true;
-                            break;
+                                SA = true;
+                                break;
                             case 1:
-                            SB = true;
-                            break;
+                                SB = true;
+                                break;
                             case 2:
-                            SC = true;
-                            break;
+                                SC = true;
+                                break;
                             case 3:
-                            SD = true;
-                            break;
+                                SD = true;
+                                break;
                         }
                     }
                 }
             }
         }
         {//--------------------------------------------------------------Boss動畫
-        if(OnMove){
+            if (OnMove)
+            {
                 BOSS.GetComponent<SpriteRenderer>().sprite = Walk;
-                if(BOSS.transform.position.x-LastPosition.x < 0){
+                if (BOSS.transform.position.x - LastPosition.x < 0)
+                {
                     BOSS.GetComponent<SpriteRenderer>().flipX = true;
                     LastPosition = BOSS.transform.position;
                 }
-                else if(BOSS.transform.position.x-LastPosition.x > 0){
+                else if (BOSS.transform.position.x - LastPosition.x > 0)
+                {
                     BOSS.GetComponent<SpriteRenderer>().flipX = false;
                     LastPosition = BOSS.transform.position;
                 }
             }
-        else{
+            else
+            {
                 BOSS.GetComponent<SpriteRenderer>().sprite = Idle;
             }
         }
         {//--------------------------------------------------------------Boss招式
-        if(NA){
-                SkillStart(ref NA,ref OnMove,ref OnAttack,ref NATK_A,0f);
+            if (NA)
+            {
+                SkillStart(ref NA, ref OnMove, ref OnAttack, ref NATK_A, 0f);
             }
-        if(NATK_A == true){
-                BOSS.transform.DOMove(new Vector3(SetUPosition.x,SetUPosition.y), 1f).SetEase(Ease.OutQuad);
-                if(SkillTime > 1f || BOSS.transform.position.x ==0){
+            if (NATK_A == true)
+            {
+                BOSS.transform.DOMove(new Vector3(SetUPosition.x, SetUPosition.y), 1f).SetEase(Ease.OutQuad);
+                if (SkillTime > 1f || BOSS.transform.position.x == 0)
+                {
                     OnMove = false;
                 }
-                if(SkillTime - GapA > 1f && SkillTime > 1f){
+                if (SkillTime - GapA > 1f && SkillTime > 1f)
+                {
                     GapA = SkillTime;
-                    float x = Random.Range(1,21);
-                    for(int i=0;i<8;i++){
+                    float x = Random.Range(1, 21);
+                    for (int i = 0; i < 8; i++)
+                    {
                         BulletSpeed = 3f;
-                        transform.rotation = Quaternion.Euler(0, 0, i*45+5*x);
+                        transform.rotation = Quaternion.Euler(0, 0, i * 45 + 5 * x);
                         GameObject bulletA = Instantiate(Bullet, BossTransform.position, BossTransform.rotation);
                         bulletA.GetComponent<Rigidbody2D>().velocity = BossTransform.up * -BulletSpeed;
                     }
@@ -133,59 +151,74 @@ class Boss_A : MonoBehaviour{
                     }
                 }
             }
-        if(NB){
-                SkillStart(ref NB,ref OnMove,ref OnAttack,ref NATK_B,0f);
-                if(transform.position.x > 0){
-                    PositionX = Random.Range(-7.5f,-4f);
-                    }
-                else if(transform.position.x < 0){
-                    PositionX = Random.Range(7.5f,4f);
-                    }
-                else if(transform.position.x == 0){
-                    while(true){
-                        PositionX = Random.Range(-7.5f,7.5f);
-                        if(PositionX < -4f || PositionX > 4f)break;
+            if (NB)
+            {
+                SkillStart(ref NB, ref OnMove, ref OnAttack, ref NATK_B, 0f);
+                if (transform.position.x > 0)
+                {
+                    PositionX = Random.Range(-7.5f, -4f);
+                }
+                else if (transform.position.x < 0)
+                {
+                    PositionX = Random.Range(7.5f, 4f);
+                }
+                else if (transform.position.x == 0)
+                {
+                    while (true)
+                    {
+                        PositionX = Random.Range(-7.5f, 7.5f);
+                        if (PositionX < -4f || PositionX > 4f) break;
                     }
                 }
-                PositionY = Random.Range(SetUPosition.y,SetUPosition.y-1f);
+                PositionY = Random.Range(SetUPosition.y, SetUPosition.y - 1f);
                 MovePosition = new Vector3(PositionX, PositionY, BOSS.transform.position.z);
-                MoveSpeed = Mathf.Abs(BOSS.transform.position.x-PositionX)/4f;
+                MoveSpeed = Mathf.Abs(BOSS.transform.position.x - PositionX) / 4f;
             }
-        if(NATK_B == true){
+            if (NATK_B == true)
+            {
                 MoveCollderChange();
                 BOSS.transform.position = Vector3.MoveTowards(BOSS.transform.position, MovePosition, MoveSpeed * Time.deltaTime);
-                if(SkillTime - GapA > 1f){
+                if (SkillTime - GapA > 1f)
+                {
                     GapA = SkillTime;
-                    for(int i=-1;i<2;i++){
+                    for (int i = -1; i < 2; i++)
+                    {
                         BulletSpeed = 5f;
                         Vector3 Direction = Target.position - BOSS.transform.position;
                         float angle = Mathf.Atan2(Direction.y, Direction.x) * Mathf.Rad2Deg;
-                        transform.rotation = Quaternion.Euler(0, 0, 0 + angle+i*10+90);
+                        transform.rotation = Quaternion.Euler(0, 0, 0 + angle + i * 10 + 90);
                         GameObject bulletA = Instantiate(Bullet, BossTransform.position, BossTransform.rotation);
                         bulletA.GetComponent<Rigidbody2D>().velocity = BossTransform.up * -BulletSpeed;
                     }
                     GlobalAudioManager.Instance.BossAttackMusic();
                     MoveCollderChange();
-                    if(SkillTime>4f){
+                    if (SkillTime > 4f)
+                    {
                         OnMove = false;
-                        SkillEnd(ref NATK_B,0);
+                        SkillEnd(ref NATK_B, 0);
                     }
                 }
             }
-        if(SA){
-                SkillStart(ref SA,ref OnMove,ref OnAttack,ref SATK_A,0f);
+            if (SA)
+            {
+                SkillStart(ref SA, ref OnMove, ref OnAttack, ref SATK_A, 0f);
             }
-        if(SATK_A == true){
-                if(SkillTime < 5){
-                    BOSS.transform.DOMove(new Vector3(SetUPosition.x-8,SetUPosition.y), 1f).SetEase(Ease.OutQuad);
+            if (SATK_A == true)
+            {
+                if (SkillTime < 5)
+                {
+                    BOSS.transform.DOMove(new Vector3(SetUPosition.x - 8, SetUPosition.y), 1f).SetEase(Ease.OutQuad);
                 }
-                if(SkillTime > 5){
-                    BOSS.transform.DOMove(new Vector3(SetUPosition.x+8,SetUPosition.y), 1f).SetEase(Ease.OutQuad);
+                if (SkillTime > 5)
+                {
+                    BOSS.transform.DOMove(new Vector3(SetUPosition.x + 8, SetUPosition.y), 1f).SetEase(Ease.OutQuad);
                 }
-                if((5f > SkillTime && SkillTime > 1f) || (11f > SkillTime && SkillTime > 6f)){
+                if ((5f > SkillTime && SkillTime > 1f) || (11f > SkillTime && SkillTime > 6f))
+                {
                     OnMove = false;
                 }
-                else{
+                else
+                {
                     OnMove = true;
                 }
                 if (SkillTime - GapA > 1f && ((5f > SkillTime && SkillTime > 1f) || (11f > SkillTime && SkillTime > 6f)))
@@ -195,27 +228,33 @@ class Boss_A : MonoBehaviour{
                     Instantiate(Bullet_A, BossTransform.position, BossTransform.rotation);
                     GlobalAudioManager.Instance.BossAttackMusic();
                 }
-                if(SkillTime>10){
-                    SkillEnd(ref SATK_A,0);
+                if (SkillTime > 10)
+                {
+                    SkillEnd(ref SATK_A, 0);
                 }
             }
-        if(SB){
-                SkillStart(ref SB,ref OnMove,ref OnAttack,ref SATK_B,0f);
+            if (SB)
+            {
+                SkillStart(ref SB, ref OnMove, ref OnAttack, ref SATK_B, 0f);
                 BulletSpeed = 1f;
                 CircleCollider.enabled = true;
                 CapsuleCollider.enabled = false;
             }
-        if(SATK_B == true){
-                BOSS.transform.DOMove(new Vector3(SetUPosition.x,SetUPosition.y), 1f).SetEase(Ease.OutQuad);
-                if(SkillTime > 1f || BOSS.transform.position.x ==0){
+            if (SATK_B == true)
+            {
+                BOSS.transform.DOMove(new Vector3(SetUPosition.x, SetUPosition.y), 1f).SetEase(Ease.OutQuad);
+                if (SkillTime > 1f || BOSS.transform.position.x == 0)
+                {
                     OnMove = false;
                 }
                 transform.Rotate(0, 0, 180 * Time.deltaTime);
-                if(SkillTime - GapA > 0.05f && SkillTime > 1f){
+                if (SkillTime - GapA > 0.05f && SkillTime > 1f)
+                {
                     GameObject bulletA = Instantiate(Bullet, BossTransform.position, BossTransform.rotation);
                     bulletA.GetComponent<Rigidbody2D>().velocity = BossTransform.up * -BulletSpeed;
                     ColorChange = !ColorChange;
-                    if(ColorChange){
+                    if (ColorChange)
+                    {
                         bulletA.GetComponent<SpriteRenderer>().sprite = ORG_Ammo;
                     }
                     GapA = SkillTime;
@@ -230,27 +269,34 @@ class Boss_A : MonoBehaviour{
                     SkillEnd(ref SATK_B, -4);
                 }
             }
-        if(SC){
-                SkillStart(ref SC,ref OnMove,ref OnAttack,ref SATK_C,0f);
+            if (SC)
+            {
+                SkillStart(ref SC, ref OnMove, ref OnAttack, ref SATK_C, 0f);
             }
-        if(SATK_C == true){
-                BOSS.transform.DOMove(new Vector3(SetUPosition.x,SetUPosition.y+0.5f), 1f).SetEase(Ease.OutQuad);
-                if(SkillTime > 1f || BOSS.transform.position.x ==0){
+            if (SATK_C == true)
+            {
+                BOSS.transform.DOMove(new Vector3(SetUPosition.x, SetUPosition.y + 0.5f), 1f).SetEase(Ease.OutQuad);
+                if (SkillTime > 1f || BOSS.transform.position.x == 0)
+                {
                     OnMove = false;
                 }
-                if(SkillTime - GapA > 0.15f && SkillTime > 1f){
+                if (SkillTime - GapA > 0.15f && SkillTime > 1f)
+                {
                     GapA = SkillTime;
-                    for(int i=-1;i<2;i++){
+                    for (int i = -1; i < 2; i++)
+                    {
                         BulletSpeed = 3f;
-                        transform.rotation = Quaternion.Euler(0, 0, 0 + i*45);
+                        transform.rotation = Quaternion.Euler(0, 0, 0 + i * 45);
                         GameObject bulletA = Instantiate(Bullet, BossTransform.position, BossTransform.rotation);
                         bulletA.GetComponent<Rigidbody2D>().velocity = BossTransform.up * -BulletSpeed;
                     }
-                    if(SkillTime - GapB > 1f){
+                    if (SkillTime - GapB > 1f)
+                    {
                         GapB = SkillTime;
-                        float x = Random.Range(-20,20);
-                        for(int i=-6;i<7;i++){
-                            transform.rotation = Quaternion.Euler(0, 0, 0 + i*15+x);
+                        float x = Random.Range(-20, 20);
+                        for (int i = -6; i < 7; i++)
+                        {
+                            transform.rotation = Quaternion.Euler(0, 0, 0 + i * 15 + x);
                             GameObject bulletA = Instantiate(Bullet_C, BossTransform.position, BossTransform.rotation);
                             bulletA.GetComponent<Rigidbody2D>().velocity = BossTransform.up * -BulletSpeed;
                         }
@@ -258,27 +304,33 @@ class Boss_A : MonoBehaviour{
                     }
                     transform.rotation = Quaternion.Euler(0, 0, 0);
                 }
-                if(SkillTime>10){
-                    SkillEnd(ref SATK_C,0);
+                if (SkillTime > 10)
+                {
+                    SkillEnd(ref SATK_C, 0);
                 }
             }
-        if(SD){
-                SkillStart(ref SD,ref OnMove,ref OnAttack,ref SATK_D,0f);
+            if (SD)
+            {
+                SkillStart(ref SD, ref OnMove, ref OnAttack, ref SATK_D, 0f);
                 BulletSpeed = 2f;
             }
-        if(SATK_D == true){
-                BOSS.transform.DOMove(new Vector3(SetUPosition.x+8,SetUPosition.y), 1f).SetEase(Ease.OutQuad);
-                if(SkillTime > 1f){
+            if (SATK_D == true)
+            {
+                BOSS.transform.DOMove(new Vector3(SetUPosition.x + 8, SetUPosition.y), 1f).SetEase(Ease.OutQuad);
+                if (SkillTime > 1f)
+                {
                     OnMove = false;
                 }
-                if(SkillTime - GapA > 0.2f && SkillTime > 1f){
+                if (SkillTime - GapA > 0.2f && SkillTime > 1f)
+                {
                     GameObject bulletA = Instantiate(Bullet_D, Transform_SATK_D.position, BossTransform.rotation);
                     bulletA.GetComponent<Rigidbody2D>().velocity = BossTransform.up * -BulletSpeed;
                     GapA = SkillTime;
                     GlobalAudioManager.Instance.BossAttackMusic();
                 }
-                if(SkillTime>15){
-                    SkillEnd(ref SATK_D,0);
+                if (SkillTime > 15)
+                {
+                    SkillEnd(ref SATK_D, 0);
                 }
             }
         }
@@ -298,24 +350,32 @@ class Boss_A : MonoBehaviour{
             }
         }
         {//Boss掉落物程式
-        GameObject Player = GameObject.FindGameObjectWithTag("Player");
-        PlayerHP = Player.GetComponent<PlayerController>().life;
-        if(DropTimer > 10f){
-            if(PlayerHP < 50){
-                if(Random.value < 0.5f){
-                    Instantiate(E_BlockPrefab, new Vector3(Random.Range(-8f, 8f),Transform_SATK_D.position.y-1.8f), Quaternion.identity);
+            GameObject Player = GameObject.FindGameObjectWithTag("Player");
+            PlayerHP = Player.GetComponent<PlayerController>().life;
+            if (DropTimer > 10f)
+            {
+                if (PlayerHP < 50)
+                {
+                    if (Random.value < 0.5f)
+                    {
+                        Instantiate(E_BlockPrefab, new Vector3(Random.Range(-8f, 8f), Transform_SATK_D.position.y - 1.8f), Quaternion.identity);
+                        DropTimer = 0;
+                    }
+                    else
+                    {
+                        Instantiate(B_BlockPrefab, new Vector3(Random.Range(-8f, 8f), Transform_SATK_D.position.y - 1.8f), Quaternion.identity);
+                        DropTimer = 0;
+                    }
+                }
+                else
+                {
+                    Instantiate(B_BlockPrefab, new Vector3(Random.Range(-8f, 8f), Transform_SATK_D.position.y - 1.8f), Quaternion.identity);
                     DropTimer = 0;
                 }
-                else{
-                    Instantiate(B_BlockPrefab, new Vector3(Random.Range(-8f, 8f),Transform_SATK_D.position.y-1.8f), Quaternion.identity);
-                    DropTimer = 0;
-                }
-            }
-            else{
-                    Instantiate(B_BlockPrefab, new Vector3(Random.Range(-8f, 8f),Transform_SATK_D.position.y-1.8f), Quaternion.identity);
-                    DropTimer = 0;
             }
         }
+        if(Explode.gameObject.GetComponent<SpriteRenderer>().sprite.name == "[MConverter.eu] BADGUYDIE1-96"){
+            BOSS.GetComponent<SpriteRenderer>().enabled = false;
         }
     }
     //Boss移動時的碰撞箱轉換
@@ -336,7 +396,7 @@ class Boss_A : MonoBehaviour{
     //進入勝利劇情
     private IEnumerator TriggerStoryByDistance(float totalTransitionTime)
     {
-        BOSS.GetComponent<SpriteRenderer>().enabled = false;
+        yield return new WaitForSeconds(3f);
         float fadeOutTime = totalTransitionTime * 0.7f;//關卡淡出
         float fadeInTime = totalTransitionTime * 0.3f;//劇情淡入
 
