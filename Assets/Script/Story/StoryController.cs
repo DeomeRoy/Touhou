@@ -6,6 +6,7 @@ using System.Linq;
 using System.Collections.Generic;
 using UnityEngine.SceneManagement;
 using DG.Tweening;
+[System.Serializable]
 public class Stage0Step
 {
     public List<GameObject> objectsToShow;
@@ -87,7 +88,7 @@ public class StoryController : MonoBehaviour
         previousSpeakerID = null;
         currentStepIndex = 0;
         isPlaying = true;
-        if (SceneManager.GetActiveScene().name == "stage0")
+        if (SceneManager.GetActiveScene().name == "Stage0")
         {
             previousStage0Objects.Clear();
             foreach (var step in stage0Steps)
@@ -143,7 +144,7 @@ public class StoryController : MonoBehaviour
 
     void UpdateStoryStep()
     {
-        if (SceneManager.GetActiveScene().name == "stage0")
+        if (SceneManager.GetActiveScene().name == "Stage0")
         {
             HandleStage0Step();
         }
@@ -259,10 +260,13 @@ public class StoryController : MonoBehaviour
 
     private void HandleStage0Step()
     {
+        Debug.Log($"[Stage0] 呼叫 HandleStage0Step(), currentStepIndex = {currentStepIndex}, 總步數 = {stage0Steps.Count}");
+        var currentObjects = stage0Steps[currentStepIndex].objectsToShow ?? new List<GameObject>();
+        Debug.Log($"[Stage0] Step {currentStepIndex} 中 objectsToShow.count = {currentObjects.Count}："
+            + string.Join(", ", currentObjects.Select(o => o != null ? o.name : "null")));
+
         if (stage0Steps == null || stage0Steps.Count == 0) return;
         if (currentStepIndex < 0 || currentStepIndex >= stage0Steps.Count) return;
-
-        var currentObjects = stage0Steps[currentStepIndex].objectsToShow ?? new List<GameObject>();
 
         foreach (var obj in previousStage0Objects)
         {

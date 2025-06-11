@@ -1,7 +1,7 @@
 using UnityEngine;
-using UnityEngine.UI;            // 如果你用的是 UnityEngine.UI.Text
+using UnityEngine.UI;
 using UnityEngine.SceneManagement;
-using DG.Tweening;              // DOTween 用来做淡入／淡出
+using DG.Tweening;
 using System.Collections;
 using TMPro;
 
@@ -17,9 +17,11 @@ public class ThankYouSingleText : MonoBehaviour
     public float detectY = -5f;
     public float waitBeforeFade = 5f;
     public float fadeToBlackDuration = 1f;
-    public string line1 = "感谢你一路的陪伴！";
-    public string line2 = "有你相伴，旅程更美好。";
-    public string line3 = "期待再次相遇，祝好！";
+    public string line1 = "";
+    public string line2 = "";
+    public string line3 = "";
+    public SpriteRenderer imageToFade;
+    public float postFadeInWait = 3f;
 
     private bool hasFadedToBlack = false;
 
@@ -42,6 +44,9 @@ public class ThankYouSingleText : MonoBehaviour
         yield return FadeInAndOut(line2);
         yield return FadeInAndOut(line3);
 
+        yield return StartCoroutine(FadeInObject());
+        yield return new WaitForSeconds(postFadeInWait);
+
         yield return StartCoroutine(MoveCameraAndDetect());
     }
 
@@ -63,19 +68,16 @@ public class ThankYouSingleText : MonoBehaviour
 
     private IEnumerator MoveCameraAndDetect()
     {
-        // 确保文字隐藏
         textCanvasGroup.alpha = 0f;
 
         while (!hasFadedToBlack)
         {
-            // 摄像机 Y 坐标 ≤ detectY，也触发淡出（并且等待 waitBeforeFade）
             if (Camera.main != null && Camera.main.transform.position.y <= detectY)
             {
                 StartCoroutine(FadeToBlackAndReturn());
                 yield break;
             }
 
-            // 持续让摄像机往下移动
             if (Camera.main != null)
                 Camera.main.transform.position += Vector3.down * (cameraSpeed * Time.deltaTime);
 
@@ -88,25 +90,35 @@ public class ThankYouSingleText : MonoBehaviour
         if (hasFadedToBlack) yield break;
         hasFadedToBlack = true;
 
-        // 1. 先等待 waitBeforeFade 秒
         yield return new WaitForSeconds(waitBeforeFade);
-
-        // 2. 淡出音乐（可选）
         GlobalAudioManager.Instance.FadeOutMusic(fadeToBlackDuration);
 
-        // 3. 黑幕淡入
         if (cutscenePanel != null)
         {
-            // 拦截点击
             cutscenePanel.blocksRaycasts = true;
-            // alpha 0→1
             cutscenePanel.DOFade(1f, fadeToBlackDuration);
         }
 
-        // 4. 等待黑幕完全淡入
         yield return new WaitForSeconds(fadeToBlackDuration);
-
-        // 5. 切回主菜单
         SceneManager.LoadScene("TitleScene");
     }
+
+    private IEnumerator FadeInObject()
+    {
+        if (imageToFade == null)
+            yield break;
+
+        // 1. 一開始把它變透明
+        Color c = imageToFade.color;
+        c.a = 0f;
+        imageToFade.color = c;
+        imageToFade.gameObject.SetActive(true);
+
+        // 2. 用 DOTween 幫忙淡入 alpha
+        imageToFade.DOFade(1f, fadeOutDuration);
+
+        // 3. 等待淡入完成
+        yield return new WaitForSeconds(fadeOutDuration);
+    }
+
 }
