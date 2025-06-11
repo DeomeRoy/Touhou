@@ -16,7 +16,7 @@ public class TitleSceneController : MonoBehaviour
     private bool skipVideoRequested;
 
     [HideInInspector] public bool Mainpanel, Savepanel, Settingpanel;
-    public GameObject Background_001, Background_002, Options, ContinuePane, SettingPane;
+    public GameObject Background_001, Background_002, Background_003, Options, ContinuePane, TeachPane, SettingPane;
     [HideInInspector] public CanvasGroup CutscenePanel;
 
     void Start()
@@ -31,7 +31,9 @@ public class TitleSceneController : MonoBehaviour
         Settingpanel = false;
         Background_001.SetActive(true);
         Background_002.SetActive(false);
+        Background_003.SetActive(false);
         ContinuePane.SetActive(false);
+        TeachPane.SetActive(false);
         SettingPane.SetActive(false);
         Options.SetActive(true);
         fadeTime = 2f;
@@ -60,7 +62,11 @@ public class TitleSceneController : MonoBehaviour
 
     public void OnClickInformation()
     {
-        SceneManager.LoadScene("Information");
+        //SceneManager.LoadScene("Information");
+        Background_001.SetActive(false);
+        Background_003.SetActive(true);
+        Options.SetActive(false);
+        TeachPane.SetActive(true);
     }
 
     public void OnClickContinue()
@@ -109,9 +115,11 @@ public class TitleSceneController : MonoBehaviour
         Debug.Log("BackToTitle");
         Background_001.SetActive(true);
         Background_002.SetActive(false);
+        Background_003.SetActive(false);
         Options.SetActive(true);
         SettingPane.SetActive(false);
         ContinuePane.SetActive(false);
+        TeachPane.SetActive(false);
     }
 
     IEnumerator Cutscene()

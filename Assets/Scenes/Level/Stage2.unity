@@ -10286,7 +10286,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   hasLaunched: 0
   launchForce: 10
-  launchYPosition: -1.64
+  launchYPosition: -1.05
 --- !u!58 &1405974285
 CircleCollider2D:
   m_ObjectHideFlags: 0
