@@ -12,6 +12,8 @@ public class TitleSceneController : MonoBehaviour
     public static TitleSceneController Instance;
     public float fadeTime;
     public VideoPlayer introVideo;
+    public Button skipVideoButton;
+    private bool skipVideoRequested;
 
     [HideInInspector] public bool Mainpanel, Savepanel, Settingpanel;
     public GameObject Background_001, Background_002, Options, ContinuePane, SettingPane;
@@ -33,6 +35,8 @@ public class TitleSceneController : MonoBehaviour
         SettingPane.SetActive(false);
         Options.SetActive(true);
         fadeTime = 2f;
+        skipVideoRequested = false;
+        skipVideoButton.onClick.AddListener(OnSkipVideoButton);
 
         RenderTexture rt = introVideo.targetTexture as RenderTexture;
         if (rt != null)
@@ -42,6 +46,11 @@ public class TitleSceneController : MonoBehaviour
             RenderTexture.active = null;
             rt.Release();
         }
+    }
+
+    public void OnSkipVideoButton()
+    {
+        skipVideoRequested = true;
     }
 
     public void OnClickStart()
@@ -126,33 +135,33 @@ public class TitleSceneController : MonoBehaviour
                 yield return null;
 
                 GameObject.Find("System").GetComponent<TitleMenuController>().ShowMenu();
+                skipVideoRequested = false;
                 bool finished = false;
                 introVideo.loopPointReached += vp => finished = true;
-                while (!finished)
-                {
-                    if (Input.GetKeyDown(KeyCode.Return))
-                    {
-                        introVideo.Stop();
-                        var disp = GameObject.Find("IntroVideoDisplay").GetComponent<RawImage>();
 
-                        disp.DOFade(0f, fadeTime)
-                            .OnComplete(() =>
-                            {
-                                disp.texture = null;
-                                var rt = introVideo.targetTexture as RenderTexture;
-                                if (rt != null)
-                                {
-                                    RenderTexture.active = rt;
-                                    GL.Clear(true, true, Color.clear);
-                                    RenderTexture.active = null;
-                                    rt.Release();
-                                }
-                            });
-                        finished = true;
-                        break;
-                    }
+                while (!finished && !skipVideoRequested)
+                {
                     yield return null;
                 }
+
+                if (skipVideoRequested)
+                {
+                    introVideo.Stop();
+                    var disp = GameObject.Find("IntroVideoDisplay").GetComponent<RawImage>();
+                    disp.DOFade(0f, fadeTime).OnComplete(() =>
+                    {
+                        disp.texture = null;
+                        var rt = introVideo.targetTexture as RenderTexture;
+                        if (rt != null)
+                        {
+                            RenderTexture.active = rt;
+                            GL.Clear(true, true, Color.clear);
+                            RenderTexture.active = null;
+                            rt.Release();
+                        }
+                    });
+                }
+
             }
             FadeOut();
             yield return new WaitForSeconds(fadeTime);

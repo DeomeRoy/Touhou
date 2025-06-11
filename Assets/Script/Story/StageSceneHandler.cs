@@ -2,39 +2,45 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using DG.Tweening;
 using System.Collections;
+using UnityEngine.UI;
 
 public class StageSceneHandler : MonoBehaviour
 {
     private bool hasTriggeredStart = false;
     private bool hasTriggeredReturn = false;
-    private bool waitingForStoryController = false;
     public float fadeDuration = 1f;
 
-    void Update()
+    void OnEnable()
     {
-        string sceneName = SceneManager.GetActiveScene().name;
+        SceneManager.sceneLoaded += OnSceneLoaded;
+    }
+    void OnDisable()
+    {
+        SceneManager.sceneLoaded -= OnSceneLoaded;
+    }
 
-        if (sceneName == "Stage0" && !hasTriggeredStart)
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        if (scene.name == "Stage4")
         {
-            StoryController story = FindObjectOfType<StoryController>();
-            if (story != null)
+            GameObject btnObj = GameObject.Find("ReturnButton");
+            if (btnObj != null)
             {
-                hasTriggeredStart = true;
-                story.StartStory("start");
-                Debug.Log("start");
-            }
-            else
-            {
-                if (!waitingForStoryController)
+                Button btn = btnObj.GetComponent<Button>();
+                if (btn != null)
                 {
-                    waitingForStoryController = true;
-                    Debug.Log("等待 StoryController...");
+                    btn.onClick.RemoveListener(OnReturnButtonClicked);
+                    btn.onClick.AddListener(OnReturnButtonClicked);
                 }
+                else Debug.LogWarning("ReturnButton 上没找到 Button 组件");
             }
+            else Debug.LogWarning("场景里找不到名为 ReturnButton 的物件");
         }
+    }
 
-        // ✅ Stage4 按 Enter 觸發淡出 + 回 TitleScene
-        if (sceneName == "Stage4" && Input.GetKeyDown(KeyCode.Return) && !hasTriggeredReturn)
+    public void OnReturnButtonClicked()
+    {
+        if (!hasTriggeredReturn)
         {
             hasTriggeredReturn = true;
             StartCoroutine(FadeOutAndReturnToTitleLikeStory());
@@ -57,7 +63,6 @@ public class StageSceneHandler : MonoBehaviour
             yield break;
         }
 
-        // ✅ 音樂與畫面一起淡出
         GlobalAudioManager.Instance.FadeOutMusic(fadeDuration);
         cg.blocksRaycasts = true;
         cg.DOFade(1f, fadeDuration);

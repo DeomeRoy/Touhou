@@ -26,6 +26,8 @@ class Boss_C : MonoBehaviour
     //Boss碰撞箱
     CircleCollider2D CircleCollider;
     CapsuleCollider2D CapsuleCollider;
+    public float autoEndDelay = 5f;
+    public float endFadeDuration = 1f;
 
     public void Start()
     {
@@ -707,7 +709,6 @@ class Boss_C : MonoBehaviour
 
         SceneAudioManager.Instance.FadeOutSceneMusic(fadeOutTime);
         yield return new WaitForSeconds(fadeOutTime + 0.167f);
-        SceneAudioManager.Instance.PlayStoryMusicWithFadeIn(fadeInTime);
 
         GameObject Stone = GameObject.Find("Stone");
         if (Stone != null)
@@ -728,9 +729,29 @@ class Boss_C : MonoBehaviour
             }
         }
 
-        StoryController storyCtrl = FindObjectOfType<StoryController>();
-        storyCtrl.StartStory("BossEndFight");
+        StartCoroutine(AutoEndBossFight());
     }
+
+    private IEnumerator AutoEndBossFight()
+    {
+        yield return new WaitForSeconds(autoEndDelay);
+        SceneAudioManager.Instance.FadeOutSceneMusic(endFadeDuration);
+
+        GameObject panelObj = GameObject.Find("CutscenePanel");
+        if (panelObj == null)
+        {
+            Debug.LogWarning("AutoEndBossFight：找不到 CutscenePanel");
+            yield break;
+        }
+        CanvasGroup cg = panelObj.GetComponent<CanvasGroup>();
+        cg.blocksRaycasts = true;
+        cg.DOFade(1f, endFadeDuration);
+
+        yield return new WaitForSeconds(endFadeDuration);
+
+        SceneManager.LoadScene("Stage4");
+    }
+
     //Boss碰到球的判定
     void OnCollisionEnter2D(Collision2D collision)
     {

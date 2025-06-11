@@ -89,9 +89,6 @@ public class WallMover : MonoBehaviour
 
         switch (sceneName)
         {
-            case "Stage0":
-                storyID = "BossPreFight";
-                break;
             case "Stage1":
                 storyID = "BossPreFight";
                 break;
