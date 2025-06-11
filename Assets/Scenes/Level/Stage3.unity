@@ -10458,28 +10458,28 @@ MonoBehaviour:
   strikeForceMultiplier: 15
   angleRangeModifier: 1
   angularForceMultiplier: 10
-  idleSprite: {fileID: 21300000, guid: a462e7111a9a978408813c9c76ba0d6c, type: 3}
-  deadSprite: {fileID: 21300000, guid: 0b9a36face0f42e47a50a683090beb0b, type: 3}
+  idleSprite: {fileID: 21300000, guid: 577d3688797842a4fbb7b4024d9355ff, type: 3}
+  deadSprite: {fileID: 21300000, guid: e8e4de3382613964992b84ef5ea009bd, type: 3}
   walkSprites:
-  - {fileID: 21300000, guid: 4905b1e9f19fef646a0eea78a236faea, type: 3}
-  - {fileID: 21300000, guid: d8b81a4a291f45c49bb220841a5acebe, type: 3}
-  - {fileID: 21300000, guid: 1b076c05db067684aaf6544594bd4a70, type: 3}
+  - {fileID: 21300000, guid: 8fb9994fa709f4c498f9251e6ecd3259, type: 3}
+  - {fileID: 21300000, guid: 1951addc9d91c4d4a9834e6e0b9a4c45, type: 3}
+  - {fileID: 21300000, guid: 76e5b8a593089284ba7697ba28613308, type: 3}
   attackSprites:
-  - {fileID: 21300000, guid: 6ad6460a122659247a25ec53d663fca2, type: 3}
-  - {fileID: 21300000, guid: d25e53326593c784b999249629c7ec37, type: 3}
-  - {fileID: 21300000, guid: 0e3f980ee39dd0240a593de39954e368, type: 3}
-  - {fileID: 21300000, guid: 5e67e1d7fa2e8bd43a38a80becf68a01, type: 3}
+  - {fileID: 21300000, guid: b026f423e534fba4cbf9f34868abdf5a, type: 3}
+  - {fileID: 21300000, guid: d755e1d35ca16e348a83d15bd3bbff7c, type: 3}
+  - {fileID: 21300000, guid: b47774d91a73d20468f951f9b5de80fc, type: 3}
+  - {fileID: 21300000, guid: 55dd5142282fb18489cde375e896bc52, type: 3}
   bulletSprites:
-  - {fileID: 21300000, guid: a462e7111a9a978408813c9c76ba0d6c, type: 3}
-  - {fileID: 21300000, guid: ce9f7654c68b77a49af6709b5bb2e967, type: 3}
-  - {fileID: 21300000, guid: 3954269ff5c7d3c4c80c803d87de4629, type: 3}
+  - {fileID: 21300000, guid: 577d3688797842a4fbb7b4024d9355ff, type: 3}
+  - {fileID: 21300000, guid: fcf8884c37f818b45b5167561c9a86f1, type: 3}
+  - {fileID: 21300000, guid: 42df154a8e0173842bdf7b3a5fdbe2e2, type: 3}
   slideSprites:
-  - {fileID: 21300000, guid: 0b9a36face0f42e47a50a683090beb0b, type: 3}
-  - {fileID: 21300000, guid: b0cc44af42186744fb566fe66fd0743b, type: 3}
+  - {fileID: 21300000, guid: 6eb428b4417e19b439190719e22ceb09, type: 3}
+  - {fileID: 21300000, guid: 30102367b9b69e245adc3b5597e1c7bd, type: 3}
   transitionRunSprites:
-  - {fileID: 21300000, guid: 7627ed735ea8d864783005219dc3089c, type: 3}
-  - {fileID: 21300000, guid: 5e48f489f79b0d144a2ae3765cd6626c, type: 3}
-  - {fileID: 21300000, guid: 1ae10871c94417d42ad1748682c1fac0, type: 3}
+  - {fileID: 21300000, guid: 8fb9994fa709f4c498f9251e6ecd3259, type: 3}
+  - {fileID: 21300000, guid: 1951addc9d91c4d4a9834e6e0b9a4c45, type: 3}
+  - {fileID: 21300000, guid: 76e5b8a593089284ba7697ba28613308, type: 3}
   idleSize: {x: 1.32, y: 1.23}
   deadSize: {x: 1.32, y: 1.23}
   walkSize: {x: 1.32, y: 1.23}
@@ -19502,12 +19502,12 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: a462e7111a9a978408813c9c76ba0d6c, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 577d3688797842a4fbb7b4024d9355ff, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 16.4, y: 23.603092}
+  m_Size: {x: 19.199999, y: 21.605274}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
