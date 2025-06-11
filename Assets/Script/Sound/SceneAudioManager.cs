@@ -60,6 +60,7 @@ public class SceneAudioManager : MonoBehaviour
         }
         else if (localSceneName == "Stage4")
         {
+            GlobalAudioManager.Instance.StopAllMusic();
             GlobalAudioManager.Instance.PlayMusicDirectly(GlobalAudioManager.Instance.stage4Music, GlobalAudioManager.Instance.stage4Volume);
         }
         else if (GameManager.isContinue && gsd == 4 && (localSceneName == "Stage1"))
