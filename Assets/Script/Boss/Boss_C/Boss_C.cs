@@ -45,7 +45,7 @@ class Boss_C : MonoBehaviour
         OpenMouth = false;
         Shaked = false;
         //Boss血量與戰鬥是否結束(預設否
-        BossHP = 50;
+        BossHP = 75;
         End = false;
         //初始化碰撞箱
         CircleCollider = GetComponent<CircleCollider2D>();
@@ -141,6 +141,7 @@ class Boss_C : MonoBehaviour
         //--------------------------------------------------------------BOSS招式
         if (NA)
         {
+            GlobalAudioManager.Instance.BossSoundEffect(3,8);
             SkillStart(ref NA, ref OnMove, ref OnAttack, ref NATK_A, -1f);
             CircleCollider.enabled = true;
             CapsuleCollider.enabled = false;
@@ -164,7 +165,7 @@ class Boss_C : MonoBehaviour
             }
             if (SkillTime - GapA > 2f)
             {
-                GlobalAudioManager.Instance.BossFallMusic();
+                GlobalAudioManager.Instance.BossSoundEffect(3,5);
                 GapA = SkillTime;
                 BulletSpeed = 5f;
                 transform.rotation = Quaternion.Euler(0, 0, 110);
@@ -181,6 +182,7 @@ class Boss_C : MonoBehaviour
         }
         if (NB)
         {
+            GlobalAudioManager.Instance.BossSoundEffect(3,8);
             SkillStart(ref NB, ref OnMove, ref OnAttack, ref NATK_B, -1f);
             Move();
             MoveCollderChange();
@@ -210,7 +212,7 @@ class Boss_C : MonoBehaviour
             {
                 if (Laser_A.GetComponent<Laser_Tutorial>().StartShoot == false && Laser_B.GetComponent<Laser_Tutorial>().StartShoot == false)
                 {
-                    GlobalAudioManager.Instance.BossFallMusic();
+                    GlobalAudioManager.Instance.BossSoundEffect(3,6);
                     Laser_A.GetComponent<Laser_Tutorial>().StartShoot = true;
                     Laser_B.GetComponent<Laser_Tutorial>().StartShoot = true;
                 }
@@ -228,6 +230,7 @@ class Boss_C : MonoBehaviour
         }
         if (NC)
         {
+            GlobalAudioManager.Instance.BossSoundEffect(3,8);
             SkillStart(ref NC, ref OnMove, ref OnAttack, ref NATK_C, -2.5f);
             Move();
             MoveCollderChange();
@@ -263,7 +266,7 @@ class Boss_C : MonoBehaviour
                 BOSS.GetComponent<SpriteRenderer>().sprite = MouthB;
                 if (Laser_A.GetComponent<Laser_Tutorial>().StartShoot == false)
                 {
-                    GlobalAudioManager.Instance.BossFallMusic();
+                    GlobalAudioManager.Instance.BossSoundEffect(3,6);
                     Laser_A.GetComponent<Laser_Tutorial>().StartShoot = true;
                 }
             }
@@ -280,7 +283,7 @@ class Boss_C : MonoBehaviour
             {
                 if (Laser_B.GetComponent<Laser_Tutorial>().StartShoot == false)
                 {
-                    GlobalAudioManager.Instance.BossFallMusic();
+                    GlobalAudioManager.Instance.BossSoundEffect(3,6);
                     Laser_B.GetComponent<Laser_Tutorial>().StartShoot = true;
                 }
                 Laser_B.transform.DORotate(new Vector3(0, 0, -125), 3f).SetEase(Ease.Linear);
@@ -295,7 +298,7 @@ class Boss_C : MonoBehaviour
             {
                 if (Laser_A.GetComponent<Laser_Tutorial>().StartShoot == false && Laser_B.GetComponent<Laser_Tutorial>().StartShoot == false)
                 {
-                    GlobalAudioManager.Instance.BossFallMusic();
+                    GlobalAudioManager.Instance.BossSoundEffect(3,6);
                     Laser_A.GetComponent<Laser_Tutorial>().StartShoot = true;
                     Laser_B.GetComponent<Laser_Tutorial>().StartShoot = true;
                 }
@@ -315,6 +318,7 @@ class Boss_C : MonoBehaviour
         }
         if (ND)
         {
+            GlobalAudioManager.Instance.BossSoundEffect(3,8);
             SkillStart(ref ND, ref OnMove, ref OnAttack, ref NATK_D, -1f);
             Move();
             MoveCollderChange();
@@ -350,7 +354,7 @@ class Boss_C : MonoBehaviour
             {
                 if (Laser_B.GetComponent<Laser_Tutorial>().StartShoot == false)
                 {
-                    GlobalAudioManager.Instance.BossFallMusic();
+                    GlobalAudioManager.Instance.BossSoundEffect(3,6);
                     Laser_B.GetComponent<Laser_Tutorial>().StartShoot = true;
                 }
                 OnMove = false;
@@ -360,7 +364,7 @@ class Boss_C : MonoBehaviour
             {
                 if (Laser_C.GetComponent<Laser_Tutorial>().StartShoot == false)
                 {
-                    GlobalAudioManager.Instance.BossFallMusic();
+                    GlobalAudioManager.Instance.BossSoundEffect(3,6);
                     Laser_C.GetComponent<Laser_Tutorial>().StartShoot = true;
                 }
             }
@@ -368,7 +372,7 @@ class Boss_C : MonoBehaviour
             {
                 if (Laser_A.GetComponent<Laser_Tutorial>().StartShoot == false)
                 {
-                    GlobalAudioManager.Instance.BossFallMusic();
+                    GlobalAudioManager.Instance.BossSoundEffect(3,6);
                     Laser_A.GetComponent<Laser_Tutorial>().StartShoot = true;
                 }
             }
@@ -376,7 +380,7 @@ class Boss_C : MonoBehaviour
             {
                 if (Laser_D.GetComponent<Laser_Tutorial>().StartShoot == false)
                 {
-                    GlobalAudioManager.Instance.BossFallMusic();
+                    GlobalAudioManager.Instance.BossSoundEffect(3,6);
                     Laser_D.GetComponent<Laser_Tutorial>().StartShoot = true;
                 }
             }
@@ -395,6 +399,8 @@ class Boss_C : MonoBehaviour
         }
         if (SA)
         {
+            GlobalAudioManager.Instance.BossSoundEffect(3,8);
+            GlobalAudioManager.Instance.BossSoundEffect(3,7);
             SkillStart(ref SA, ref OnMove, ref OnAttack, ref SATK_A, -1f);
             CircleCollider.enabled = true;
             CapsuleCollider.enabled = false;
@@ -445,33 +451,33 @@ class Boss_C : MonoBehaviour
                     case 0:
                         GameObject bulletA = Instantiate(Laser_Bullet, Laser_A.transform.position, Laser_A.transform.rotation * Quaternion.Euler(0, 0, 90));
                         bulletA.GetComponent<Rigidbody2D>().velocity = Laser_A.transform.right * BulletSpeed;
-                        GlobalAudioManager.Instance.BossFallMusic();
+                        GlobalAudioManager.Instance.BossSoundEffect(3,4);
                         break;
                     case 1:
                         GameObject bulletB = Instantiate(Laser_Bullet, Laser_B.transform.position, Laser_B.transform.rotation * Quaternion.Euler(0, 0, 90));
                         bulletB.GetComponent<Rigidbody2D>().velocity = Laser_B.transform.right * BulletSpeed;
-                        GlobalAudioManager.Instance.BossFallMusic();
+                        GlobalAudioManager.Instance.BossSoundEffect(3,4);
                         break;
                     case 2:
                         GameObject bulletC = Instantiate(Laser_Bullet, Laser_C.transform.position, Laser_C.transform.rotation * Quaternion.Euler(0, 0, 90));
                         bulletC.GetComponent<Rigidbody2D>().velocity = Laser_C.transform.right * BulletSpeed;
-                        GlobalAudioManager.Instance.BossFallMusic();
+                        GlobalAudioManager.Instance.BossSoundEffect(3,4);
                         break;
                     case 3:
                         GameObject bulletD = Instantiate(Laser_Bullet, Laser_D.transform.position, Laser_D.transform.rotation * Quaternion.Euler(0, 0, 90));
                         bulletD.GetComponent<Rigidbody2D>().velocity = Laser_D.transform.right * BulletSpeed;
-                        GlobalAudioManager.Instance.BossFallMusic();
+                        GlobalAudioManager.Instance.BossSoundEffect(3,4);
                         break;
                     case 4:
                         GameObject bulletE = Instantiate(Laser_Bullet, Laser_E.transform.position, Laser_E.transform.rotation * Quaternion.Euler(0, 0, 90));
                         bulletE.GetComponent<Rigidbody2D>().velocity = Laser_E.transform.right * BulletSpeed;
-                        GlobalAudioManager.Instance.BossFallMusic();
+                        GlobalAudioManager.Instance.BossSoundEffect(3,4);
                         break;
                 }
             }
             if (SkillTime - GapB > 0.35f)
             {
-                GlobalAudioManager.Instance.BossFallMusic();
+                GlobalAudioManager.Instance.BossAttackMusic();
                 GapB = SkillTime;
                 float x = Random.Range(-8, 9);
                 BulletSpeed = 8f;
@@ -495,6 +501,7 @@ class Boss_C : MonoBehaviour
         }
         if (SB)
         {
+            GlobalAudioManager.Instance.BossSoundEffect(3,8);
             SkillStart(ref SB, ref OnMove, ref OnAttack, ref SATK_B, -1f);
             CircleCollider.enabled = true;
             CapsuleCollider.enabled = false;
@@ -539,7 +546,7 @@ class Boss_C : MonoBehaviour
             }
             if (SkillTime - GapA > 4f)
             {
-                GlobalAudioManager.Instance.BossFallMusic();
+                GlobalAudioManager.Instance.BossSoundEffect(3,4);
                 GapA = SkillTime;
                 BulletSpeed = 20f;
                 GameObject bulletA = Instantiate(Laser_Bullet, Laser_A.transform.position, Laser_A.transform.rotation * Quaternion.Euler(0, 0, 90));
@@ -549,7 +556,7 @@ class Boss_C : MonoBehaviour
             }
             if (SkillTime - GapB > 0.75f)
             {
-                GlobalAudioManager.Instance.BossFallMusic();
+                GlobalAudioManager.Instance.BossAttackMusic();
                 GapB = SkillTime;
                 float x = Random.Range(-9, -7);
                 BulletSpeed = 8f;
@@ -567,6 +574,7 @@ class Boss_C : MonoBehaviour
         }
         if (SC)
         {
+            GlobalAudioManager.Instance.BossSoundEffect(3,8);
             SkillStart(ref SC, ref OnMove, ref OnAttack, ref SATK_C, -1f);
             CircleCollider.enabled = true;
             CapsuleCollider.enabled = false;
@@ -606,7 +614,7 @@ class Boss_C : MonoBehaviour
             transform.Rotate(0, 0, 180 * Time.deltaTime);
             if (SkillTime - 1 - GapA > 0.05f && SkillTime - 1 > 1f)
             {
-                GlobalAudioManager.Instance.BossFallMusic();
+                GlobalAudioManager.Instance.BossAttackMusic();
                 BulletSpeed = 1f;
                 GameObject bulletA = Instantiate(Bullet, new Vector3(BossTransform.position.x, BossTransform.position.y, 0.5f), BossTransform.rotation);
                 bulletA.GetComponent<Rigidbody2D>().velocity = BossTransform.up * -BulletSpeed;
@@ -614,7 +622,7 @@ class Boss_C : MonoBehaviour
             }
             if (SkillTime - 1 - GapB > 5f)
             {
-                GlobalAudioManager.Instance.BossFallMusic();
+                GlobalAudioManager.Instance.BossSoundEffect(3,4);
                 GapB = SkillTime - 1;
                 BulletSpeed = 20f;
                 GameObject bulletA = Instantiate(Laser_Bullet, Laser_A.transform.position, Laser_A.transform.rotation * Quaternion.Euler(0, 0, 90));
@@ -630,6 +638,7 @@ class Boss_C : MonoBehaviour
         }
         if (SD)
         {
+            GlobalAudioManager.Instance.BossSoundEffect(3,8);
             SkillStart(ref SD, ref OnMove, ref OnAttack, ref SATK_D, -1f);
         }
         if (SATK_D == true)
@@ -667,7 +676,7 @@ class Boss_C : MonoBehaviour
             }
             if (SkillTime - GapA > 0.15f)
             {
-                GlobalAudioManager.Instance.BossFallMusic();
+                GlobalAudioManager.Instance.BossAttackMusic();
                 GapA = SkillTime;
                 BulletSpeed = 3f;
                 float x = Random.Range(-45, 46);
@@ -678,27 +687,27 @@ class Boss_C : MonoBehaviour
             BulletSpeed = 20f;
             if (SkillTime > 2f && Laser_A.GetComponent<Laser_Tutorial>().StartShoot == false)
             {
-                GlobalAudioManager.Instance.BossFallMusic();
+                GlobalAudioManager.Instance.BossSoundEffect(3,6);
                 Laser_A.GetComponent<Laser_Tutorial>().StartShoot = true;
             }
             if (SkillTime > 4f && Laser_B.GetComponent<Laser_Tutorial>().StartShoot == false)
             {
-                GlobalAudioManager.Instance.BossFallMusic();
+                GlobalAudioManager.Instance.BossSoundEffect(3,6);
                 Laser_B.GetComponent<Laser_Tutorial>().StartShoot = true;
             }
             if (SkillTime > 6f && Laser_C.GetComponent<Laser_Tutorial>().StartShoot == false)
             {
-                GlobalAudioManager.Instance.BossFallMusic();
+                GlobalAudioManager.Instance.BossSoundEffect(3,6);
                 Laser_C.GetComponent<Laser_Tutorial>().StartShoot = true;
             }
             if (SkillTime > 8f && Laser_D.GetComponent<Laser_Tutorial>().StartShoot == false)
             {
-                GlobalAudioManager.Instance.BossFallMusic();
+                GlobalAudioManager.Instance.BossSoundEffect(3,6);
                 Laser_D.GetComponent<Laser_Tutorial>().StartShoot = true;
             }
             if (SkillTime > 10f && Laser_E.GetComponent<Laser_Tutorial>().StartShoot == false)
             {
-                GlobalAudioManager.Instance.BossFallMusic();
+                GlobalAudioManager.Instance.BossSoundEffect(3,6);
                 Laser_E.GetComponent<Laser_Tutorial>().StartShoot = true;
             }
             if (SkillTime > 11)
@@ -721,6 +730,7 @@ class Boss_C : MonoBehaviour
         {//Boss血量歸零的判定程式(開始對話+關閉計時器+隱藏球+玩家無敵+強制結束招式+避免重複判定
             if (BossHP <= 0 && !End)
             {
+                GlobalAudioManager.Instance.BossSoundEffect(3,9);
                 GlobalAudioManager.Instance.BossFallMusic();
                 StartCoroutine(TriggerStoryByDistance(1));
                 AutoAttackTimer = false;
@@ -859,8 +869,8 @@ class Boss_C : MonoBehaviour
                 break;
         }
         Boss_HP_Bar_Follow UpdateBossHP = FindObjectOfType<Boss_HP_Bar_Follow>();
-        UpdateBossHP.UpdateBossHP(BossHP);
-        GlobalAudioManager.Instance.BossHitMusic();
+        UpdateBossHP.UpdateBossHP_BC(BossHP);
+        GlobalAudioManager.Instance.BossSoundEffect(3,Random.Range(1,4));
         if (BOSS.GetComponent<SpriteRenderer>().color != Color.red)
         {
             StartCoroutine(HurtFlash());

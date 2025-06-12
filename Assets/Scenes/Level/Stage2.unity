@@ -3047,7 +3047,7 @@ MonoBehaviour:
   B_BlockPrefab: {fileID: 484334599547172165, guid: 166f0f668a07c1b46ac6f96cc0053905, type: 3}
   E_BlockPrefab: {fileID: 484334599547172165, guid: b734b816b385cf8498d4c8d3358300a1, type: 3}
   Explode: {fileID: 865254282}
-  Target: {fileID: 0}
+  Target: {fileID: 457258960}
   BossTransform: {fileID: 417243767}
   Transform_SATK_C: {fileID: 132966077}
   Transform_SATK_D: {fileID: 1390415243}
@@ -3459,8 +3459,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   bulletPrefab: {fileID: 2952838449763887668, guid: 3f96242383fbd5b4ea0bd19fcc54c863, type: 3}
   BOOM: {fileID: 3933271898585314972, guid: 19bdbdbf19366a54a92248bd7bd7e6d6, type: 3}
-  HP: {fileID: 0}
-  MP: {fileID: 0}
+  HP: {fileID: 1375464353}
+  MP: {fileID: 1390052675}
   attack_flag: 0
   slide_attack_flag: 0
   bullet_flag: 0

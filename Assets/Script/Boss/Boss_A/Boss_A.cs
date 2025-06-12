@@ -123,6 +123,7 @@ class Boss_A : MonoBehaviour{
             if (NA)
             {
                 SkillStart(ref NA, ref OnMove, ref OnAttack, ref NATK_A, 0f);
+                GlobalAudioManager.Instance.BossSoundEffect(1,3);
             }
             if (NATK_A == true)
             {
@@ -201,6 +202,7 @@ class Boss_A : MonoBehaviour{
             }
             if (SA)
             {
+                GlobalAudioManager.Instance.BossSoundEffect(1,3);
                 SkillStart(ref SA, ref OnMove, ref OnAttack, ref SATK_A, 0f);
             }
             if (SATK_A == true)
@@ -215,10 +217,18 @@ class Boss_A : MonoBehaviour{
                 }
                 if ((5f > SkillTime && SkillTime > 1f) || (11f > SkillTime && SkillTime > 6f))
                 {
+                    if (OnMove == true)
+                    {
+                        GlobalAudioManager.Instance.BossSoundEffect(1,4);
+                    }
                     OnMove = false;
                 }
                 else
                 {
+                    if ((5f > SkillTime && SkillTime > 1f) && OnMove == false)
+                    {
+                        GlobalAudioManager.Instance.BossSoundEffect(1,3);
+                    }
                     OnMove = true;
                 }
                 if (SkillTime - GapA > 1f && ((5f > SkillTime && SkillTime > 1f) || (11f > SkillTime && SkillTime > 6f)))
@@ -235,6 +245,7 @@ class Boss_A : MonoBehaviour{
             }
             if (SB)
             {
+                GlobalAudioManager.Instance.BossSoundEffect(1,3);
                 SkillStart(ref SB, ref OnMove, ref OnAttack, ref SATK_B, 0f);
                 BulletSpeed = 1f;
                 CircleCollider.enabled = true;
@@ -243,9 +254,10 @@ class Boss_A : MonoBehaviour{
             if (SATK_B == true)
             {
                 BOSS.transform.DOMove(new Vector3(SetUPosition.x, SetUPosition.y), 1f).SetEase(Ease.OutQuad);
-                if (SkillTime > 1f || BOSS.transform.position.x == 0)
+                if ((SkillTime > 1f || BOSS.transform.position.x == 0) && OnMove == true)
                 {
                     OnMove = false;
+                    GlobalAudioManager.Instance.BossSoundEffect(1,4);
                 }
                 transform.Rotate(0, 0, 180 * Time.deltaTime);
                 if (SkillTime - GapA > 0.05f && SkillTime > 1f)
@@ -271,14 +283,16 @@ class Boss_A : MonoBehaviour{
             }
             if (SC)
             {
+                GlobalAudioManager.Instance.BossSoundEffect(1,3);
                 SkillStart(ref SC, ref OnMove, ref OnAttack, ref SATK_C, 0f);
             }
             if (SATK_C == true)
             {
                 BOSS.transform.DOMove(new Vector3(SetUPosition.x, SetUPosition.y + 0.5f), 1f).SetEase(Ease.OutQuad);
-                if (SkillTime > 1f || BOSS.transform.position.x == 0)
+                if ((SkillTime > 1f || BOSS.transform.position.x == 0) && OnMove == true)
                 {
                     OnMove = false;
+                    GlobalAudioManager.Instance.BossSoundEffect(1,4);
                 }
                 if (SkillTime - GapA > 0.15f && SkillTime > 1f)
                 {
@@ -313,13 +327,15 @@ class Boss_A : MonoBehaviour{
             {
                 SkillStart(ref SD, ref OnMove, ref OnAttack, ref SATK_D, 0f);
                 BulletSpeed = 2f;
+                GlobalAudioManager.Instance.BossSoundEffect(1,3);
             }
             if (SATK_D == true)
             {
                 BOSS.transform.DOMove(new Vector3(SetUPosition.x + 8, SetUPosition.y), 1f).SetEase(Ease.OutQuad);
-                if (SkillTime > 1f)
+                if (SkillTime > 1f && OnMove == true)
                 {
                     OnMove = false;
+                    GlobalAudioManager.Instance.BossSoundEffect(1,4);
                 }
                 if (SkillTime - GapA > 0.2f && SkillTime > 1f)
                 {
@@ -337,6 +353,7 @@ class Boss_A : MonoBehaviour{
         {//Boss血量歸零的判定程式(開始對話+關閉計時器+隱藏球+玩家無敵+強制結束招式+避免重複判定
             if (BossHP <= 0 && !End)
             {
+                GlobalAudioManager.Instance.BossSoundEffect(1,5);
                 GlobalAudioManager.Instance.BossFallMusic();
                 StartCoroutine(TriggerStoryByDistance(1));
                 AutoAttackTimer = false;
@@ -442,8 +459,8 @@ class Boss_A : MonoBehaviour{
                 break;
         }
         Boss_HP_Bar_Follow UpdateBossHP = FindObjectOfType<Boss_HP_Bar_Follow>();
-        UpdateBossHP.UpdateBossHP(BossHP);
-        GlobalAudioManager.Instance.BossHitMusic();
+        UpdateBossHP.UpdateBossHP_A(BossHP);
+        GlobalAudioManager.Instance.BossSoundEffect(1,Random.Range(1,3));
         if (BOSS.GetComponent<SpriteRenderer>().color != Color.red)
         {
             StartCoroutine(HurtFlash());

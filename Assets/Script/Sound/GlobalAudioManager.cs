@@ -21,22 +21,16 @@ public class GlobalAudioManager : MonoBehaviour
     public AudioClip blockfireSound;
     public AudioClip balltoblockSound;
     public AudioClip balltowallSound;
+    // [HideInInspector]
+    public AudioClip mainMenuMusic,storyMusic;
+    public AudioClip bossMusic,bossMusic2,bossMusic3;
+    public AudioClip stage0Music,stage1Music,stage2Music,stage3Music,stage4Music;
 
-    public AudioClip mainMenuMusic;
-    public AudioClip stage1Music;
-    public AudioClip stage2Music;
-    public AudioClip stage3Music;
-    public AudioClip storyMusic;
-    public AudioClip bossMusic;
-    public AudioClip bossMusic2;
-    public AudioClip bossMusic3;
-    public AudioClip stage0Music;
-    public AudioClip stage4Music;
-
-    public AudioClip BossAttackSound;
-    public AudioClip BossFallSound;
-    public AudioClip BossHitSound;
-
+    public AudioClip BossMove_AB, BossMove_C, EarthQuake, Thunder;
+    public AudioClip BossA_HitA, BossA_HitB, BossA_EI, BossA_Die;
+    public AudioClip BossB_HitA, BossB_HitB, BossB_HitC, BossB_AttackA, BossB_AttackB, BossB_Die;
+    public AudioClip BossC_HitA, BossC_HitB, BossC_HitC, BossC_AttackA, BossC_AttackB, BossC_Laser, BossC_Die;
+    public AudioClip BossAttackSound,BossFallSound;
     public float globalVolume = 1f;
 
     //用於音樂與音效的聲源
@@ -76,10 +70,7 @@ public class GlobalAudioManager : MonoBehaviour
     public float bossVolume2 = 1f;
     public float bossVolume3 = 1f;
 
-    public float BossAttackVolume = 1f;
-    public float BossFallVolume = 1f;
-    public float BossHitVolume = 1f;
-
+    public float BossAVolume, BossBVolume, BossCVolume, BossAttackVolume;
 
     public float stage0Volume = 0.8f;
     public float stage4Volume = 0.8f;
@@ -416,20 +407,96 @@ public class GlobalAudioManager : MonoBehaviour
         musicSource1.Stop();
         musicSource2.Stop();
     }
-
     public void BossAttackMusic(float volumeScale = 1f)
     {
         sfxSource.PlayOneShot(BossAttackSound, BossAttackVolume * volumeScale);
     }
-
-    public void BossHitMusic(float volumeScale = 1f)
-    {
-        sfxSource.PlayOneShot(BossHitSound, BossHitVolume * volumeScale);
-    }
-
     public void BossFallMusic(float volumeScale = 1f)
     {
-        sfxSource.PlayOneShot(BossFallSound, BossFallVolume * volumeScale);
+        sfxSource.PlayOneShot(BossFallSound, BossAttackVolume * volumeScale);
     }
-
+    public void BossSoundEffect(float Boss, int Sound, float volumeScale = 1f)
+    {
+        switch (Boss)
+        {
+            case 1:
+                switch (Sound)
+                {
+                    case 1:
+                        sfxSource.PlayOneShot(BossA_HitA, BossAVolume * volumeScale);
+                        break;
+                    case 2:
+                        sfxSource.PlayOneShot(BossA_HitB, BossAVolume * volumeScale);
+                        break;
+                    case 3:
+                        sfxSource.PlayOneShot(BossMove_AB, BossAVolume * volumeScale);
+                        break;
+                    case 4:
+                        sfxSource.PlayOneShot(BossA_EI, BossAVolume * volumeScale);
+                        break;
+                    case 5:
+                        sfxSource.PlayOneShot(BossA_Die, BossAVolume * volumeScale);
+                        break;
+                }
+                break;
+            case 2:
+                switch (Sound)
+                {
+                    case 1:
+                        sfxSource.PlayOneShot(BossB_HitA, BossBVolume * volumeScale);
+                        break;
+                    case 2:
+                        sfxSource.PlayOneShot(BossB_HitB, BossBVolume * volumeScale);
+                        break;
+                    case 3:
+                        sfxSource.PlayOneShot(BossB_HitC, BossBVolume * volumeScale);
+                        break;
+                    case 4:
+                        sfxSource.PlayOneShot(BossB_AttackA, BossBVolume * volumeScale);
+                        break;
+                    case 5:
+                        sfxSource.PlayOneShot(BossB_AttackB, BossBVolume * volumeScale);
+                        break;
+                    case 6:
+                        sfxSource.PlayOneShot(BossMove_AB, BossBVolume * volumeScale);
+                        break;
+                    case 7:
+                        sfxSource.PlayOneShot(BossB_Die, BossBVolume * volumeScale);
+                        break;
+                }
+                break;
+            case 3:
+                switch (Sound)
+                {
+                    case 1:
+                        sfxSource.PlayOneShot(BossC_HitA, BossCVolume * volumeScale);
+                        break;
+                    case 2:
+                        sfxSource.PlayOneShot(BossC_HitB, BossCVolume * volumeScale);
+                        break;
+                    case 3:
+                        sfxSource.PlayOneShot(BossC_HitC, BossCVolume * volumeScale);
+                        break;
+                    case 4:
+                        sfxSource.PlayOneShot(BossC_AttackA, BossCVolume * volumeScale);
+                        break;
+                    case 5:
+                        sfxSource.PlayOneShot(BossC_AttackB, BossCVolume * volumeScale);
+                        break;
+                    case 6:
+                        sfxSource.PlayOneShot(BossC_Laser, BossCVolume * volumeScale);
+                        break;
+                    case 7:
+                        sfxSource.PlayOneShot(EarthQuake, BossCVolume * volumeScale);
+                        break;
+                    case 8:
+                        sfxSource.PlayOneShot(BossMove_C, BossCVolume * volumeScale);
+                        break;
+                    case 9:
+                        sfxSource.PlayOneShot(BossC_Die, BossCVolume * volumeScale);
+                        break;
+                }
+                break;
+        }
+    }
 }

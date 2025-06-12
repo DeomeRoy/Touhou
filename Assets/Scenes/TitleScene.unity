@@ -675,18 +675,38 @@ MonoBehaviour:
   balltoblockSound: {fileID: 8300000, guid: 1c2f2c1d15cc34542b0dc5926a2f298c, type: 3}
   balltowallSound: {fileID: 8300000, guid: 523b673d916383d4181fe013434ad866, type: 3}
   mainMenuMusic: {fileID: 8300000, guid: ecf43021d081edc45b78b979d374a851, type: 3}
-  stage1Music: {fileID: 8300000, guid: 230491154cf8d494f8add78eb5e9a919, type: 3}
-  stage2Music: {fileID: 8300000, guid: 230491154cf8d494f8add78eb5e9a919, type: 3}
-  stage3Music: {fileID: 8300000, guid: 230491154cf8d494f8add78eb5e9a919, type: 3}
   storyMusic: {fileID: 8300000, guid: 8b862e27d1b624742ada0b557a51ec65, type: 3}
   bossMusic: {fileID: 8300000, guid: ac583d3e5a3b21347b7180eb095833b2, type: 3}
   bossMusic2: {fileID: 8300000, guid: 99825a977550c0c4eb175545a69377ca, type: 3}
   bossMusic3: {fileID: 8300000, guid: bd75ef919d308d44c929ec5e7f9f8830, type: 3}
   stage0Music: {fileID: 8300000, guid: 696dc3ea2a200774c99aa7eff886391e, type: 3}
+  stage1Music: {fileID: 8300000, guid: 230491154cf8d494f8add78eb5e9a919, type: 3}
+  stage2Music: {fileID: 8300000, guid: 230491154cf8d494f8add78eb5e9a919, type: 3}
+  stage3Music: {fileID: 8300000, guid: 230491154cf8d494f8add78eb5e9a919, type: 3}
   stage4Music: {fileID: 8300000, guid: bd2b2784737b54141a2e5ff7a084d7f7, type: 3}
+  BossMove_AB: {fileID: 8300000, guid: fc515dbd912560344b6cac455d219d04, type: 3}
+  BossMove_C: {fileID: 8300000, guid: c9cf2e77c6b47744690a40aa6669b868, type: 3}
+  EarthQuake: {fileID: 8300000, guid: 8d55267649ad7f1458c642f8ce275adc, type: 3}
+  Thunder: {fileID: 8300000, guid: 44bf5363aca4f4449a1f6cef0c9d875b, type: 3}
+  BossA_HitA: {fileID: 8300000, guid: b7a5bc9d8befd4e47b26ba8411404aad, type: 3}
+  BossA_HitB: {fileID: 8300000, guid: cded48b7289ef6441a03c2e69b7bf632, type: 3}
+  BossA_EI: {fileID: 8300000, guid: 7d454acb35de0a6418e989d056b49049, type: 3}
+  BossA_Die: {fileID: 8300000, guid: bdb188f9a335f7c4da2d7af133f45eb5, type: 3}
+  BossB_HitA: {fileID: 8300000, guid: 8e1bf8cd70f993542b4dc40482b76df8, type: 3}
+  BossB_HitB: {fileID: 8300000, guid: 3be77053e034d834fa9994621b8dc797, type: 3}
+  BossB_HitC: {fileID: 8300000, guid: 7262bf21b1cfa804e9e1b42bcf6596dc, type: 3}
+  BossB_AttackA: {fileID: 8300000, guid: ae5b85da905c69841964d3faa82a9153, type: 3}
+  BossB_AttackB: {fileID: 8300000, guid: 135ff79df20964840920cd9734a74da5, type: 3}
+  BossB_Die: {fileID: 8300000, guid: 9a8dfa520148dc04fb87560b79291d99, type: 3}
+  BossC_HitA: {fileID: 8300000, guid: a1e428b4e3876684e95e740d2714df5b, type: 3}
+  BossC_HitB: {fileID: 8300000, guid: 8a87dd2a2686f7c448d4bdc6204126be, type: 3}
+  BossC_HitC: {fileID: 8300000, guid: f9890cd9494ba19448de64c95f0a02d8, type: 3}
+  BossC_AttackA: {fileID: 8300000, guid: cf583823e0870c649ba4f8d66dd5802a, type: 3}
+  BossC_AttackB: {fileID: 8300000, guid: 6a2cddb3de066d24cbb24309015d4dbc, type: 3}
+  BossC_Laser: {fileID: 8300000, guid: 4c8a57085c0225b4eaf2eaa7694ca061, type: 3}
+  BossC_Die: {fileID: 8300000, guid: 8a87dd2a2686f7c448d4bdc6204126be, type: 3}
   BossAttackSound: {fileID: 8300000, guid: 2fb6cdec1e7119044824fd3aaa295629, type: 3}
   BossFallSound: {fileID: 8300000, guid: a76520a5af8b5dc47a0bcd83c647ee68, type: 3}
-  BossHitSound: {fileID: 8300000, guid: d8733dafd6babaa4d9256cba01c6164a, type: 3}
   globalVolume: 1
   musicSource1: {fileID: 0}
   musicSource2: {fileID: 0}
@@ -714,9 +734,10 @@ MonoBehaviour:
   bossVolume: 0.007
   bossVolume2: 0.007
   bossVolume3: 0.007
+  BossAVolume: 0.05
+  BossBVolume: 0.05
+  BossCVolume: 0.05
   BossAttackVolume: 0.01
-  BossFallVolume: 0.01
-  BossHitVolume: 0.01
   stage0Volume: 0.01
   stage4Volume: 0.01
   crossFadeOutTime: 0.5

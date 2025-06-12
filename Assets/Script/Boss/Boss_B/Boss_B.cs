@@ -36,7 +36,7 @@ class Boss_B : MonoBehaviour{
         //正在攻擊預設關
         OnAttack = false;
         //Boss血量與戰鬥是否結束(預設否
-        BossHP = 50;
+        BossHP = 75;
         End = false;
         //初始化碰撞箱
         CircleCollider = GetComponent<CircleCollider2D>();
@@ -127,6 +127,7 @@ class Boss_B : MonoBehaviour{
         //--------------------------------------------------------------BOSS招式
         if (NA)
         {
+            GlobalAudioManager.Instance.BossSoundEffect(2,6);
             SkillStart(ref NA, ref OnMove, ref OnAttack, ref NATK_A, -1f);
             Move();
             CircleCollider.enabled = true;
@@ -163,6 +164,7 @@ class Boss_B : MonoBehaviour{
         }
         if (NB)
         {
+            GlobalAudioManager.Instance.BossSoundEffect(2,6);
             SkillStart(ref NB, ref OnMove, ref OnAttack, ref NATK_B, -1f);
             Move();
         }
@@ -192,6 +194,7 @@ class Boss_B : MonoBehaviour{
         }
         if (NC)
         {
+            GlobalAudioManager.Instance.BossSoundEffect(2,6);
             SkillStart(ref NC, ref OnMove, ref OnAttack, ref NATK_C, -1f);
             Move();
             CircleCollider.enabled = true;
@@ -223,6 +226,7 @@ class Boss_B : MonoBehaviour{
         }
         if (ND)
         {
+            GlobalAudioManager.Instance.BossSoundEffect(2,6);
             SkillStart(ref ND, ref OnMove, ref OnAttack, ref NATK_D, -1f);
             CircleCollider.enabled = true;
             CapsuleCollider.enabled = false;
@@ -250,6 +254,7 @@ class Boss_B : MonoBehaviour{
         }
         if (SA)
         {
+            GlobalAudioManager.Instance.BossSoundEffect(2,6);
             SkillStart(ref SA, ref OnMove, ref OnAttack, ref SATK_A, -1f);
             CircleCollider.enabled = true;
             CapsuleCollider.enabled = false;
@@ -259,6 +264,10 @@ class Boss_B : MonoBehaviour{
             BOSS.transform.DOMove(new Vector3(SetUPosition.x, SetUPosition.y), 1f).SetEase(Ease.OutQuad);
             if (SkillTime > 0f || BOSS.transform.position == SetUPosition)
             {
+                if (OnMove == true)
+                {
+                    GlobalAudioManager.Instance.BossSoundEffect(2,Random.Range(4,6));
+                }
                 OnMove = false;
             }
             if (SkillTime - GapA > 1f)
@@ -282,6 +291,7 @@ class Boss_B : MonoBehaviour{
         }
         if (SB)
         {
+            GlobalAudioManager.Instance.BossSoundEffect(2,6);
             SkillStart(ref SB, ref OnMove, ref OnAttack, ref SATK_B, -1f);
             CircleCollider.enabled = true;
             CapsuleCollider.enabled = false;
@@ -291,6 +301,10 @@ class Boss_B : MonoBehaviour{
             BOSS.transform.DOMove(new Vector3(SetUPosition.x, SetUPosition.y), 1f).SetEase(Ease.OutQuad);
             if (SkillTime > 0f || BOSS.transform.position == SetUPosition)
             {
+                if (OnMove == true)
+                {
+                    GlobalAudioManager.Instance.BossSoundEffect(2,Random.Range(4,6));
+                }
                 OnMove = false;
             }
             if (SkillTime - GapA > 0.1f)
@@ -335,6 +349,7 @@ class Boss_B : MonoBehaviour{
         }
         if (SC)
         {
+            GlobalAudioManager.Instance.BossSoundEffect(2,6);
             SkillStart(ref SC, ref OnMove, ref OnAttack, ref SATK_C, -1f);
         }
         if (SATK_C == true)
@@ -342,6 +357,10 @@ class Boss_B : MonoBehaviour{
             BOSS.transform.DOMove(new Vector3(SetUPosition.x, SetUPosition.y), 1f).SetEase(Ease.OutQuad);
             if (SkillTime > 0f || BOSS.transform.position == SetUPosition)
             {
+                if (OnMove == true)
+                {
+                    GlobalAudioManager.Instance.BossSoundEffect(2,Random.Range(4,6));
+                }
                 OnMove = false;
             }
             BOSS.transform.position = Vector3.MoveTowards(BOSS.transform.position, SetUPosition, MoveSpeed * Time.deltaTime);
@@ -366,6 +385,7 @@ class Boss_B : MonoBehaviour{
         }
         if (SD)
         {
+            GlobalAudioManager.Instance.BossSoundEffect(2,6);
             SkillStart(ref SD, ref OnMove, ref OnAttack, ref SATK_D, -1f);
         }
         if (SATK_D == true)
@@ -373,6 +393,10 @@ class Boss_B : MonoBehaviour{
             BOSS.transform.DOMove(new Vector3(SetUPosition.x, SetUPosition.y), 1f).SetEase(Ease.OutQuad);
             if (SkillTime > 0f || BOSS.transform.position == SetUPosition)
             {
+                if (OnMove == true)
+                {
+                    GlobalAudioManager.Instance.BossSoundEffect(2,Random.Range(4,6));
+                }
                 OnMove = false;
             }
             if (SkillTime - GapA > 0.5f)
@@ -417,6 +441,7 @@ class Boss_B : MonoBehaviour{
         {//Boss血量歸零的判定程式(開始對話+關閉計時器+隱藏球+玩家無敵+強制結束招式+避免重複判定
             if (BossHP <= 0 && !End)
             {
+                GlobalAudioManager.Instance.BossSoundEffect(2,7);
                 GlobalAudioManager.Instance.BossFallMusic();
                 StartCoroutine(TriggerStoryByDistance(1));
                 AutoAttackTimer = false;
@@ -507,8 +532,8 @@ class Boss_B : MonoBehaviour{
                 break;
         }
         Boss_HP_Bar_Follow UpdateBossHP = FindObjectOfType<Boss_HP_Bar_Follow>();
-        UpdateBossHP.UpdateBossHP(BossHP);
-        GlobalAudioManager.Instance.BossHitMusic();
+        UpdateBossHP.UpdateBossHP_BC(BossHP);
+        GlobalAudioManager.Instance.BossSoundEffect(2,Random.Range(1,4));
         if (BOSS.GetComponent<SpriteRenderer>().color != Color.red)
         {
             StartCoroutine(HurtFlash());
